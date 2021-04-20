@@ -8,6 +8,8 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 # Create your models here.
 
+# This is a test edit
+
 class Event(models.Model):
 	author = models.ForeignKey("auth.user", on_delete="CASCADE")
 	name = models.CharField(max_length=30)
@@ -33,4 +35,3 @@ class Notification(models.Model):
 	def __str__(self):
 		return self.sender.username
 
-	
