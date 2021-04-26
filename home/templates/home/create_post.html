@@ -1,0 +1,101 @@
+{% extends "home/base.html" %}
+
+{% block content %}
+<!-- ==============================================
+News Feed Section
+=============================================== --> 
+<section class="profile" style="background-image: url({{ MEDIA_URL }}{{ member_profile.cover_pic.url }}); background-size: cover; background-repeat: no-repeat; background-position: center center;">
+	<div class="container-fluid">
+		<div class="row">
+		</div><!--/ row-->   
+	</div><!--/ container -->
+</section><!--/ profile -->
+
+<!-- ==============================================
+User Profile Section
+=============================================== --> 
+<section class="user-profile">
+	<div class="container-fluid">
+		<div class="row">
+
+			<div class="col-lg-12">
+				<div class="post-content">
+					<div class="author-post text-center">
+						<a href="#"><img class="img-fluid img-circle" src="{{ MEDIA_URL }}{{ member_profile.profile_pic.url }}" alt="Image"></a>
+					</div><!-- /author -->
+				</div><!-- /.post-content -->        
+			</div><!-- /col-sm-12 -->
+
+		</div><!--/ row-->   
+	</div><!--/ container -->
+</section><!--/ profile -->
+
+<!-- ==============================================
+User Profile Section
+=============================================== --> 
+<section class="details">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12">
+
+				<div class="details-box row">
+					<h2 class="simple-h2">Nouveau Post</h2>
+					<div class="col-lg-4">
+					</div>
+					<div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
+              			
+	                    <form class="form-login" method="post" id="loginform">
+	                        {% csrf_token %}
+	                        <div class="login-wrap">
+	                            <div>{{ form.title }}</div>
+	                      		<div>{{ form.description }}</div>
+	                      		<div>{{ form.picture }}</div>
+	                            <button class="btn btn-theme btn-block" type="submit" name="login">Publier</button>
+	                           
+	                            </label>
+	                        </div>
+	                    </form>
+                    	<br/> 
+                </div>
+				</div><!--/ details-box -->
+
+			</div>
+		</div>
+	</div><!--/ container -->
+</section><!--/ profile -->
+ <!-- ==============================================
+ Fluffs Section (subscribers list)
+ =============================================== -->
+ {% if my_profile %}
+ <section class="fluffs" id="fluffs">
+ 	<div class="container">
+ 		<div class="row">
+ 			<div class="section-title-pacifico">
+ 				<h2 style="text-align: center;">Mes Admyrateurs</a></h2>
+ 				<h1>Pensez à vérifier que la liste de vos abonnés sur Snapchat corresponde bien à cette liste.</h1>
+ 			</div>     
+ 		</div>
+
+ 		<div class="row">
+ 			{% for subscription in subscribers_list %}
+ 			<div class="col-md-3 col-sm-6 col-xs-12">
+ 				<div class="photo-rounded-fluffs">
+ 					<h1 class="text-center">{{ subscription.admyrateur.username }}</h1>
+ 				</div>
+ 			</div>
+ 			{% endfor %}
+ 		</div>
+ 	</div>
+ </section>
+ {% endif %}
+<!-- ==============================================
+Home Menu Section
+=============================================== -->    
+<section class="home-menu">
+	<div class="container">
+		<div class="row">
+
+		</div><!--/row -->
+	</div><!--/container -->
+</section><!--/home-menu -->   
+{% endblock %}

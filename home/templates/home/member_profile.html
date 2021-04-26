@@ -1,0 +1,214 @@
+{% extends "home/base.html" %}
+{% load mathfilters %}
+{% block content %}
+<!-- ==============================================
+News Feed Section
+=============================================== --> 
+<section class="profile" style="background-image: url({{ MEDIA_URL }}{{ member_profile.cover_pic.url }}); background-size: cover; background-repeat: no-repeat; background-position: center center;">
+	<div class="container-fluid">
+		<div class="row">
+		</div><!--/ row-->   
+	</div><!--/ container -->
+</section><!--/ profile -->
+
+<!-- ==============================================
+User Profile Section
+=============================================== --> 
+<section class="user-profile">
+	<div class="container-fluid">
+		<div class="row">
+
+			<div class="col-lg-12">
+				<div class="post-content">
+					<div class="author-post text-center">
+						<a href="#"><img class="img-fluid img-circle" src="{{ MEDIA_URL }}{{ member_profile.profile_pic.url }}" alt="Image"></a>
+					</div><!-- /author -->
+				</div><!-- /.post-content -->        
+			</div><!-- /col-sm-12 -->
+
+		</div><!--/ row-->   
+	</div><!--/ container -->
+</section><!--/ profile -->
+
+<!-- ==============================================
+User Profile Section
+=============================================== --> 
+<section class="details">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12">
+
+				<div class="details-box row">
+					<div class="col-lg-9">
+						<div class="content-box">
+							<h4>{{ member_profile.admyrateur.username }}</i></h4>
+							<p>{{ member_profile.description }}</p>
+							{% if my_profile %}
+							<p><a href="{% url 'edit_profile' pk=member_profile.pk %}">Modifier mon profil</a></p>
+							<p><a href="{% url 'create_post' %}">Ajouter une publication</a></p>
+							{% endif %}
+						</div><!--/ media -->
+					</div> 
+					<div class="col-lg-3">
+						<div class="follow-box">
+							{% if my_profile %}
+							<button class="kafe-btn kafe-btn-mint">
+								<a href="{% url 'create_plan' %}">Ajouter un abonnement</a>
+							</button>
+							
+							{% else %}
+							<script src="https://js.stripe.com/v3/"></script>
+							<button class="kafe-btn kafe-btn-mint" id="uncheckout-button">S'abonner</button>
+							{% endif %}
+						</div><!--/ dropdown -->
+					</div>
+				</div><!--/ details-box -->
+
+			</div>
+		</div>
+	</div>
+	<div class="subscriptions">
+		<div class="container">
+			<div class="row">
+			{% if plans.count == 1 %}
+				<div class="col-lg-4 num-down">
+				</div>
+			{% endif %}
+			{% for plan in plans %}
+
+			<div class="col-lg-3">
+				<div class="tr-section">
+					<div class="tr-post">
+						<div class="post-content">
+							<div class="card-content">
+								<h2>{{ plan.name }}</h2>
+								<h3>{{ plan.price|div:100 }}€/mois</h3>
+								<br/>
+								<p>{{ plan.description|linebreaks }}</p>
+								{% if plan.adult_content %}
+			                    <p class="disclaimer"><b>Cet abonnement est réservé à un public majeur</b></p>
+			                    {% endif %}
+							</div>
+							{% if not my_profile %}
+							<button id="checkout{{ plan.pk }}" href="" class="kafe-btn kafe-btn-mint-small full-width">S'abonner</button>	
+							{% else %}
+		                    <button class="kafe-btn kafe-btn-mint-small full-width" ><a href="{% url 'edit_plan' pk=plan.pk %}">Modifier / Supprimer</a></button>
+		                    {% endif %}	  
+						</div><!-- /.post-content -->									
+					</div><!-- /.tr-post -->	
+				</div><!-- /.tr-post -->	
+			</div><!-- /col-sm-3 -->
+			<script type="text/javascript">
+		      // Create an instance of the Stripe object with your publishable API key
+		      var stripe = Stripe('pk_test_iv54kfN7kNgyfbMcVushIuAF');
+		      var checkout{{ plan.pk }} = document.getElementById('checkout{{ plan.pk }}');
+		      console.log(checkout{{ plan.pk }})
+		      checkout{{ plan.pk }}.addEventListener('click', function() {
+		        // Create a new Checkout Session using the server-side endpoint you
+		        // created in step 3.
+		        fetch("{% url 'checkout_session' pk=plan.pk %}", {
+		          method: 'POST',
+				  credentials: 'include'
+		        })
+		        .then(function(response) {
+		          console.error(response)
+		          return response.json();
+		        })
+		        .then(function(session) {
+		          console.error(session)
+		          return stripe.redirectToCheckout(session);
+		        })
+		        .then(function(result) {
+		          // If `redirectToCheckout` fails due to a browser or network
+		          // error, you should display the localized error message to your
+		          // customer using `error.message`.
+		          if (result.error) {
+		            alert(result.error.message);
+		          }
+		        })
+		        .catch(function(error) {
+		          console.error('Error:', error);
+		        });
+		      });
+		    </script>
+	        {% endfor %}
+	        </div>
+		    <!-- End row-->
+		</div>
+	</div><!--/ container -->
+<section class="newsfeed">
+  <div class="container">
+   <div class="row">
+    {% for post in posts %}
+    <div class="col-lg-4">
+	 <a href="#myModal" data-toggle="modal">
+	 <div class="explorebox" style="background: linear-gradient( rgba(34,34,34,0.2), rgba(34,34,34,0.2)), url('{{ MEDIA_URL }}{{ post.picture.url }}') no-repeat;
+	          background-size: cover;
+              background-position: center center;
+              -webkit-background-size: cover;
+              -moz-background-size: cover;
+              -o-background-size: cover;">
+	  <div class="explore-top">
+      </div>		  
+      <div class="explore-body">
+      	{% if my_profile %}
+      	<div class="explore-like"><a href="{% url 'delete_post' pk=post.pk %}"><i class="fa fa-trash"></i></a></div>
+      	{% endif %}
+      </div>		  
+	 </div>
+	 </a>
+	</div><!--/ col-lg-4 -->
+	{% empty %}
+	<h3 style="text-align: center" class="empty">
+		Cet artiste n'a rien publié :(
+	</h3>
+	{% endfor %}
+   </div><!--/ row -->
+   
+  </div><!--/ container -->
+ </section>
+</section><!--/ profile -->
+<!-- ==============================================
+Fluffs Section (subscribers list)
+=============================================== -->
+{% if my_profile %}
+<section class="followers">
+	<div class="container-fluid">
+		<div class="row">
+			<h2 class="simple-h2">Mes Admyrateurs</h2>
+			<p style="text-align: center; width: 60%; margin-left: auto; margin-right: auto;">Retrouvez ici tous les membres qui ont souscrit à l'une de vos offres. Pensez à vérifier régulièrement que les pseudos ci-dessous figurent bien dans votre liste d'amis sur Snapchat. </p>
+			{% for subscriber in subscribers_list %}
+			<div class="col-lg-8 col-lg-offset-2">
+
+				<div class="followers-box full-width">
+					<div class="followers-list">
+
+						<div class="followers-body">
+							<div class="name-box">
+								<h4>{{ subscriber.admyrateur.username }}</h4>
+								<span><b>{{ subscriber.plan.name }}</b><br></span>
+								<span>Snapchat : @{{ subscriber.admyrateur.admyrateur.snapchat_account }}<br></span>
+								<span>Date de l'abonnement : {{ subscriber.date }}<br></span>
+							</div><!--/ name-box -->
+							<span><a href="" class="kafe-btn kafe-btn-mint-small">Signaler</a></span>
+						</div><!--/ followers-body -->
+					</div><!--suggestions-list end-->
+				</div>	
+
+			</div>
+			{% endfor %}
+		</div><!--/ row-->	
+	</div><!--/ container -->
+</section>
+{% endif %}
+<!-- ==============================================
+Home Menu Section
+=============================================== -->    
+<section class="home-menu">
+	<div class="container">
+		<div class="row">
+
+		</div><!--/row -->
+	</div><!--/container -->
+</section><!--/home-menu -->   
+{% endblock %}

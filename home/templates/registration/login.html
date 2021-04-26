@@ -1,0 +1,52 @@
+{% extends "home/base.html" %}
+
+{% block content %}
+<body>
+     <!-- ==============================================
+     Header Section
+     =============================================== -->
+     <section class="landing_page">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="banner-content text-center">
+                        <h1>Entrez dans l'intimité de vos Artystes favoris</h1>
+                        <p id="sub-title">Soutenez votre Artyste favori en faisant parti de sa communauté privée d'Admyrateurs...</p>
+                    </div><!--/. banner-content -->
+                </div>
+                {% if user.is_authenticated %}
+                {% else %}
+                <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
+                    {% if form.errors %}
+                    <p>Votre nom d'utilisateur ou votre mot de passe n'est pas le bon.</p>
+                    {% endif %}
+                    {% if next %}
+                        {% if user.is_authenticated %}
+                        <p>Your account doesn't have access to this page. To proceed,
+                        please login with an account that has access.</p>
+                        {% else %}
+                        <p>Please login to see this page.</p>
+                        {% endif %}
+                    {% endif %}
+                    <form class="form-login" method="post" id="loginform" action="{% url 'login' %}">
+                        {% csrf_token %}
+                        <div class="login-wrap">
+                            <div>{{ form.username }}</div>
+                            <div>{{ form.password }}</div>
+                      
+                            <button class="btn btn-theme btn-block" type="submit" name="login">Connexion</button>
+                            <input type="hidden" name="next" value="{{ next }}">
+                            <span class="text-center">
+                            <a href="/profiles/register/">Pas encore inscrit ?</a>
+                            </span>
+                            </label>
+                        </div>
+                    </form>
+                    <br/> 
+                </div>
+                {% endif %}
+            </div>
+            
+        </div><!-- /.container -->
+     </section>    
+{% endblock %}

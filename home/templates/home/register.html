@@ -1,0 +1,26 @@
+{% extends "home/base.html" %}
+
+{% block content %}
+<section class="login">
+<div class="container">
+<div class="banner-content">
+
+  <form method="post" class="form-signin">
+    {% if messages %}
+        <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+     {% csrf_token %}
+     <table>
+        {{ form.as_p }}
+         <button class="btn btn-theme btn-block" type="submit" name="login">Inscription</button>
+     </table>
+ </form>
+
+</div><!--/. banner-content -->
+</div><!-- /.container -->
+</section> 
+{% endblock %}

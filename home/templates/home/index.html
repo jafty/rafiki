@@ -1,0 +1,91 @@
+{% extends "home/base.html" %}
+
+{% block content %}
+<body>
+	 <!-- ==============================================
+	 Header Section
+	 =============================================== -->
+	 <section class="landing_page">
+	 	<div class="container">
+	 		<div class="row">
+	 			<div class="col-lg-8">
+	 				<div class="banner-content text-center">
+			 			<h1>Enjoy Toulouse like a local</h1>
+			 			<p id="sub-title">Meet people living in Toulouse and enjoy the city like you were borne here !</p>
+			 			
+			 		</div><!--/. banner-content -->
+	 			</div>
+	 			
+	 		</div>
+	 		
+	 	</div><!-- /.container -->
+	 </section>        
+	 <!-- ==============================================
+    Header Section
+    =============================================== -->  
+	<section class="home" id="home">
+	    <div class="container">
+	        <div class="row">
+	            <div class="col-lg-4 num-down">
+	                <div class="logo col-lg-12">
+	                    <a href="home.html">
+	                        <h2>Choisissez votre Artyste préféré.e</h2>
+	                    </a>
+	                    <br/>
+	                    <p>Rendez-vous directement sur le profil de votre influenceur.se préféré, ou partez à la découverte de nouveaux profils en consultant notre catalogue d'Artystes.</p>
+	                </div>
+	            </div>
+	          	<div class="col-lg-4 num-down">
+	                <div class="logo col-lg-12">
+	                    <a href="home.html">
+	                        <h2>Accèdez à son compte Snapchat privé</h2>
+	                    </a>
+	                    <br/>
+	                    <p>Après avoir choisi un artyste et vous être abonné à l'une de ses offres, vous recevrez son pseudo Snapchat, et elle/lui sera notifié afin d'accepter votre demande d'ajout.</p>
+	                </div>
+	            </div>
+	            <div class="col-lg-4 num-down">
+	                <div class="logo col-lg-12">
+	                    <a href="home.html">
+	                        <h2>Intéragissez de manière intime</h2>
+	                    </a>
+	                    <br/>
+	                    <p>En fonction de l'offre à laquelle vous avez souscrite, vous pourrez désormais profiter du contenu privé de votre Artyste favori, et tu pourras même échanger avec (photos, messages, appels...)</p>
+	                </div>
+	            </div>
+	        </div>
+	        <!-- End row-->
+	    </div>
+	    <!-- End container--> 
+	</section>
+	<!-- End section--> 
+	 <!-- ==============================================
+	 Fluffs Section
+	 =============================================== -->
+	 <section class="fluffs" id="fluffs">
+	 	<div class="container">
+	 		<div class="row">
+	 			<div class="section-title-pacifico">
+	 				<h2 style="text-align: center;">Bienvenue{% if is_connected %} {{ self.username }}{% endif %}</a></h2>
+	 				<h1>Nos modèles</h1>
+	 			</div>     
+	 		</div>
+
+	 		<div class="row">
+	 			{% for event in events %}
+	 			<p>hey</p>
+	 			<div class="col-md-3 col-sm-6 col-xs-12">
+	 				<div class="photo-rounded-fluffs">
+	 					<a href="{% url 'event_detail' pk=event.pk %}"> 
+	 						<img class="img-responsive" src="{{ MEDIA_URL }}{{ event.profile_pic.url }}" alt="Image">
+	 						<h1 class="text-center">{{ event.name }}</h1>
+	 						<p>{{ event.description }}</p>
+	 					</a> 
+	 				</div>
+	 			</div>
+	 			{% endfor %}
+	 		</div>
+	 	</div>
+	 </section>
+</body>
+{% endblock %}
