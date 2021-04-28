@@ -19,16 +19,16 @@ def register(request):
 				password=form.cleaned_data["password1"],
 				email=form.cleaned_data["email"],
 			)
-			return redirect("profile", username=request.user.username)
+			return redirect("my_profile")
 	else:
 		form = RegistrationForm()
 	return render(request, "home/register.html", {"form":form})
 
 
 @login_required
-def profile(request, username):
+def profile(request, pk):
 	my_profile = False
-	user = get_object_or_404(User, username=username)
+	user = get_object_or_404(User, pk=pk)
 	if user == request.user:
 		my_profile = True
 	profile = get_object_or_404(UserProfile, user=user)
@@ -44,13 +44,18 @@ def profile(request, username):
 
 
 @login_required
+def my_profile(request):
+	return redirect("profile", pk=request.user.pk)
+
+
+@login_required
 def edit_profile(request):
 	profile = get_object_or_404(UserProfile, user=request.user)
 	if request.method == "POST":
 		profile_form = UserProfileForm(request.POST, request.FILES, instance=profile)
 		if profile_form.is_valid():
 			profile = profile_form.save()
-			return redirect("profile", username=request.user.username)
+			return redirect("my_profile")
 	else:
 		profile_form = UserProfileForm(instance=profile)
-	return render(request, "home/edit_profile.html", {"profile_form":profile_form})
+	return render(request, "home/edit_profile.html", {"profile":profile, "profile_form":profile_form})

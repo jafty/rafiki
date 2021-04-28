@@ -14,4 +14,5 @@ class EventForm(forms.ModelForm):
 			"picture": _("Photo"),
 			"address": _("Adresse *"),
 			"hidden": _("Événement privé ?"),
+			"description": _("Description"),
 		}

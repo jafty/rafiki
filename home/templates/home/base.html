@@ -10,7 +10,7 @@
 		<meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">  
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Pygal - Entrez dans l'intimité de nos artystes</title>
+        <title>Rafiki - Enjoy Toulouse with locals, like a local</title>
 		<meta name="description" content="" />
         <meta name="keywords" content="" />
         <meta property="og:title" content="" />
@@ -62,7 +62,7 @@
 		  <span class="icon-bar"></span>
 		  <span class="icon-bar"></span>
 		 </button>
-		 <a class="navbar-brand" href="/">Pygal</a>
+		 <a class="navbar-brand" href="/">Rafiki</a>
 		</div><!-- /.navbar-header -->
 		<div class="navbar-left">
 		 <div class="collapse navbar-collapse" id="navbar-collapse">
@@ -74,12 +74,8 @@
 		 <ul class="nav navbar-nav">
 		  <li><i class="fa fa-user"></i></li>
 		  {% if user.is_authenticated %}
-		  	{% if user.artyste %}
-		  	<li><a href="{% url 'member_profile' pk=user.artyste.pk %}">Profil </a></li>
-		  	{% else %}
-		  	<li><a href="{% url 'my_profile' %}">Profil </a></li>
-		  	<li><a href="{% url 'merch_acc_creation' %}">Devenir Artyste </a></li>
-		  	{% endif %}
+		  	<li><a href="{% url 'profile' pk=user.pk %}">Profil </a></li>
+		  	<li><a href="{% url 'event_new' %}">Créer un événement</a></li>
 		  <li><a href="{% url 'logout' %}">Déconnexion</a></li>
 		  {% else %}
 		  <li><a href="{% url 'login' %}">Connexion / Inscription</a></li>

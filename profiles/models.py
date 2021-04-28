@@ -6,9 +6,9 @@ from django.forms import ModelForm
 
 
 class UserProfile(models.Model):
-	profile_pic = models.ImageField(upload_to="profiles", default="/media/defaultpp.jpg")
+	profile_pic = models.ImageField(upload_to="profiles/", default="profiles/defaultpp.jpg")
 	user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
-	age = models.IntegerField(blank=True)
+	age = models.IntegerField(blank=True, default=0)
 	bio = models.TextField()
 	parties_att_nb = models.IntegerField(default=0)
 	parties_org_nb = models.IntegerField(default=0)
@@ -31,4 +31,4 @@ class UserProfileForm(ModelForm):
 def create_or_update_user_profile(sender, instance, created, **kwargs):
 	if created:        
 		UserProfile.objects.get_or_create(user=instance)
-	instance.profile.save()
+		instance.profile.save()

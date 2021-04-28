@@ -15,6 +15,8 @@ from django.conf import settings
 from django.core.mail import EmailMessage
 from django.template import Context
 from django.template.loader import get_template
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 
 def event_list(request):
 	now = datetime.today()
@@ -82,7 +84,7 @@ def delete_event(request, pk):
 		return redirect("/")
 	else:
 		event.delete()
-	return redirect("profile", username=request.user.username)
+	return HttpResponseRedirect(reverse("profile", username=request.user.username))
 
 @login_required
 def ask_event(request, pk):

@@ -5,20 +5,15 @@
 <div class="container">
 <div class="banner-content">
 
-  <form method="post" class="form-signin">
-    {% if messages %}
-        <ul>
-            {% for message in messages %}
-            <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-     {% csrf_token %}
-     <table>
-        {{ form.as_p }}
-         <button class="btn btn-theme btn-block" type="submit" name="login">Inscription</button>
-     </table>
- </form>
+<form method="post" class="post-form" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="col-md-12 center-block">
+                <button id="singlebutton" name="singlebutton" type="submit" class="waves-effect  pink accent-3 waves-light btn">GO</button>
+            </div>
+        <p><b>Vous avez déjà un compte ? Cliquez <a href='/login'>ici</a></b></p>
+        <p>En vous inscrivant, vous acceptez nos conditions générales d'utilisation.</p>
+</form>
 
 </div><!--/. banner-content -->
 </div><!-- /.container -->

@@ -1,6 +1,15 @@
 {% extends "home/base.html" %}
 
 {% block content %}
+<!-- ==============================================
+News Feed Section
+=============================================== --> 
+<section class="profile" style="background-image: url({{ MEDIA_URL }}{{ profile.profile_pic.url }}); background-size: cover; background-repeat: no-repeat; background-position: center center;">
+	<div class="container-fluid">
+		<div class="row">
+		</div><!--/ row-->   
+	</div><!--/ container -->
+</section><!--/ profile -->
 
 <!-- ==============================================
 User Profile Section
@@ -30,18 +39,20 @@ User Profile Section
 			<div class="col-lg-12">
 
 				<div class="details-box row">
-					<h2 class="simple-h2">Modification du Profil</h2>
+					<h2 class="simple-h2">Crée ton événement</h2>
 					<div class="col-lg-4">
 					</div>
 					<div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
               			
-	                    <form class="form-login" method="post" id="loginform" enctype="multipart/form-data">
+	                    <form class="form-login" method="post" id="loginform">
 	                        {% csrf_token %}
 	                        <div class="login-wrap">
-	                            <div>{{ profile_form.bio }}</div>
-	                            <div>{{ profile_form.age }}</div>
-	                            <div><label>{{ profile_form.profile_pic.label_tag }}</label>{{ profile_form.profile_pic }}</div>
-	                            <button class="btn btn-theme btn-block" type="submit" name="edit">Éditer</button>
+	                            <div>{{ form.name }}</div>
+	                      		<div>{{ form.description }}</div>
+	                      		<div>{{ form.address }}</div>
+	                      		<div>{{ form.description }}</div>
+	                      		<div>{{ form.hidden }}</div>
+	                            <button class="btn btn-theme btn-block" type="submit" name="login">Publier</button>
 	                           
 	                            </label>
 	                        </div>
