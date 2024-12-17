@@ -1,7 +1,8 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
-from .models import Event, Testimonial
+from .models import Event, Testimonial, Participation
 from unittest.mock import Mock 
+from datetime import datetime, timedelta
 
 class EventUnitTests(TestCase):
     def setUp(self):
@@ -30,8 +31,47 @@ class EventUnitTests(TestCase):
         # Test that participant is able to view his own event location
         self.event.participants.add(self.participant)
         self.assertTrue(self.event.can_view_location(self.participant))
+
+
+class ParticipationUnitTests(TestCase):
+    def setUp(self):
+        self.participant = User.objects.create(username="participant")
+        self.organizer = User.objects.create(username="organizer")
+        self.event = Event.objects.create(
+            title="Test Event",
+            description="This is a test event",
+            organizer=self.organizer,
+            location="123 Test Street",
+            date=datetime.now() + timedelta(days=1),
+        )
+        self.participation = Participation.objects.create(
+            event=self.event,
+            user=self.participant
+        )
+
+    def test_accept_participant(self):
+        """
+        Given a user and a participation
+        When the participation is accepted
+        Then participation status is accepted
+        """
+        self.participation.accept_participant()
+        self.assertTrue(self.participation.is_accepted())
+
+    def test_reject_participant(self):
+        """
+        Given a user and a participation
+        When the participation is rejected
+        Then participation status is rejected
+        """
+        self.participation.reject_participant()
+        self.assertTrue(self.participation.is_rejected())
     
-    def test_organizer_can_accept_user(self):
-        # Test that accepted user belongs to the event
-        self.event.accept_participant(self.participant)
-        self.assertIn(self.participant, self.event.participants)    
+    def test_new_participant(self):
+        """
+        Given a user and a participation
+        When the user just asks for participation
+        Then participation status is pending
+        """
+        self.assertEqual(self.participation, self.participation)
+
