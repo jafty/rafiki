@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
-from .models import Event, Testimonial, Participation
+from .models import Event, Participation
 from unittest.mock import Mock 
 from datetime import datetime, timedelta
 
@@ -18,19 +18,21 @@ class EventUnitTests(TestCase):
             organizer=self.organizer,
         )
     
-    def test_can_view_location_as_organizer(self):
-        # Test that participant is able to view his own event location
-        self.assertTrue(self.event.can_view_location(self.organizer))
-    
-    def test_can_view_location_as_participant(self):
-        # Test that participant is able to view his own event location
-        self.event.participants.add(self.participant)
-        self.assertTrue(self.event.can_view_location(self.participant))
+    def test_can_manage_if_organizer(self):
+        """
+        Given an event and a user
+        When the user is the organizer
+        Then the user can manage the event
+        """
+        self.assertTrue(self.event.can_manage(self.organizer))
 
-    def test_cannot_view_location_as_non_participant(self):
-        # Test that participant is able to view his own event location
-        self.event.participants.add(self.participant)
-        self.assertTrue(self.event.can_view_location(self.participant))
+    def test_cannot_manage_if_not_organizer(self):
+        """
+        Given an event and a user
+        When the user is not the organizer
+        Then the user can not manage the event
+        """
+        self.assertFalse(self.event.can_manage(self.participant))
 
 
 class ParticipationUnitTests(TestCase):
@@ -53,10 +55,12 @@ class ParticipationUnitTests(TestCase):
         """
         Given a user and a participation
         When the participation is accepted
-        Then participation status is accepted
+        Then participation can only be accepted
         """
         self.participation.accept_participant()
         self.assertTrue(self.participation.is_accepted())
+        self.assertFalse(self.participation.is_pending())
+        self.assertFalse(self.participation.is_rejected())
 
     def test_reject_participant(self):
         """
@@ -66,12 +70,28 @@ class ParticipationUnitTests(TestCase):
         """
         self.participation.reject_participant()
         self.assertTrue(self.participation.is_rejected())
-    
+        self.assertFalse(self.participation.is_accepted())
+        self.assertFalse(self.participation.is_pending())
+
     def test_new_participant(self):
         """
         Given a user and a participation
         When the user just asks for participation
         Then participation status is pending
         """
-        self.assertEqual(self.participation, self.participation)
+        self.assertTrue(self.participation.is_pending())
+        self.assertFalse(self.participation.is_accepted())
+        self.assertFalse(self.participation.is_rejected())
+    
+    def test_organizer_cannot_join(self):
+        """
+        Given a user and a participation
+        When the user is the organizer
+        Then the participation cannot be created
+        """
+        with self.assertRaises(ValueError):
+            Participation.objects.create(event=self.event, user=self.organizer)
+
+        
+
 

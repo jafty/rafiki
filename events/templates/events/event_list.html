@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Liste des événements</title>
+</head>
+<body>
+    <h1>Liste des événements</h1>
+    <ul>
+        {% for event in events %}
+            <li><a href="{% url 'event_detail' event.id %}">{{ event.title }}</a> - {{ event.date }}</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'create_event' %}">Créer un événement</a>
+    <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit">Déconnexion</button>
+    </form>
+</body>
+</html>

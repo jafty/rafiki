@@ -1,18 +1,18 @@
 from django.db import models
+from django import forms
 from django.contrib.auth.models import User
+from datetime import datetime
 
 class Event(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
     date = models.DateTimeField()
-    location = models.CharField(max_length=255)
-    organizer = models.ForeignKey(User, on_delete=models.CASCADE, related_name="organized_events")
-    participants = models.ManyToManyField(User, related_name="participating_events", blank=True)
     is_location_hidden = models.BooleanField(default=True)
+    location = models.CharField(max_length=255)
+    organizer = models.ForeignKey(User, on_delete=models.CASCADE, related_name="organizers")
 
-    def can_view_location(self, user):
-        """Checks if an user can see the address"""
-        return user in self.participants.all() or user == self.organizer
+    def can_manage(self, user):
+        return self.organizer == user
 
 
 class Participation(models.Model):
@@ -24,22 +24,50 @@ class Participation(models.Model):
         (ACCEPTED, 'Accepted'),
         (REJECTED, 'Rejected'),
     ]
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="participation_users")
-    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="participation_events")
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES)
-
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="participations")
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="participations")
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=PENDING)
 
     def accept_participant(self):
-        pass
+        self.status = self.ACCEPTED
+        self.save()
 
     def reject_participant(self):
-        pass
+        self.status = self.REJECTED
+        self.save()
     
     def is_accepted(self):
-        return True
+        return self.status == self.ACCEPTED
 
     def is_rejected(self):
-        return True
+        return self.status == self.REJECTED
     
-class Testimonial(models.Model):
-    pass
+    def is_pending(self):
+        return self.status == self.PENDING
+
+    class Meta:
+        unique_together = ('event', 'user')
+
+    def save(self, *args, **kwargs):
+        if self.event.organizer == self.user:
+            raise ValueError("L'organisateur ne peut pas participer à son propre événement.")
+        super().save(*args, **kwargs)
+
+    
+class EventForm(forms.ModelForm):
+
+    date = forms.CharField(
+        label="Date (DD/MM/YYYY)",
+        widget=forms.TextInput(attrs={'placeholder': 'DD/MM/YYYY'}),
+    )
+
+    class Meta:
+        model = Event
+        fields = ['title', 'description', 'date', 'location', 'is_location_hidden']
+
+    def clean_date(self):
+        date_str = self.cleaned_data['date']
+        try:
+            return datetime.strptime(date_str, "%d/%m/%Y")
+        except ValueError:
+            raise forms.ValidationError("Le format de la date doit être DD/MM/YYYY.")

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ event.title }}</title>
+</head>
+<body>
+    <h1>{{ event.title }}</h1>
+    <p>{{ event.description }}</p>
+    <p>Date : {{ event.date }}</p>
+    <p>Lieu : {{ location }}</p>
+
+    <h2>Participants :</h2>
+    <ul>
+        {% for participant in participations %}
+            <li>{{ participant.user.username }}</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'event_list' %}">Retour à la liste des événements</a>
+    {% if not is_accepted and not can_manage and not is_pending %}
+        <a href="{% url 'join_event' event.id %}">Demander à participer</a>
+    {% elif can_manage  %}
+        <a href="">Editer</a>
+        <a href="{% url 'manage_participants' event.id %}">Gérer les participants</a>
+    {% endif %}
+</body>
+</html>

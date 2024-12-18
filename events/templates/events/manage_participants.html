@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gérer les participants</title>
+</head>
+<body>
+    <h1>Gérer les participants pour {{ event.title }}</h1>
+    <ul>
+        {% for participant in pending_participants %}
+            <li>
+                {{ participant.user.username }}
+                <form method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" name="action" value="accept">Accepter</button>
+                    <button type="submit" name="action" value="reject">Rejeter</button>
+                    <input type="hidden" name="user_id" value="{{ participant.user.id }}">
+                </form>
+                <p>Test {{ participant.user.id }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
