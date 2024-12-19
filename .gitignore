@@ -1,0 +1,13 @@
+# .gitignore
+# # Ignore the entire static directory except for versioned, manually maintained files
+/static
+!/static/admin
+
+# Ignore other generated contents
+*.log
+*.pot
+*.pyc
+__pycache__
+db.sqlite3
+*.sqlite3-journal
+   local_settings.py
