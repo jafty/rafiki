@@ -1,20 +1,21 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>{{ event.title }}</title>
-</head>
-<body>
-    <h1>{{ event.title }}</h1>
-    <p>{{ event.description }}</p>
-    <p>Date : {{ event.date }}</p>
-    <p>Lieu : {{ location }}</p>
 
-    <h2>Participants :</h2>
-    <ul>
-        {% for participant in participations %}
-            <li>{{ participant.user.username }}</li>
-        {% endfor %}
-    </ul>
+{% extends 'base.html' %}
+
+{% block title %}Détails de l'événement{% endblock %}
+{% block header_title %}Détails de l'événement{% endblock %}
+
+{% block content %}
+<h2 class="mb-3">{{ event.title }}</h2>
+<p><strong>Description :</strong> {{ event.description }}</p>
+<p><strong>Date :</strong> {{ event.date }}</p>
+<p><strong>Lieu :</strong> {{ location }}</p>
+
+<h3 class="mt-4">Participants :</h3>
+<ul class="list-group mb-4">
+    {% for participant in participations %}
+    <li class="list-group-item">{{ participant.user.username }}</li>
+    {% endfor %}
+</ul>
     <a href="{% url 'event_list' %}">Retour à la liste des événements</a>
     {% if not is_accepted and not can_manage and not is_pending %}
         <a href="{% url 'join_event' event.id %}">Demander à participer</a>
@@ -22,5 +23,4 @@
         <a href="">Editer</a>
         <a href="{% url 'manage_participants' event.id %}">Gérer les participants</a>
     {% endif %}
-</body>
-</html>
+{% endblock %}
