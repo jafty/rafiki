@@ -1,15 +1,14 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Créer un compte</title>
-</head>
-<body>
-    <h1>Créer un compte</h1>
+{% extends 'base.html' %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Inscription</h1>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">S'inscrire</button>
+        <button type="submit" class="btn btn-primary">S'inscrire</button>
     </form>
-    <p>Déjà inscrit ? <a href="{% url 'login' %}">Connexion</a></p>
-</body>
-</html>
+</div>
+{% endblock %}

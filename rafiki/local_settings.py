@@ -136,3 +136,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LOGIN_URL = 'login'  # URL où les utilisateurs sont redirigés s'ils ne sont pas authentifiés
 LOGIN_REDIRECT_URL = 'event_list'  # Redirection après une connexion réussie
 LOGOUT_REDIRECT_URL = 'event_list'  # Redirection après une déconnexion réussie
+
+import os
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

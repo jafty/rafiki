@@ -2,6 +2,41 @@ from django.db import models
 from django import forms
 from django.contrib.auth.models import User
 from datetime import datetime
+from django.utils.text import slugify
+from django.utils.timezone import now
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    avatar = models.ImageField(upload_to='avatars/', blank=True, null=True, default='avatars/default.jpg')
+    description = models.TextField(blank=True, null=True, help_text="Parlez un peu de vous.")
+    birth_date = models.DateField(blank=True, null=True)
+    created_at = models.DateTimeField(default=now)
+    slug = models.SlugField(unique=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.user.username)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"Profil de {self.user.username}"
+
+    def can_edit(self, user):
+        return user == self.user
+
+class UserProfileForm(forms.ModelForm):
+    birth_date = forms.DateField(
+        required=False,
+        input_formats=['%d/%m/%Y'],
+        widget=forms.TextInput(attrs={
+            'placeholder': 'JJ/MM/AAAA',
+        }),
+        label="Date de naissance"
+    )
+
+    class Meta:
+        model = UserProfile
+        fields = ['avatar', 'description', 'birth_date']
 
 class Event(models.Model):
     title = models.CharField(max_length=200)
@@ -10,9 +45,13 @@ class Event(models.Model):
     is_location_hidden = models.BooleanField(default=True)
     location = models.CharField(max_length=255)
     organizer = models.ForeignKey(User, on_delete=models.CASCADE, related_name="organizers")
+    image = models.ImageField(upload_to='event_images/', blank=True, null=True, default="event_images/default-rafiki.jpg")
 
     def can_manage(self, user):
         return self.organizer == user
+
+    def __str__(self):
+        return self.title
 
 
 class Participation(models.Model):
@@ -27,6 +66,10 @@ class Participation(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="participations")
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="participations")
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=PENDING)
+    message = models.TextField(blank=True, null=True, help_text="Message à l'organisateur")
+
+    def __str__(self):
+        return f"{self.user.username} <-> {self.event.title}"
 
     def accept_participant(self):
         self.status = self.ACCEPTED
@@ -35,13 +78,13 @@ class Participation(models.Model):
     def reject_participant(self):
         self.status = self.REJECTED
         self.save()
-    
+
     def is_accepted(self):
         return self.status == self.ACCEPTED
 
     def is_rejected(self):
         return self.status == self.REJECTED
-    
+
     def is_pending(self):
         return self.status == self.PENDING
 
@@ -53,7 +96,22 @@ class Participation(models.Model):
             raise ValueError("L'organisateur ne peut pas participer à son propre événement.")
         super().save(*args, **kwargs)
 
-    
+class ParticipationForm(forms.ModelForm):
+    message = forms.CharField(
+        required=False,
+        widget=forms.Textarea(attrs={
+            'placeholder': "Écrivez un message à l'organisateur...",
+            'rows': 3,
+            'class': 'form-control'
+        }),
+        label="Message (optionnel)"
+    )
+
+    class Meta:
+        model = Participation
+        fields = ['message']
+
+
 class EventForm(forms.ModelForm):
 
     date = forms.CharField(
@@ -63,7 +121,7 @@ class EventForm(forms.ModelForm):
 
     class Meta:
         model = Event
-        fields = ['title', 'description', 'date', 'location', 'is_location_hidden']
+        fields = ['title', 'description', 'date', 'location', 'is_location_hidden', 'image']
 
     def clean_date(self):
         date_str = self.cleaned_data['date']

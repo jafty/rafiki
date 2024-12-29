@@ -1,23 +1,34 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Gérer les participants</title>
-</head>
-<body>
-    <h1>Gérer les participants pour {{ event.title }}</h1>
-    <ul>
-        {% for participant in pending_participants %}
-            <li>
-                {{ participant.user.username }}
-                <form method="post" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit" name="action" value="accept">Accepter</button>
-                    <button type="submit" name="action" value="reject">Rejeter</button>
-                    <input type="hidden" name="user_id" value="{{ participant.user.id }}">
-                </form>
-                <p>Test {{ participant.user.id }}</p>
-            </li>
-        {% endfor %}
-    </ul>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}Gestion des participants{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Gestion des participants pour {{ event.title }}</h1>
+    <p><strong>Date :</strong> {{ event.date|date:"d/m/Y" }}</p>
+
+    <div class="mt-4">
+        <h2>Demandes en attente</h2>
+        <ul class="list-group">
+            {% for participant in pending_participants %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>{{ participant.user.username }}</strong><br>
+                        Message : {{ participant.message|default:"Aucun message." }}
+                    </div>
+                    <div>
+                        <form method="post" action="{% url 'manage_participants' event.id %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="user_id" value="{{ participant.user.id }}">
+                            <button type="submit" name="action" value="accept" class="btn btn-success btn-sm">Accepter</button>
+                            <button type="submit" name="action" value="reject" class="btn btn-danger btn-sm">Rejeter</button>
+                        </form>
+                    </div>
+                </li>
+            {% empty %}
+                <p>Aucune demande en attente.</p>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}

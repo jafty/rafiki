@@ -3,6 +3,15 @@
 /static
 !/static/admin
 
+# Suivre uniquement les fichiers sources
+!events/static/
+
+# Ignorer les fichiers collectés et téléchargés
+/static/
+!/events/static/  # Assure que les fichiers dans l'application sont suivis
+/media/
+
+
 # Ignore other generated contents
 *.log
 *.pot
@@ -11,3 +20,4 @@ __pycache__
 db.sqlite3
 *.sqlite3-journal
    local_settings.py
+/staticfiles/

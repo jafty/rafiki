@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Modifier votre profil{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Modifier votre profil</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
+    </form>
+</div>
+{% endblock %}

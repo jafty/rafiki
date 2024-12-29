@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Profil de {{ profile.user.username }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Profil de {{ profile.user.username }}</h1>
+
+    {% if can_edit %}
+        <p>Ceci est votre profil.</p>
+        <!-- Afficher des sections privées -->
+    {% endif %}
+    <div class="row">
+        <div class="col-md-4">
+            <img src="{{ profile.avatar.url }}" alt="Avatar" class="img-fluid rounded">
+        </div>
+        <div class="col-md-8">
+            <p><strong>Description :</strong> {{ profile.description|default:"Aucune description." }}</p>
+            <p><strong>Date de naissance :</strong> {{ profile.birth_date|date:"d/m/Y" }}</p>
+        </div>
+    </div>
+    <h2>Événements où {{ profile.user.username }} participe</h2>
+    <ul>
+        {% for participation in participations %}
+            <li>
+                <a href="{% url 'event_detail' participation.event.id %}">
+                    {{ participation.event.title }}
+                </a>
+                - Le {{ participation.event.date|date:"d/m/Y" }}
+            </li>
+        {% empty %}
+            <p>Pas encore d'événements.</p>
+        {% endfor %}
+    </ul>
+
+    {% if can_edit %}
+        <h2>Événements que vous organisez</h2>
+        <ul>
+            {% for event in organized_events %}
+                <li>
+                    <a href="{% url 'event_detail' event.id %}">{{ event.title }}</a>
+                    <a href="{% url 'manage_participants' event.id %}" class="btn btn-secondary btn-sm">Gérer les demandes</a>
+                </li>
+            {% empty %}
+                <p>Vous n'avez créé aucun événement.</p>
+            {% endfor %}
+        </ul>
+        <p><a href="{% url 'edit_profile' profile.user.username %}">Éditer mon profil</a></p>
+    {% endif %}
+</div>
+{% endblock %}

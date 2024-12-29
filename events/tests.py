@@ -1,12 +1,29 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
-from .models import Event, Participation
-from unittest.mock import Mock 
+from .models import Event, Participation, UserProfile
 from datetime import datetime, timedelta
+
+
+class UserProfileUnitTests(TestCase):
+    def setUp(self):
+        # User creation
+        self.random_user = User.objects.create(username="random_user")
+        self.profile_user = User.objects.create(username="participant")
+        self.profile = UserProfile.objects.get(user=self.profile_user)
+
+    def test_user_can_edit_his_own_profile(self):
+        """
+        Given a profile and a user
+        When the profile belongs to the user
+        Then the user can edit his profile
+        """
+        self.assertTrue(self.profile.can_edit(self.profile_user))
+        self.assertFalse(self.profile.can_edit(self.random_user))
+
 
 class EventUnitTests(TestCase):
     def setUp(self):
-        # User creation 
+        # User creation
         self.organizer = User.objects.create(username="organizer")
         self.participant = User.objects.create(username="participant")
         # Event creation
@@ -17,7 +34,7 @@ class EventUnitTests(TestCase):
             location = "Test Location",
             organizer=self.organizer,
         )
-    
+
     def test_can_manage_if_organizer(self):
         """
         Given an event and a user
@@ -82,7 +99,7 @@ class ParticipationUnitTests(TestCase):
         self.assertTrue(self.participation.is_pending())
         self.assertFalse(self.participation.is_accepted())
         self.assertFalse(self.participation.is_rejected())
-    
+
     def test_organizer_cannot_join(self):
         """
         Given a user and a participation
@@ -92,6 +109,12 @@ class ParticipationUnitTests(TestCase):
         with self.assertRaises(ValueError):
             Participation.objects.create(event=self.event, user=self.organizer)
 
-        
+    def test_user_can_see_events_he_joined(self):
+        #creer participations pour un user
+        #user_events_joined()
+        #tester user_events_joined avec la liste des participatins supposées
+        self.assertTrue
+
+
 
 
