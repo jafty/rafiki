@@ -1,49 +1,64 @@
 {% extends 'base.html' %}
 
-{% block title %}Détail de l'événement{% endblock %}
+{% block title %}{{ event.title }}{% endblock %}
 
 {% block content %}
-<div class="container mt-4 event-detail">
-    <div class="row">
-        <div class="col-md-6">
-            <img src="{{ event.image.url }}" alt="{{ event.title }}" class="img-fluid rounded">
-        </div>
-        <div class="col-md-6">
-            <h1 class="mb-3">{{ event.title }}</h1>
-            <p><strong>Date :</strong> {{ event.date|date:"d/m/Y H:i" }}</p>
-            <p><strong>Lieu :</strong> {{ location }}</p>
-            <p><strong>Organisateur :</strong> <a href="{% url 'profile' event.organizer.username %}">{{ event.organizer }}</a></p>
-            <p>{{ event.description }}</p>
-            {% if is_accepted %}
-                <button class="btn btn-success" disabled>Vous participez à cet événement</button>
-            {% elif is_pending %}
-                <button class="btn btn-warning" disabled>Participation en attente</button>
-            {% elif not can_manage %}
-                <h4 class="mt-4">Envoyer une demande de participation</h4>
-                <form method="post">
-                    {% csrf_token %}
-                    <div class="mb-3">
-                        <label for="message" class="form-label">Message pour l'organisateur</label>
-                        {{ form.message }}
-                    </div>
-                    <button type="submit" class="btn btn-primary">Rejoindre l'événement</button>
-                </form>
-            {% else %}
-                <a href="{% url 'manage_participants' event.id %}" class="btn btn-secondary mt-2">Gérer les participants</a>
-                <a href="{% url 'edit_event' event.id %}" class="btn btn-secondary mt-2">Éditer l'événement</a>
-            {% endif %}
-        </div>
+<div class="container mt-4">
+    <!-- Titre de l'événement -->
+    <h1 class="text-center mb-4">{{ event.title }}</h1>
+
+    <!-- Image de l'événement -->
+    <div class="mb-4">
+        <img src="{{ event.image.url }}" alt="{{ event.title }}" class="img-fluid w-100 rounded">
     </div>
 
-    <div class="mt-5">
-        <h3>Participants acceptés</h3>
-        <ul>
-            {% for participant in participations %}
-                <li>{{ participant.user.username }}</li>
-            {% empty %}
-                <p>Aucun participant pour le moment.</p>
-            {% endfor %}
-        </ul>
+    <!-- Contenu en deux colonnes -->
+    <div class="row">
+        <!-- Colonne 1 : Description, organisateur, participants -->
+        <div class="col-md-8">
+            <h3>Description</h3>
+            <p>{{ event.description }}</p>
+
+            <h4>Organisateur</h4>
+            <p><a href="{% url 'profile' event.organizer.username %}">{{ event.organizer }}</a></p>
+
+            <h4>Participants</h4>
+            <ul>
+                {% for participant in participations %}
+                    <li>{{ participant.user.username }}</li>
+                {% empty %}
+                    <p>Aucun participant pour le moment.</p>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Colonne 2 : Détails et formulaire -->
+        <div class="col-md-4">
+            <div class="p-3 border rounded">
+                <h4>Détails de l'événement</h4>
+                <p><strong>Date :</strong> {{ event.date|date:"d/m/Y H:i" }}</p>
+                <p><strong>Lieu :</strong> {{ location }}</p>
+
+                {% if is_accepted %}
+                    <p class="text-success">Vous participez à cet événement.</p>
+                {% elif is_pending %}
+                    <p class="text-warning">Votre demande est en attente.</p>
+                {% elif not can_manage %}
+                    <h5>Demande de participation</h5>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="message" class="form-label">Message pour l'organisateur</label>
+                            {{ form.message }}
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Envoyer</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'manage_participants' event.id %}" class="btn btn-secondary mt-2 w-100">Gérer les participants</a>
+                    <a href="{% url 'edit_event' event.id %}" class="btn btn-secondary mt-2 w-100">Éditer l'événement</a>
+                {% endif %}
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

@@ -19,5 +19,6 @@
 __pycache__
 db.sqlite3
 *.sqlite3-journal
-   local_settings.py
+rafiki/local_settings.py
 /staticfiles/
+venv/
