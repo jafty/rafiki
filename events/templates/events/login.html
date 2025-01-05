@@ -1,15 +1,28 @@
 {% extends 'base.html' %}
-
+{% load widget_tweaks %}
 {% block title %}Connexion{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <h1>Connexion</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Se connecter</button>
-    </form>
-    <a href="{% url 'register' %}">S'inscrire</a>
+<div class="block-content mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h1 class="mb-4 text-center">Connexion</h1>
+            <form method="post" class="p-4 border rounded shadow-sm">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="username" class="form-label fw-bold">Nom d'utilisateur</label>
+                    {{ form.username|add_class:"form-control" }}
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label fw-bold">Mot de passe</label>
+                    {{ form.password|add_class:"form-control" }}
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Se connecter</button>
+            </form>
+            <div class="mt-3 text-center">
+                <a href="{% url 'register' %}" class="text-decoration-none">S'inscrire</a>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

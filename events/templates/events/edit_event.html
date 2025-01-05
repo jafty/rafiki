@@ -1,14 +1,37 @@
 {% extends 'base.html' %}
-
+{% load widget_tweaks %}
 {% block title %}Modifier l'événement{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
     <h1>Modifier l'événement</h1>
-    <form method="post" enctype="multipart/form-data">
+    <form id="contactForm" enctype="multipart/form-data" name="contactForm" method="post">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+        <div class="mb-3">
+            <label for="name" class="form-label fw-bold">Nom de l'événement</label>
+            {{ form.title|add_class:"form-control" }}
+        </div>
+        <div class="mb-3">
+            <label for="date" class="form-label fw-bold">Date</label>
+            {{ form.date|add_class:"form-control" }}
+        </div>
+        <div class="mb-3">
+            <label for="location" class="form-label fw-bold">Lieu</label>
+            {{ form.location|add_class:"form-control" }}
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label fw-bold">Description</label>
+            {{ form.description|add_class:"form-control" }}
+        </div>
+        <div class="mb-3">
+            <label for="image" class="form-label fw-bold">Image</label>
+            {{ form.image|add_class:"form-control" }}
+        </div>
+        <div class="mb-3">
+            <label for="is_location_hidden" class="form-check-label fw-bold">Adresse masquée ?</label>
+            {{ form.is_location_hidden|add_class:"form-check-input" }}
+        </div>
+        <button type="submit" class="btn btn-primary w-25">Créer</button>
     </form>
 </div>
 {% endblock %}

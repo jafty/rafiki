@@ -3,9 +3,8 @@
 {% block title %}{{ event.title }}{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <!-- Titre de l'événement -->
-    <h1 class="text-center mb-4">{{ event.title }}</h1>
+<div class="block-content mt-4">
+
 
     <!-- Image de l'événement -->
     <div class="mb-4">
@@ -16,16 +15,22 @@
     <div class="row">
         <!-- Colonne 1 : Description, organisateur, participants -->
         <div class="col-md-8">
-            <h3>Description</h3>
-            <p>{{ event.description }}</p>
-
-            <h4>Organisateur</h4>
-            <p><a href="{% url 'profile' event.organizer.username %}">{{ event.organizer }}</a></p>
-
-            <h4>Participants</h4>
+            <!-- Titre de l'événement -->
+            <h1 class="mb-4">{{ event.title }}</h1>
+            <p class="d-flex align-items-center">
+                <img src="{{ event.organizer.profile.avatar.url }}" alt="Avatar de l'organisateur" class="rounded-circle me-2" style="width: 40px; height: 40px;">
+                <a href="{% url 'profile' event.organizer.username %}">{{ event.organizer }}</a>
+            </p>
+            <hr class="my-3">
+            <p>{{ event.description|linebreaks }}</p>
+            <hr class="my-3">
+            <h2>Participants</h2>
             <ul>
                 {% for participant in participations %}
-                    <li>{{ participant.user.username }}</li>
+                    <li class="d-flex align-items-center mb-2">
+                        <img src="{{ participant.user.profile.avatar.url }}" alt="Avatar de {{ participant.user.username }}" class="rounded-circle me-2" style="width: 30px; height: 30px;">
+                        <a href="{% url 'profile' participant.user.username %}">{{ participant.user.username }}</a>
+                    </li>
                 {% empty %}
                     <p>Aucun participant pour le moment.</p>
                 {% endfor %}
@@ -35,9 +40,9 @@
         <!-- Colonne 2 : Détails et formulaire -->
         <div class="col-md-4">
             <div class="p-3 border rounded">
-                <h4>Détails de l'événement</h4>
-                <p><strong>Date :</strong> {{ event.date|date:"d/m/Y H:i" }}</p>
-                <p><strong>Lieu :</strong> {{ location }}</p>
+                <h2>Détails de l'événement</h2>
+                <p><i class="fas fa-calendar-alt"></i> <strong>Date :</strong> {{ event.date|date:"d/m/Y H:i" }}</p>
+                <p><i class="fas fa-map-marker-alt"></i> <strong>Lieu :</strong> {{ location }}</p>
 
                 {% if is_accepted %}
                     <p class="text-success">Vous participez à cet événement.</p>

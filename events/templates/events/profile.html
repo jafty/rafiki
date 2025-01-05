@@ -4,48 +4,66 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h1>Profil de {{ profile.user.username }}</h1>
-
-    {% if can_edit %}
-        <p>Ceci est votre profil.</p>
-        <!-- Afficher des sections privées -->
-    {% endif %}
-    <div class="row">
-        <div class="col-md-4">
-            <img src="{{ profile.avatar.url }}" alt="Avatar" class="img-fluid rounded">
+    <div class="row justify-content-center">
+        <!-- Left Section: Avatar, Username, Description -->
+        <div class="col-md-3">
+            <div class="profile-card">
+                <img src="{{ profile.avatar.url }}" alt="Avatar" class="img-fluid rounded w-100 mb-3">
+                <h3 class="text-center font-weight-bold">{{ profile.user.username }}</h3>
+                <p class="text-center">{{ profile.description|default:"Aucune description."|linebreaks }}</p>
+                {% if can_edit %}
+                <p><a href="{% url 'edit_profile' profile.user.username %}" class="btn btn-link btn-primary">Éditer mon profil</a></p>
+                <p>
+                    <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="nav-link btn btn-link" id="logout" style="display: inline; padding: 0; color: inherit; text-decoration: none;">Déconnexion</button>
+                    </form>
+                </p>
+                {% endif %}
+            </div>
         </div>
-        <div class="col-md-8">
-            <p><strong>Description :</strong> {{ profile.description|default:"Aucune description." }}</p>
-            <p><strong>Date de naissance :</strong> {{ profile.birth_date|date:"d/m/Y" }}</p>
+
+        <!-- Right Section: Events Participation and Organized Events -->
+        <div class="col-md-7">
+            <h3 class="font-weight-bold">Événements où {{ profile.user.username }} participe</h3>
+            <div class="row">
+                {% for participation in participations %}
+                    <div class="col-md-6 mb-4">
+                        <a href="{% url 'event_detail' participation.event.id %}" class="event-card">
+                            <div class="event-card-image" style="background-image: url('{{ participation.event.image.url }}');">
+                                <div class="event-card-overlay">
+                                    <h5 class="event-card-title">{{ participation.event.title }}</h5>
+                                    <p class="event-card-date">Le {{ participation.event.date|date:"d/m/Y" }}</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                {% empty %}
+                    <p>Pas encore d'événements.</p>
+                {% endfor %}
+            </div>
+
+            {% if can_edit %}
+                <h3 class="font-weight-bold">Événements que vous organisez</h3>
+                <div class="row">
+                    {% for event in organized_events %}
+                        <div class="col-md-6 mb-4">
+                            <a href="{% url 'event_detail' event.id %}" class="event-card">
+                                <div class="event-card-image" style="background-image: url('{{ event.image.url }}');">
+                                    <div class="event-card-overlay">
+                                        <h5 class="event-card-title">{{ event.title }}</h5>
+                                        <p class="event-card-date">Le {{ event.date|date:"d/m/Y" }}</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    {% empty %}
+                        <p>Vous n'avez créé aucun événement.</p>
+                    {% endfor %}
+                </div>
+                
+            {% endif %}
         </div>
     </div>
-    <h2>Événements où {{ profile.user.username }} participe</h2>
-    <ul>
-        {% for participation in participations %}
-            <li>
-                <a href="{% url 'event_detail' participation.event.id %}">
-                    {{ participation.event.title }}
-                </a>
-                - Le {{ participation.event.date|date:"d/m/Y" }}
-            </li>
-        {% empty %}
-            <p>Pas encore d'événements.</p>
-        {% endfor %}
-    </ul>
-
-    {% if can_edit %}
-        <h2>Événements que vous organisez</h2>
-        <ul>
-            {% for event in organized_events %}
-                <li>
-                    <a href="{% url 'event_detail' event.id %}">{{ event.title }}</a>
-                    <a href="{% url 'manage_participants' event.id %}" class="btn btn-secondary btn-sm">Gérer les demandes</a>
-                </li>
-            {% empty %}
-                <p>Vous n'avez créé aucun événement.</p>
-            {% endfor %}
-        </ul>
-        <p><a href="{% url 'edit_profile' profile.user.username %}">Éditer mon profil</a></p>
-    {% endif %}
 </div>
 {% endblock %}

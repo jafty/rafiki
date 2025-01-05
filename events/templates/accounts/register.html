@@ -1,14 +1,40 @@
 {% extends 'base.html' %}
-
+{% load widget_tweaks %}
 {% block title %}Inscription{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
-    <h1>Inscription</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">S'inscrire</button>
-    </form>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h1 class="mb-4 text-center">Inscription</h1>
+            {% if form.errors %}
+                <div class="alert alert-danger">
+                    <ul class="mb-0">
+                        {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            <form method="post" class="p-4 border rounded shadow-sm">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="username" class="form-label fw-bold">Nom d'utilisateur</label>
+                    {{ form.username|add_class:"form-control" }}
+                </div>
+                <div class="mb-3">
+                    <label for="password1" class="form-label fw-bold">Mot de passe</label>
+                    {{ form.password1|add_class:"form-control" }}
+                </div>
+                <div class="mb-3">
+                    <label for="password2" class="form-label fw-bold">Confirmation du mot de passe</label>
+                    {{ form.password2|add_class:"form-control" }}
+                </div>
+                <button type="submit" class="btn btn-primary w-100">S'inscrire</button>
+            </form>
+        </div>
+    </div>
 </div>
 {% endblock %}
