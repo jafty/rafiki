@@ -1,7 +1,6 @@
 # .gitignore
 # # Ignore the entire static directory except for versioned, manually maintained files
 /media/
-
 # Ignore other generated contents
 *.log
 *.pot
@@ -9,5 +8,6 @@
 __pycache__
 db.sqlite3
 *.sqlite3-journal
-local_settings.py
+rafiki/local_settings.py
 /staticfiles/
+venv/
