@@ -1,17 +1,6 @@
 # .gitignore
 # # Ignore the entire static directory except for versioned, manually maintained files
-/static
-!/static/admin
-
-# Suivre uniquement les fichiers sources
-!events/static/
-
-# Ignorer les fichiers collectés et téléchargés
-/static/
-!/events/static/  # Assure que les fichiers dans l'application sont suivis
 /media/
-
-
 # Ignore other generated contents
 *.log
 *.pot
