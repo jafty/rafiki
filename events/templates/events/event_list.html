@@ -3,10 +3,15 @@
 {% block title %}Liste des événements{% endblock %}
 
 {% block content %}
+
 <div class="block-content mt-4">
     <div class="row g-4">
+        <div class="mb-4">
+            <h2 class="fw-bold">Explorez les événements disponibles</h2>
+            <p>Rafiki Events vous permet de rencontrer des expatriés, de partager votre culture et de vivre des expériences enrichissantes. Recherchez un événement qui vous inspire ou créez le vôtre pour connecter des personnes autour de centres d'intérêt communs ! Pour cela, rien de plus simple : cliquez sur un événement qui vous plaît, demandez à participer en envoyant un message à l'organisateur, et s'il accepte, vous aurez accès à l'adresse exacte si celle-ci est masquée.</p>
+        </div>
         {% for event in events %}
-        <div class="col-md-4">
+        <div class="col-md-6">
             <a href="{% url 'event_detail' event_id=event.id %}" class="event-card">
                 <div class="event-card-image" style="background-image: url('{{ event.image.url }}');">
                     <div class="event-card-overlay">
