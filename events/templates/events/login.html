@@ -8,6 +8,13 @@
         <div class="col-md-6">
             <h1 class="mb-4 text-center">Connexion</h1>
             <form method="post" class="p-4 border rounded shadow-sm">
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {% for error in form.non_field_errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
                 {% csrf_token %}
                 <div class="mb-3">
                     <label for="username" class="form-label fw-bold">Nom d'utilisateur</label>

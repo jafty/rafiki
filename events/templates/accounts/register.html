@@ -21,6 +21,10 @@
             <form method="post" class="p-4 border rounded shadow-sm">
                 {% csrf_token %}
                 <div class="mb-3">
+                    <label for="username" class="form-label fw-bold">Adresse e-mail</label>
+                    {{ form.email|add_class:"form-control" }}
+                </div>
+                <div class="mb-3">
                     <label for="username" class="form-label fw-bold">Nom d'utilisateur</label>
                     {{ form.username|add_class:"form-control" }}
                 </div>

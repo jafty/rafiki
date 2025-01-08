@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 from datetime import datetime
 from django.utils.text import slugify
 from django.utils.timezone import now
+from django.contrib.auth.forms import UserCreationForm
+from django.core.exceptions import ValidationError
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
@@ -38,6 +40,28 @@ class UserProfileForm(forms.ModelForm):
         model = UserProfile
         fields = ['avatar', 'description', 'birth_date']
 
+class CustomUserCreationForm(UserCreationForm):
+    email = forms.EmailField(required=True, widget=forms.EmailInput(attrs={'class': 'form-control'}))
+
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password1', 'password2']
+
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exists():
+            raise ValidationError("Cette adresse e-mail est déjà utilisée. Veuillez en choisir une autre.")
+        return email
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.email = self.cleaned_data['email']
+        if commit:
+            user.save()
+        return user
+
+
 class Event(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
@@ -52,6 +76,24 @@ class Event(models.Model):
 
     def __str__(self):
         return self.title
+
+class EventForm(forms.ModelForm):
+
+    date = forms.CharField(
+        label="Date (DD/MM/YYYY)",
+        widget=forms.TextInput(attrs={'placeholder': 'DD/MM/YYYY'}),
+    )
+
+    class Meta:
+        model = Event
+        fields = ['title', 'description', 'date', 'location', 'is_location_hidden', 'image']
+
+    def clean_date(self):
+        date_str = self.cleaned_data['date']
+        try:
+            return datetime.strptime(date_str, "%d/%m/%Y")
+        except ValueError:
+            raise forms.ValidationError("Le format de la date doit être DD/MM/YYYY.")
 
 
 class Participation(models.Model):
@@ -110,22 +152,3 @@ class ParticipationForm(forms.ModelForm):
     class Meta:
         model = Participation
         fields = ['message']
-
-
-class EventForm(forms.ModelForm):
-
-    date = forms.CharField(
-        label="Date (DD/MM/YYYY)",
-        widget=forms.TextInput(attrs={'placeholder': 'DD/MM/YYYY'}),
-    )
-
-    class Meta:
-        model = Event
-        fields = ['title', 'description', 'date', 'location', 'is_location_hidden', 'image']
-
-    def clean_date(self):
-        date_str = self.cleaned_data['date']
-        try:
-            return datetime.strptime(date_str, "%d/%m/%Y")
-        except ValueError:
-            raise forms.ValidationError("Le format de la date doit être DD/MM/YYYY.")
