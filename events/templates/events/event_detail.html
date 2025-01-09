@@ -59,8 +59,9 @@
                             <label for="message" class="form-label">Message pour l'organisateur</label>
                             {{ form.message }}
                         </div>
-                        <button type="submit" class="btn btn-primary w-100">Envoyer</button>
+                        <button type="submit" class="btn btn-primary w-100">Envoyer et  payer {{ event.price }}</button>
                     </form>
+                    <p>À l'issue de votre ta demande de participation, tu seras redirigé vers un formulaire de paiement. Si l'organisateur n'accepte pas ta participation, la transaction sera annulée.</p>
                 {% else %}
                     <a href="{% url 'manage_participants' event.id %}" class="btn btn-secondary mt-2 w-100">Gérer les participants</a>
                     <a href="{% url 'edit_event' event.id %}" class="btn btn-secondary mt-2 w-100">Éditer l'événement</a>

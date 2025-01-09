@@ -78,6 +78,8 @@ def event_detail(request, event_id):
     can_manage = event.can_manage(user)
     is_accepted = False
     is_pending = False
+    is_rejected = False
+    # TODO : remove those false shit taht's crazy work
     location = event.location
     if Participation.objects.filter(user=user, event=event).exists():
         participation = Participation.objects.get(user=user, event=event)
@@ -88,7 +90,7 @@ def event_detail(request, event_id):
         location = "Addresse masquée"
     if request.method == "POST":
         form = ParticipationForm(request.POST)
-        
+
         if form.is_valid():
             message = form.cleaned_data.get('message')
             session_params = event.get_stripe_session_params()
