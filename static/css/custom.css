@@ -1,12 +1,50 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Judson:wght@400;700&display=swap');
 
 h1, h2, h3 {
+    font-family: 'Judson', serif;
     font-weight: bold;
+    color: #333;
+    letter-spacing: 1px;
+    line-height: 1.4;
+}
+
+.hero-image h1 {
+    color: white;
+}
+
+a {
+    text-decoration: none;
+}
+
+h1 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+}
+
+h2 {
+    font-size: 2rem;
+    margin-bottom: 15px;
+}
+
+h3 {
+    font-size: 1.6rem;
+    margin-bottom: 10px;
+}
+
+/* Styles globaux */
+body {
+    background-color: #F5EFE6; /* Fond beige */
+    font-family: 'Source Sans Pro', 'Open Sans', sans-serif; /* Polices mises à jour */
+    color: #333;
 }
 
 #logout {
     color: red !important;
     font-size: 12px;
+}
+
+form.rounded {
+    background-color: white;
 }
 
 .form-check-input {
@@ -26,47 +64,61 @@ a {
     font-weight: bold;
     color: #FC6C85;
 }
+
 .border h2 {
     font-size: 20px;
 }
 
 .block-content {
-    padding-left: 10%;
-    padding-right: 10%;
+
+    padding-left: 5%;
+    padding-right: 5%;
     padding-top: 50px;
     padding-bottom: 100px;
 }
 
-body {
-    background-color: #fff;
-    font-family: 'Roboto', sans-serif;
-    color: #333;
-}
-
+/* Barre de navigation */
 .navbar {
-    background-color: #fff;
-    border-bottom: 1px solid #ddd;
+    background-color: #E9B8B1; /* Couleur rose */
+    border-bottom: 2px solid #333;
 }
 
 .navbar-brand {
     font-weight: bold;
-    color: #FC6C85 !important;
+    color: #333 !important;
+    font-family: 'Source Sans Pro', sans-serif;
 }
 
 .navbar-nav .nav-link {
-    color: #FC6C85 !important;
-    font-weight: bold;
+    color: #333 !important;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 600;
 }
 
 .navbar-nav .nav-link:hover {
-    color: #FF6978 !important;
+    color: #7A5244 !important; /* Brun légèrement plus foncé pour hover */
 }
 
+/* Pied de page */
 footer {
-    background-color: #FC6C85;
+    background-color: #192d5a; /* Fond bleu */
     color: #fff;
     padding: 10px 0;
     font-size: 12px;
+    border-top: 2px solid #333;
+}
+
+footer p, footer ul, footer a {
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+.img-fluid {
+    border: 2px solid #333;
+}
+
+footer h5 {
+    font-family: 'Judson', serif !important;
+    color: #b4dcff !important;
 }
 
 footer .col-md-4:nth-child(1), .col-md-4:nth-child(2) {
@@ -74,6 +126,7 @@ footer .col-md-4:nth-child(1), .col-md-4:nth-child(2) {
     padding-right: 15px;
 }
 
+/* Cartes */
 .card {
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
@@ -86,25 +139,31 @@ footer .col-md-4:nth-child(1), .col-md-4:nth-child(2) {
 }
 
 .card-title {
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Open Sans', sans-serif;
     font-size: 1.5rem;
     font-weight: 700;
     color: #FC6C85;
 }
 
+/* Boutons */
 .btn-primary {
-    background-color: #FC6C85;
-    border: none;
+    background-color: #D8A097; /* Couleur rose */
+    border: 2px border #192d5a;
+    font-weight:bold;
     transition: background-color 0.3s ease;
-    color: white;
-    text-decoration: none;
+    color: #192d5a;
+    font-family: 'Source Sans Pro', sans-serif;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    text-transform: uppercase;
 }
 
 .btn-primary:hover {
-    background-color: #A93F4D;
-    color: #333;
+    background-color: #192d5a;
+    color: #fff;
 }
 
+/* Événements */
 .event-card {
     text-decoration: none;
     color: inherit;
@@ -126,7 +185,7 @@ footer .col-md-4:nth-child(1), .col-md-4:nth-child(2) {
 .event-card-overlay {
     width: 100%;
     padding: 10px;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.7); /* Contraste légèrement amélioré */
     color: #fff;
     text-align: center;
 }
@@ -134,6 +193,7 @@ footer .col-md-4:nth-child(1), .col-md-4:nth-child(2) {
 .event-card-title {
     font-size: 1.25rem;
     font-weight: bold;
+    color: white;
 }
 
 .event-card-date {
@@ -142,6 +202,7 @@ footer .col-md-4:nth-child(1), .col-md-4:nth-child(2) {
     margin-top: 5px;
 }
 
+/* Profils */
 .profile-card {
     text-align: center;
     border: 1px solid #ddd;
@@ -149,6 +210,7 @@ footer .col-md-4:nth-child(1), .col-md-4:nth-child(2) {
     border-radius: 10px;
     background-color: #f9f9f9;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 35px;
 }
 
 .profile-card img {
@@ -168,8 +230,19 @@ footer .col-md-4:nth-child(1), .col-md-4:nth-child(2) {
     color: #666;
 }
 
+/* Logo dans la navbar */
 .navbar img {
     height: 45px !important;
     margin-right: 10px;
 }
-.
+
+.thick-box {
+    border: 2px solid #333 !important;
+    background-color: white;
+    margin-top: 100px;
+}
+
+.thick-box p {
+    font-size: 0.9em;
+    margin-top: 30px;
+}

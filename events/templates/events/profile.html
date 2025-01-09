@@ -12,7 +12,7 @@
                 <h3 class="text-center font-weight-bold">{{ profile.user.username }}</h3>
                 <p class="text-center">{{ profile.description|default:"Aucune description."|linebreaks }}</p>
                 {% if can_edit %}
-                <p><a href="{% url 'edit_profile' profile.user.username %}" class="btn btn-link btn-primary">Éditer mon profil</a></p>
+                <p><a href="{% url 'edit_profile' profile.user.username %}" class="btn btn-primary">Éditer mon profil</a></p>
                 <p>
                     <form action="{% url 'logout' %}" method="post" style="display: inline;">
                         {% csrf_token %}
@@ -32,7 +32,7 @@
                         <a href="{% url 'event_detail' participation.event.id %}" class="event-card">
                             <div class="event-card-image" style="background-image: url('{{ participation.event.image.url }}');">
                                 <div class="event-card-overlay">
-                                    <h5 class="event-card-title">{{ participation.event.title }}</h5>
+                                    <h3 class="event-card-title">{{ participation.event.title }}</h3>
                                     <p class="event-card-date">Le {{ participation.event.date|date:"d/m/Y" }}</p>
                                 </div>
                             </div>
@@ -44,15 +44,15 @@
             </div>
 
             {% if can_edit %}
-                <h3 class="font-weight-bold">Événements que vous organisez</h3>
+                <h3 class="font-weight-bold">Événements organisés</h3>
                 <div class="row">
                     {% for event in organized_events %}
                         <div class="col-md-6 mb-4">
                             <a href="{% url 'event_detail' event.id %}" class="event-card">
                                 <div class="event-card-image" style="background-image: url('{{ event.image.url }}');">
                                     <div class="event-card-overlay">
-                                        <h5 class="event-card-title">{{ event.title }}</h5>
-                                        <p class="event-card-date">Le {{ event.date|date:"d/m/Y" }}</p>
+                                        <h3 class="event-card-title">{{ event.title }}</h3>
+                                        <p class="event-card-date">Le {{ event.date|date:"d/mgit a/Y" }}</p>
                                     </div>
                                 </div>
                             </a>
