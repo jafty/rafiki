@@ -20,6 +20,13 @@
                     <div class="contact-form">
                         <form id="contactForm" enctype="multipart/form-data" name="contactForm" method="post">
                             {% csrf_token %}
+                            {% if form.non_field_errors %}
+                                <div class="alert alert-danger">
+                                    {% for error in form.non_field_errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
                             <div class="mb-3">
                                 <label for="name" class="form-label fw-bold">Nom de l'événement</label>
                                 {{ form.title|add_class:"form-control" }}
@@ -27,6 +34,10 @@
                             <div class="mb-3">
                                 <label for="date" class="form-label fw-bold">Date</label>
                                 {{ form.date|add_class:"form-control" }}
+                            </div>
+                            <div class="mb-3">
+                                <label for="price" class="form-label fw-bold">Prix en euros</label>
+                                {{ form.price|add_class:"form-control" }}
                             </div>
                             <div class="mb-3">
                                 <label for="location" class="form-label fw-bold">Lieu</label>

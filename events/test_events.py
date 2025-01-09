@@ -1,7 +1,13 @@
+import django
+import os
+from rafiki import settings
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'rafiki.settings')
+django.setup()
 from django.test import TestCase
 from django.contrib.auth.models import User
-from .models import Event, Participation, UserProfile
+from events.models import Event, Participation, UserProfile
 from datetime import datetime, timedelta
+from django.utils.timezone import now
 
 
 class UserProfileUnitTests(TestCase):
@@ -30,9 +36,18 @@ class EventUnitTests(TestCase):
         self.event = Event.objects.create(
             title=" Test Event 1",
             description="This is a test event 1",
-            date="2024-12-31 18:00",
+            date= now() + timedelta(days=2),
             location = "Test Location",
             organizer=self.organizer,
+            price=10.00,
+        )
+        self.past_event = Event.objects.create(
+            title=" Test Event 1",
+            description="This is a test event 1",
+            date= now() - timedelta(days=2),
+            location = "Test Location",
+            organizer=self.organizer,
+            price=100.00,
         )
 
     def test_can_manage_if_organizer(self):
@@ -50,6 +65,42 @@ class EventUnitTests(TestCase):
         Then the user can not manage the event
         """
         self.assertFalse(self.event.can_manage(self.participant))
+    
+    def test_cannot_join_event_if_past_due(self):
+        """
+        Given an event 
+        When the event date is anterior to the date of the day
+        Then nobody can join the event
+        """
+        self.assertFalse(self.past_event.is_joinable())
+        self.assertTrue(self.event.is_joinable())
+
+    def test_euros_to_cents_conversion(self):
+        """
+        Given an event 
+        When the price in euros is converted in centimes
+        Then the centime result is 100 times the euros price
+        """
+        self.assertEqual(self.event.get_price_in_cents(), 1000)
+        self.assertEqual(self.past_event.get_price_in_cents(), 10000)
+
+    def test_get_stripe_session_params(self):
+        params = self.event.get_stripe_session_params()
+
+        # Vérifie que les paramètres contiennent les clés attendues
+        self.assertIn("payment_method_types", params)
+        self.assertIn("line_items", params)
+        self.assertIn("mode", params)
+        self.assertIn("success_url", params)
+        self.assertIn("cancel_url", params)
+
+        # Vérifie les valeurs spécifiques
+        self.assertEqual(params["payment_method_types"], ["card"])
+        self.assertEqual(params["line_items"][0]["price_data"]["unit_amount"], 1000)
+        self.assertEqual(params["line_items"][0]["price_data"]["currency"], "eur")
+        self.assertEqual(params["line_items"][0]["price_data"]["product_data"]["name"], self.event.title)
+        self.assertEqual(params["success_url"], f"{settings.BASE_URL}/stripe_success/")
+        self.assertEqual(params["cancel_url"], f"{settings.BASE_URL}/stripe_cancel/")
 
 
 class ParticipationUnitTests(TestCase):
@@ -109,11 +160,6 @@ class ParticipationUnitTests(TestCase):
         with self.assertRaises(ValueError):
             Participation.objects.create(event=self.event, user=self.organizer)
 
-    def test_user_can_see_events_he_joined(self):
-        #creer participations pour un user
-        #user_events_joined()
-        #tester user_events_joined avec la liste des participatins supposées
-        self.assertTrue
 
 
 

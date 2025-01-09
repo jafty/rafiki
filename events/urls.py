@@ -15,6 +15,7 @@ urlpatterns = [
     path('profile/<str:username>/', profile, name='profile'),
     path('profile/<str:username>/edit/', edit_profile, name='edit_profile'),
     path('event/<int:event_id>/edit/', edit_event, name='edit_event'),
+    path('stripe_webhook/', stripe_webhook, name='stripe_webhook'),
 ]
 
 if settings.DEBUG:

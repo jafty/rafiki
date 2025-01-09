@@ -6,6 +6,7 @@ from django.utils.text import slugify
 from django.utils.timezone import now
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
+from rafiki import settings
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
@@ -70,12 +71,51 @@ class Event(models.Model):
     location = models.CharField(max_length=255)
     organizer = models.ForeignKey(User, on_delete=models.CASCADE, related_name="organizers")
     image = models.ImageField(upload_to='event_images/', blank=True, null=True, default="event_images/default-rafiki.jpg")
+    price = models.DecimalField(max_digits=8, decimal_places=2, default=0.00, help_text="Prix en euros")
 
     def can_manage(self, user):
         return self.organizer == user
 
+    def get_price_in_cents(self):
+        return int(self.price * 100)
+
+    def is_joinable(self):
+        return self.date >= now()
+    
+    def get_stripe_session_params(self):
+        """
+        Génère les paramètres nécessaires pour créer une session Stripe Checkout.
+        """
+        return {
+            "payment_method_types": ["card"],
+            "line_items": [
+                {
+                    "price_data": {
+                        "currency": "eur",
+                        "product_data": {"name": self.title},
+                        "unit_amount": self.get_price_in_cents(),
+                    },
+                    "quantity": 1,
+                }
+            ],
+            "mode": "payment",
+            "payment_intent_data": {"capture_method": "manual"},
+            "success_url": f"{settings.BASE_URL}/",
+            "cancel_url": f"{settings.BASE_URL}/",
+        }
+
     def __str__(self):
         return self.title
+    
+    # Followings methods do not need tests since they only use native django functions
+    def get_accepted_participants(self):
+        """Retourne la liste des participants acceptés."""
+        return self.participations.filter(status="accepted")
+
+    def get_pending_participants(self):
+        """Retourne la liste des participants en attente."""
+        return self.participations.filter(status="pending")
+
 
 class EventForm(forms.ModelForm):
 
@@ -86,7 +126,7 @@ class EventForm(forms.ModelForm):
 
     class Meta:
         model = Event
-        fields = ['title', 'description', 'date', 'location', 'is_location_hidden', 'image']
+        fields = ['title', 'description', 'price', 'date', 'location', 'is_location_hidden', 'image',]
 
     def clean_date(self):
         date_str = self.cleaned_data['date']
@@ -109,6 +149,7 @@ class Participation(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="participations")
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=PENDING)
     message = models.TextField(blank=True, null=True, help_text="Message à l'organisateur")
+    stripe_payment_intent = models.CharField(max_length=255, blank=True, null=True, help_text="ID de Stripe PaymentIntent")
 
     def __str__(self):
         return f"{self.user.username} <-> {self.event.title}"

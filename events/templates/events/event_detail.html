@@ -22,6 +22,7 @@
                 <a href="{% url 'profile' event.organizer.username %}">{{ event.organizer }}</a>
             </p>
             <hr class="my-3">
+            <p><b>Prix : {{ event.price }}€</b></p>
             <p>{{ event.description|linebreaks }}</p>
             <hr class="my-3">
             <h2>Participants</h2>
@@ -41,13 +42,15 @@
         <div class="col-md-4">
             <div class="p-3 border rounded">
                 <h2>Détails de l'événement</h2>
-                <p><i class="fas fa-calendar-alt"></i> <strong>Date :</strong> {{ event.date|date:"d/m/Y H:i" }}</p>
+                <p><i class="fas fa-calendar-alt"></i> <strong>Date :</strong> {{ event.date|date:"d/m/Y" }}</p>
                 <p><i class="fas fa-map-marker-alt"></i> <strong>Lieu :</strong> {{ location }}</p>
 
                 {% if is_accepted %}
                     <p class="text-success">Vous participez à cet événement.</p>
                 {% elif is_pending %}
                     <p class="text-warning">Votre demande est en attente.</p>
+                {% elif is_rejected %}
+                    <p class="text-danger">Votre demande a été rejetée.</p>
                 {% elif not can_manage %}
                     <h5>Demande de participation</h5>
                     <form method="post">

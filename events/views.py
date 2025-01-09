@@ -1,9 +1,17 @@
+import stripe
+from django.http import JsonResponse  # Pour renvoyer des réponses JSON
+from django.views.decorators.csrf import csrf_exempt  # Pour désactiver la vérification CSRF sur des vues spécifiques
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
 from .models import Event, Participation, EventForm, UserProfile, UserProfileForm, ParticipationForm, CustomUserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login
+from django.utils.timezone import now
+from rafiki import settings
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
+
 
 @login_required
 def create_event(request):
@@ -19,6 +27,49 @@ def create_event(request):
     return render(request, 'events/create_event.html', {'form': form})
 
 
+@csrf_exempt
+def stripe_webhook(request):
+    payload = request.body
+    sig_header = request.META['HTTP_STRIPE_SIGNATURE']
+    endpoint_secret = settings.STRIPE_WEBHOOK_SECRET
+    print("stripe_webhook")
+    try:
+        stripe_event = stripe.Webhook.construct_event(payload, sig_header, endpoint_secret)
+    except ValueError:
+        return JsonResponse({"error": "Invalid payload"}, status=400)
+    except stripe.error.SignatureVerificationError:
+        return JsonResponse({"error": "Invalid signature"}, status=400)
+
+    # Gestion des événements Stripe
+    if stripe_event['type'] == "checkout.session.completed":
+        session = stripe_event['data']['object']
+        print(session)
+        # Récupérer les métadonnées
+        user_id = session['metadata']['user_id']
+        event_id = session['metadata']['event_id']
+        message = session['metadata']['message']
+
+        # Récupérer les objets User et Event
+        user = User.objects.get(id=user_id)
+        event = Event.objects.get(id=event_id)
+        print("supposed to create participation")
+        print(user_id)
+        # Créer la participation
+        payment_intent = stripe.PaymentIntent.retrieve(session['payment_intent'])
+        print("PAYMENT INTENT")
+        print(payment_intent)
+        if payment_intent["status"] == "requires_capture":
+            Participation.objects.get_or_create(
+                event=event,
+                user=user,
+                message=message,  # Enregistre le message
+                status=Participation.PENDING,
+                stripe_payment_intent=session['payment_intent'],
+            )
+
+    return JsonResponse({"status": "success"}, status=200)
+
+
 @login_required
 def event_detail(request, event_id):
     user = request.user
@@ -32,19 +83,26 @@ def event_detail(request, event_id):
         participation = Participation.objects.get(user=user, event=event)
         is_accepted = participation.is_accepted()
         is_pending = participation.is_pending()
+        is_rejected = participation.is_rejected()
     if not is_accepted and not can_manage and event.is_location_hidden:
         location = "Addresse masquée"
     if request.method == "POST":
         form = ParticipationForm(request.POST)
+        
         if form.is_valid():
             message = form.cleaned_data.get('message')
-            Participation.objects.create(
-                event=event,
-                user=user,
-                status=Participation.PENDING,
-                message=message
+            session_params = event.get_stripe_session_params()
+            session = stripe.checkout.Session.create(
+                **session_params,
+                metadata={
+                    'user_id': user.id,
+                    'event_id': event.id,
+                    'message': message,  # Ajoute le message ici
+                }
             )
-        return redirect('event_detail', event_id=event.id)
+            print("SESSION")
+            print(session)
+        return redirect(session.url)
     else:
         form = ParticipationForm()
 
@@ -55,6 +113,7 @@ def event_detail(request, event_id):
         'is_accepted': is_accepted,
         'location': location,
         'is_pending': is_pending,
+        'is_rejected': is_rejected,
         'form': form,
     })
 
@@ -67,9 +126,21 @@ def manage_participants(request, event_id):
         user_id = request.POST.get('user_id')
         participation = get_object_or_404(Participation, event=event, user_id=user_id)
         if action == "accept":
-            participation.accept_participant()
+            try:
+                stripe.PaymentIntent.capture(participation.stripe_payment_intent)
+                participation.accept_participant()
+            except stripe.error.StripeError as e:
+                # Gérer les erreurs de capture Stripe
+                print(f"Erreur lors de la capture du paiement : {e}")
+                return JsonResponse({'error': 'Erreur lors de la capture du paiement.'}, status=400)
         elif action == "reject":
-            participation.reject_participant()
+            try:
+                stripe.PaymentIntent.cancel(participation.stripe_payment_intent)
+                participation.reject_participant()
+            except stripe.error.StripeError as e:
+                # Gérer les erreurs d'annulation Stripe
+                print(f"Erreur lors de l'annulation du paiement : {e}")
+                return JsonResponse({'error': 'Erreur lors de l\'annulation du paiement.'}, status=400)
         return redirect('manage_participants', event_id=event.id)
     pending_participants = event.participations.filter(status=Participation.PENDING)
     return render(request, 'events/manage_participants.html', {
@@ -126,7 +197,8 @@ def edit_profile(request, username):
 
 @login_required
 def event_list(request):
-    events = Event.objects.all()
+    events = [event for event in Event.objects.all() if event.is_joinable()]
+    events = sorted(events, key=lambda event: event.date)
     return render(request, 'events/event_list.html', {'events': events})
 
 
@@ -160,3 +232,5 @@ def register(request):
     else:
         form = CustomUserCreationForm()
     return render(request, 'accounts/register.html', {'form': form})
+
+
