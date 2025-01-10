@@ -193,3 +193,15 @@ class ParticipationForm(forms.ModelForm):
     class Meta:
         model = Participation
         fields = ['message']
+
+
+class Notification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
+    event = models.ForeignKey('Event', on_delete=models.CASCADE, null=True, blank=True)
+    message = models.TextField()
+    created_at = models.DateTimeField(default=now)
+    is_read = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Notification for {self.user.username}: {self.message[:30]}..."
+    

@@ -7,16 +7,27 @@
     <h1>Modifier l'événement</h1>
     <form id="contactForm" enctype="multipart/form-data" name="contactForm" method="post">
         {% csrf_token %}
+        {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+                {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
         <div class="mb-3">
             <label for="name" class="form-label fw-bold">Nom de l'événement</label>
             {{ form.title|add_class:"form-control" }}
         </div>
         <div class="mb-3">
             <label for="date" class="form-label fw-bold">Date</label>
-            {{ form.date|add_class:"form-control" }}
+            {{ form.date|add_class:"form-control"|attr:"readonly:readonly" }}
         </div>
         <div class="mb-3">
-            <label for="location" class="form-label fw-bold">Lieu</label>
+            <label for="date" class="form-label fw-bold">Prix</label>
+            {{ form.price|add_class:"form-control" }}
+        </div>
+        <div class="mb-3">
+            <label for="location" class="form-label fw-bold">Adresse</label>
             {{ form.location|add_class:"form-control" }}
         </div>
         <div class="mb-3">
@@ -31,7 +42,7 @@
             <label for="is_location_hidden" class="form-check-label fw-bold">Adresse masquée ?</label>
             {{ form.is_location_hidden|add_class:"form-check-input" }}
         </div>
-        <button type="submit" class="btn btn-primary w-25">Créer</button>
+        <button type="submit" class="btn btn-primary w-25">Modifier l'événement</button>
     </form>
 </div>
 {% endblock %}

@@ -34,6 +34,14 @@
 
                     {% if user.is_authenticated %}
                         <li class="nav-item">
+                            <a class="nav-link" href="{% url 'notifications_list' %}">
+                                🔔 Notifications
+                                {% if unread_notifications_count > 0 %}
+                                    <span class="badge bg-danger">{{ unread_notifications_count }}</span>
+                                {% endif %}
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="{% url 'profile' user.username %}">Profil</a>
                         </li>
 

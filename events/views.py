@@ -4,7 +4,7 @@ from django.views.decorators.csrf import csrf_exempt  # Pour désactiver la vér
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
-from .models import Event, Participation, EventForm, UserProfile, UserProfileForm, ParticipationForm, CustomUserCreationForm
+from .models import Event, Participation, EventForm, UserProfile, UserProfileForm, ParticipationForm, CustomUserCreationForm, Notification
 from django.contrib.auth.models import User
 from django.contrib.auth import login
 from django.utils.timezone import now
@@ -66,7 +66,12 @@ def stripe_webhook(request):
                 status=Participation.PENDING,
                 stripe_payment_intent=session['payment_intent'],
             )
-
+            if not Notification.objects.filter(event=event, message__icontains="nouvelles demandes").exists():
+                Notification.objects.create(
+                    user=event.organizer,
+                    event=event,
+                    message=f"Vous avez de nouvelles demandes de participation pour l'événement '{event.title}'."
+                )
     return JsonResponse({"status": "success"}, status=200)
 
 
@@ -75,22 +80,20 @@ def event_detail(request, event_id):
     user = request.user
     event = get_object_or_404(Event, id=event_id)
     participations = Participation.objects.filter(event=event, status=Participation.ACCEPTED)
-    can_manage = event.can_manage(user)
+    # TODO : remove those false shit taht's crazy work
+    location = event.location
     is_accepted = False
     is_pending = False
     is_rejected = False
-    # TODO : remove those false shit taht's crazy work
-    location = event.location
     if Participation.objects.filter(user=user, event=event).exists():
         participation = Participation.objects.get(user=user, event=event)
+        is_rejected = participation.is_rejected()
         is_accepted = participation.is_accepted()
         is_pending = participation.is_pending()
-        is_rejected = participation.is_rejected()
-    if not is_accepted and not can_manage and event.is_location_hidden:
+    if not is_accepted and not event.can_manage(user) and event.is_location_hidden:
         location = "Addresse masquée"
     if request.method == "POST":
         form = ParticipationForm(request.POST)
-
         if form.is_valid():
             message = form.cleaned_data.get('message')
             session_params = event.get_stripe_session_params()
@@ -111,7 +114,7 @@ def event_detail(request, event_id):
     return render(request, 'events/event_detail.html', {
         'event': event,
         'participations': participations,
-        'can_manage': can_manage,
+        'can_manage': event.can_manage(user),
         'is_accepted': is_accepted,
         'location': location,
         'is_pending': is_pending,
@@ -131,6 +134,11 @@ def manage_participants(request, event_id):
             try:
                 stripe.PaymentIntent.capture(participation.stripe_payment_intent)
                 participation.accept_participant()
+                Notification.objects.create(
+                    user=participation.user,
+                    event=event,
+                    message=f"Vous avez été accepté(e) à l'événement '{event.title}'."
+                )
             except stripe.error.StripeError as e:
                 # Gérer les erreurs de capture Stripe
                 print(f"Erreur lors de la capture du paiement : {e}")
@@ -139,6 +147,11 @@ def manage_participants(request, event_id):
             try:
                 stripe.PaymentIntent.cancel(participation.stripe_payment_intent)
                 participation.reject_participant()
+                Notification.objects.create(
+                    user=participation.user,
+                    event=event,
+                    message=f"Vous avez été refusé(e) pour l'événement '{event.title}'."
+                )
             except stripe.error.StripeError as e:
                 # Gérer les erreurs d'annulation Stripe
                 print(f"Erreur lors de l'annulation du paiement : {e}")
@@ -216,11 +229,20 @@ def edit_event(request, event_id):
         if form.is_valid():
             form.save()
             return redirect('event_detail', event_id=event.id)
+        else:
+            render(request, 'events/edit_event.html', {'form': form, 'event': event})
     else:
-        form = EventForm(instance=event)
+        form = EventForm(initial={
+            'title': event.title,
+            'description': event.description,
+            'location': event.location,
+            'date': event.date,  # Pré-remplit le champ date
+            'price': event.price,
+            'is_location_hidden': event.is_location_hidden,
+        })
         if event.date:
             form.initial['date'] = event.date.strftime('%d/%m/%Y')
-    return render(request, 'events/edit_event.html', {'form': form})
+    return render(request, 'events/edit_event.html', {'form': form, 'event': event})
 
 
 
@@ -235,4 +257,8 @@ def register(request):
         form = CustomUserCreationForm()
     return render(request, 'accounts/register.html', {'form': form})
 
+@login_required
+def notifications_list(request):
+    notifications = request.user.notifications.all().order_by('-created_at')
+    return render(request, 'notifications/list.html', {'notifications': notifications})
 
