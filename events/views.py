@@ -7,7 +7,6 @@ from django.contrib.auth.decorators import login_required
 from .models import Event, Participation, EventForm, UserProfile, UserProfileForm, ParticipationForm, CustomUserCreationForm, Notification
 from django.contrib.auth.models import User
 from django.contrib.auth import login
-from django.utils.timezone import now
 from rafiki import settings
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -29,6 +28,7 @@ def create_event(request):
 
 @csrf_exempt
 def stripe_webhook(request):
+    # STRIPE HANDLING
     payload = request.body
     sig_header = request.META['HTTP_STRIPE_SIGNATURE']
     endpoint_secret = settings.STRIPE_WEBHOOK_SECRET
@@ -40,24 +40,15 @@ def stripe_webhook(request):
     except stripe.error.SignatureVerificationError:
         return JsonResponse({"error": "Invalid signature"}, status=400)
 
-    # Gestion des événements Stripe
+    # COMPLETED CHECKOUT ACTIONS
     if stripe_event['type'] == "checkout.session.completed":
         session = stripe_event['data']['object']
-        print(session)
-        # Récupérer les métadonnées
         user_id = session['metadata']['user_id']
         event_id = session['metadata']['event_id']
         message = session['metadata']['message']
-
-        # Récupérer les objets User et Event
         user = User.objects.get(id=user_id)
         event = Event.objects.get(id=event_id)
-        print("supposed to create participation")
-        print(user_id)
-        # Créer la participation
         payment_intent = stripe.PaymentIntent.retrieve(session['payment_intent'])
-        print("PAYMENT INTENT")
-        print(payment_intent)
         if payment_intent["status"] == "requires_capture":
             Participation.objects.get_or_create(
                 event=event,
@@ -66,12 +57,11 @@ def stripe_webhook(request):
                 status=Participation.PENDING,
                 stripe_payment_intent=session['payment_intent'],
             )
-            if not Notification.objects.filter(event=event, message__icontains="nouvelles demandes").exists():
-                Notification.objects.create(
-                    user=event.organizer,
-                    event=event,
-                    message=f"Vous avez de nouvelles demandes de participation pour l'événement '{event.title}'."
-                )
+            Notification.objects.create(
+                user=event.organizer,
+                event=event,
+                message=f"Vous avez de nouvelles demandes de participation pour l'événement '{event.title}'."
+            )
     return JsonResponse({"status": "success"}, status=200)
 
 
@@ -80,16 +70,10 @@ def event_detail(request, event_id):
     user = request.user
     event = get_object_or_404(Event, id=event_id)
     participations = Participation.objects.filter(event=event, status=Participation.ACCEPTED)
-    # TODO : remove those false shit taht's crazy work
-    location = event.location
-    is_accepted = False
-    is_pending = False
-    is_rejected = False
-    if Participation.objects.filter(user=user, event=event).exists():
-        participation = Participation.objects.get(user=user, event=event)
-        is_rejected = participation.is_rejected()
-        is_accepted = participation.is_accepted()
-        is_pending = participation.is_pending()
+    participation = Participation.objects.filter(user=user, event=event).first()
+    is_accepted = participation.is_accepted() if participation else False
+    is_pending = participation.is_pending() if participation else False
+    is_rejected = participation.is_rejected() if participation else False
     if not is_accepted and not event.can_manage(user) and event.is_location_hidden:
         location = "Addresse masquée"
     if request.method == "POST":
@@ -105,8 +89,6 @@ def event_detail(request, event_id):
                     'message': message,  # Ajoute le message ici
                 }
             )
-            print("SESSION")
-            print(session)
         return redirect(session.url)
     else:
         form = ParticipationForm()
@@ -116,7 +98,7 @@ def event_detail(request, event_id):
         'participations': participations,
         'can_manage': event.can_manage(user),
         'is_accepted': is_accepted,
-        'location': location,
+        'location': event.location,
         'is_pending': is_pending,
         'is_rejected': is_rejected,
         'form': form,
@@ -258,7 +240,10 @@ def register(request):
     return render(request, 'accounts/register.html', {'form': form})
 
 @login_required
-def notifications_list(request):
+def notifications(request):
+    # Récupère les notifications de l'utilisateur
     notifications = request.user.notifications.all().order_by('-created_at')
-    return render(request, 'notifications/list.html', {'notifications': notifications})
+    # Marque toutes les notifications comme lues
+    notifications.filter(is_read=False).update(is_read=True)
+    return render(request, 'events/notifications.html', {'notifications': notifications})
 

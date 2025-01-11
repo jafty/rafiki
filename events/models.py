@@ -81,7 +81,7 @@ class Event(models.Model):
 
     def is_joinable(self):
         return self.date >= now()
-    
+
     def get_stripe_session_params(self):
         """
         Génère les paramètres nécessaires pour créer une session Stripe Checkout.
@@ -106,7 +106,7 @@ class Event(models.Model):
 
     def __str__(self):
         return self.title
-    
+
     # Followings methods do not need tests since they only use native django functions
     def get_accepted_participants(self):
         """Retourne la liste des participants acceptés."""
@@ -201,7 +201,6 @@ class Notification(models.Model):
     message = models.TextField()
     created_at = models.DateTimeField(default=now)
     is_read = models.BooleanField(default=False)
-
+    # TODO: put more logic in model
     def __str__(self):
         return f"Notification for {self.user.username}: {self.message[:30]}..."
-    
