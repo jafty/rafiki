@@ -36,6 +36,12 @@
                     <label for="password2" class="form-label fw-bold">Confirmation du mot de passe</label>
                     {{ form.password2|add_class:"form-control" }}
                 </div>
+                <div class="mb-3 form-check d-flex align-items-center">
+                    {{ form.consent|add_class:"form-check-input me-2" }}
+                    <label for="id_consent" class="form-check-label mb-0">
+                        J'accepte les <a href="{% url 'cgu' %}" target="_blank">Conditions Générales d'Utilisation</a> et la <a href="{% url 'confidentialite' %}" target="_blank">Politique de Confidentialité</a>.
+                    </label>
+                </div>
                 <button type="submit" class="btn btn-primary w-100">S'inscrire</button>
             </form>
         </div>

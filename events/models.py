@@ -7,6 +7,8 @@ from django.utils.timezone import now
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 from rafiki import settings
+from django.core.mail import send_mail
+from django.core.validators import RegexValidator
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
@@ -15,6 +17,8 @@ class UserProfile(models.Model):
     birth_date = models.DateField(blank=True, null=True)
     created_at = models.DateTimeField(default=now)
     slug = models.SlugField(unique=True, blank=True)
+    consent_date = models.DateTimeField(null=True, blank=True, default=None)
+    is_certified = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -36,18 +40,19 @@ class UserProfileForm(forms.ModelForm):
         }),
         label="Date de naissance"
     )
-
     class Meta:
         model = UserProfile
         fields = ['avatar', 'description', 'birth_date']
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True, widget=forms.EmailInput(attrs={'class': 'form-control'}))
-
+    consent = forms.BooleanField(
+        label="J'accepte les <a href='/cgu/' target='_blank'>Conditions Générales d'Utilisation</a> et la <a href='/confidentialite/' target='_blank'>Politique de Confidentialité</a>.",
+        required=True,
+    )
     class Meta:
         model = User
         fields = ['username', 'email', 'password1', 'password2']
-
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
@@ -67,11 +72,22 @@ class Event(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
     date = models.DateTimeField()
+    time = models.TimeField(
+        verbose_name="Heure",
+        validators=[RegexValidator(
+            regex=r'^([01]\d|2[0-3]):([0-5]\d)$',
+            message="L'heure doit être au format HH:MM (24 heures)."
+        )],
+        help_text="Veuillez entrer l'heure au format HH:MM."
+    )
     is_location_hidden = models.BooleanField(default=True)
     location = models.CharField(max_length=255)
     organizer = models.ForeignKey(User, on_delete=models.CASCADE, related_name="organizers")
     image = models.ImageField(upload_to='event_images/', blank=True, null=True, default="event_images/default-rafiki.jpg")
     price = models.DecimalField(max_digits=8, decimal_places=2, default=0.00, help_text="Prix en euros")
+    contact = models.TextField()
+    activity_type = models.CharField(max_length=255)
+
 
     def can_manage(self, user):
         return self.organizer == user
@@ -81,6 +97,23 @@ class Event(models.Model):
 
     def is_joinable(self):
         return self.date >= now()
+
+    def notify_organizer(self):
+        print("in notify_organizer")
+        print(self.organizer.email)
+        send_mail(
+            f"You have new demands for {self.title}",
+            f"You have new demands for {self.title}, please visit your event to\
+             handle those requests!<br><br>Team Zanmi",
+            settings.DEFAULT_FROM_EMAIL,
+            [self.organizer.email],
+        )
+        print("before notif creation")
+        Notification.objects.create(
+            user=self.organizer,
+            event=self,
+            message=f"You have new demands for {self.title}"
+        )
 
     def get_stripe_session_params(self):
         """
@@ -100,8 +133,8 @@ class Event(models.Model):
             ],
             "mode": "payment",
             "payment_intent_data": {"capture_method": "manual"},
-            "success_url": f"{settings.BASE_URL}/",
-            "cancel_url": f"{settings.BASE_URL}/",
+            "success_url": f"{settings.BASE_URL}/stripe_success/",
+            "cancel_url": f"{settings.BASE_URL}/stripe_cancel/",
         }
 
     def __str__(self):
@@ -126,7 +159,19 @@ class EventForm(forms.ModelForm):
 
     class Meta:
         model = Event
-        fields = ['title', 'description', 'price', 'date', 'location', 'is_location_hidden', 'image',]
+        fields = ['title', 'description', 'price', 'date', 'time', 'location', 'activity_type', 'is_location_hidden', 'contact',  'image',]
+        widgets = {
+            'time': forms.TimeInput(attrs={
+                'type': 'time',
+                'class': 'form-control',
+                'placeholder': 'HH:MM'
+            }, format='%H:%M'),
+            'contact': forms.TimeInput(attrs={
+                'type': 'contact',
+                'class': 'form-control',
+                'placeholder': 'Comment vous contacter ?'
+            }),
+        }
 
     def clean_date(self):
         date_str = self.cleaned_data['date']
@@ -171,6 +216,35 @@ class Participation(models.Model):
     def is_pending(self):
         return self.status == self.PENDING
 
+    def notify_user(self, action=None):
+        if action == "reject":
+            send_mail(
+                f"Your demand for {self.event.title} has been rejected",
+                "Sorry, but your request to join {self.event.title} has been rejected.\
+                You can asj to join to our other events  <br><br>Team Zanmi",
+                settings.DEFAULT_FROM_EMAIL,
+                [self.user.email]
+            )
+            Notification.objects.create(
+                user=self.user,
+                event=self.event,
+                message=f"Your demand for {self.event.title} has been rejected"
+            )
+        else:
+            send_mail(
+                f"Your demand for {self.event.title} has been accepted",
+                "Congrats! You have been accepted to the event {self.event.title}.<br>\
+                Here is the location of the event, that you can find on our website : {self.event.location}\
+                <br><br>Team Zanmi",
+                settings.DEFAULT_FROM_EMAIL,
+                [self.user.email]
+            )
+            Notification.objects.create(
+                user=self.user,
+                event=self.event,
+                message=f"Your demand for {self.event.title} has been accepted"
+            )
+
     class Meta:
         unique_together = ('event', 'user')
 
@@ -201,6 +275,6 @@ class Notification(models.Model):
     message = models.TextField()
     created_at = models.DateTimeField(default=now)
     is_read = models.BooleanField(default=False)
-    # TODO: put more logic in model
+
     def __str__(self):
         return f"Notification for {self.user.username}: {self.message[:30]}..."
