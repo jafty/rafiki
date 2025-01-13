@@ -219,6 +219,12 @@ def event_list(request):
     return render(request, 'events/event_list.html', {'events': events})
 
 
+def event_list_fr(request):
+    events = [event for event in Event.objects.all() if event.is_joinable()]
+    events = sorted(events, key=lambda event: event.date)
+    return render(request, 'events/event_list_fr.html', {'events': events})
+
+
 @login_required
 def edit_event(request, event_id):
     event = get_object_or_404(Event, id=event_id)

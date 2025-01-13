@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 {% load widget_tweaks %}
-{% block title %}Modifier l'événement{% endblock %}
+{% block title %}Edit Event{% endblock %}
 
 {% block content %}
-<div class=" mt-4">
-    <h1>Modifier l'événement</h1>
+<div class="mt-4">
+    <h1>Edit Event</h1>
     <form id="contactForm" enctype="multipart/form-data" name="contactForm" method="post">
         {% csrf_token %}
         {% if form.non_field_errors %}
@@ -15,7 +15,7 @@
             </div>
         {% endif %}
         <div class="mb-3">
-            <label for="name" class="form-label fw-bold">Nom de l'événement</label>
+            <label for="name" class="form-label fw-bold">Event Name</label>
             {{ form.title|add_class:"form-control" }}
         </div>
         <div class="mb-3">
@@ -23,19 +23,19 @@
             {{ form.date|add_class:"form-control"|attr:"readonly:readonly" }}
         </div>
         <div class="mb-3">
-            <label for="time" class="form-label fw-bold">Heure</label>
+            <label for="time" class="form-label fw-bold">Time</label>
             {{ form.time|add_class:"form-control" }}
         </div>
         <div class="mb-3">
-            <label for="date" class="form-label fw-bold">Prix</label>
+            <label for="price" class="form-label fw-bold">Price</label>
             {{ form.price|add_class:"form-control" }}
         </div>
         <div class="mb-3">
-            <label for="location" class="form-label fw-bold">Adresse</label>
+            <label for="location" class="form-label fw-bold">Address</label>
             {{ form.location|add_class:"form-control" }}
         </div>
         <div class="mb-3">
-            <label for="contact" class="form-label fw-bold">Comment vous contacter</label>
+            <label for="contact" class="form-label fw-bold">How to Contact You</label>
             {{ form.contact|add_class:"form-control" }}
         </div>
         <div class="mb-3">
@@ -43,7 +43,7 @@
             {{ form.description|add_class:"form-control" }}
         </div>
         <div class="mb-3">
-            <label for="activity_type" class="form-label fw-bold">Type d'activité</label>
+            <label for="activity_type" class="form-label fw-bold">Activity Type</label>
             {{ form.activity_type|add_class:"form-control" }}
         </div>
         <div class="mb-3">
@@ -51,11 +51,10 @@
             {{ form.image|add_class:"form-control" }}
         </div>
         <div class="mb-3">
-            <label for="is_location_hidden" class="form-check-label fw-bold">Adresse masquée ?</label>
+            <label for="is_location_hidden" class="form-check-label fw-bold">Hide Address?</label>
             {{ form.is_location_hidden|add_class:"form-check-input" }}
         </div>
-  
-        <button type="submit" class="btn btn-primary w-25">Modifier l'événement</button>
+        <button type="submit" class="btn btn-primary w-25">Save Changes</button>
     </form>
 </div>
 {% endblock %}

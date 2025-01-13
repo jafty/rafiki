@@ -1,16 +1,15 @@
 {% extends 'base.html' %}
 {% load widget_tweaks %}
 
-{% block title %}Créer un événement{% endblock %}
+{% block title %}Create an Event{% endblock %}
 
 {% block content %}
-<!--====== Start Contact Section ======-->
 <section class="contact-section pt-115 pb-100">
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
                 <div class="section-title section-title-left mb-50">
-                    <h2>Créer un événement</h2>
+                    <h2>Create an Event</h2>
                 </div>
             </div>
         </div>
@@ -28,7 +27,7 @@
                                 </div>
                             {% endif %}
                             <div class="mb-3">
-                                <label for="name" class="form-label fw-bold">Nom de l'événement</label>
+                                <label for="name" class="form-label fw-bold">Event Name</label>
                                 {{ form.title|add_class:"form-control" }}
                             </div>
                             <div class="mb-3">
@@ -36,19 +35,19 @@
                                 {{ form.date|add_class:"form-control" }}
                             </div>
                             <div class="mb-3">
-                                <label for="time" class="form-label fw-bold">Heure</label>
+                                <label for="time" class="form-label fw-bold">Time</label>
                                 {{ form.time|add_class:"form-control" }}
                             </div>
                             <div class="mb-3">
-                                <label for="price" class="form-label fw-bold">Prix en euros</label>
+                                <label for="price" class="form-label fw-bold">Price in Euros</label>
                                 {{ form.price|add_class:"form-control" }}
                             </div>
                             <div class="mb-3">
-                                <label for="location" class="form-label fw-bold">Lieu</label>
+                                <label for="location" class="form-label fw-bold">Location</label>
                                 {{ form.location|add_class:"form-control" }}
                             </div>
                             <div class="mb-3">
-                                <label for="activity_type" class="form-label fw-bold">Type d'activité</label>
+                                <label for="activity_type" class="form-label fw-bold">Activity Type</label>
                                 {{ form.activity_type|add_class:"form-control" }}
                             </div>
                             <div class="mb-3">
@@ -56,7 +55,7 @@
                                 {{ form.description|add_class:"form-control" }}
                             </div>
                             <div class="mb-3">
-                                <label for="contact" class="form-label fw-bold">Comment vous contacter</label>
+                                <label for="contact" class="form-label fw-bold">How to Contact You</label>
                                 {{ form.contact|add_class:"form-control" }}
                             </div>
                             <div class="mb-3">
@@ -64,17 +63,15 @@
                                 {{ form.image|add_class:"form-control" }}
                             </div>
                             <div class="mb-3">
-                                <label for="is_location_hidden" class="form-check-label fw-bold">Adresse masquée ?</label>
+                                <label for="is_location_hidden" class="form-check-label fw-bold">Hide Address?</label>
                                 {{ form.is_location_hidden|add_class:"form-check-input" }}
                             </div>
-                            <button type="submit" class="btn btn-primary w-25">Créer</button>
+                            <button type="submit" class="btn btn-primary w-25">Create</button>
                         </form>
-                        
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-<!--====== End Contact Section ======-->
 {% endblock %}

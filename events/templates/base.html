@@ -1,11 +1,11 @@
 {% load static %}
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rafiki - {% block title %}{% endblock %}</title>
+    <title>Zanmi - {% block title %}{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/custom.css' %}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
@@ -19,7 +19,7 @@
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
             <a class="navbar-brand d-flex align-items-center" href="/">
-                <img src="{% static 'images/logo.png' %}" alt="Rafiki Logo" style="height: 40px; margin-right: 10px;">
+                <img src="{% static 'images/logo.png' %}" alt="Zanmi Logo" style="height: 40px; margin-right: 10px;">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -27,7 +27,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/">Accueil</a>
+                        <a class="nav-link" href="/">Home</a>
                     </li>
 
                     {% if user.is_authenticated %}
@@ -40,15 +40,15 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'profile' user.username %}">Profil</a>
+                            <a class="nav-link" href="{% url 'profile' user.username %}">Profile</a>
                         </li>
 
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'login' %}">Connexion</a>
+                            <a class="nav-link" href="{% url 'login' %}">Log In</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'register' %}">Inscription</a>
+                            <a class="nav-link" href="{% url 'register' %}">Sign Up</a>
                         </li>
                     {% endif %}
                 </ul>
@@ -60,13 +60,22 @@
     <!-- Hero Image Section -->
     <div class="hero-image">
         <div class="hero-overlay">
-            <h1 class="fw-bold">Explore le monde... Sans prendre l'avion !</h1>
-            <p>Rencontre des personnes venues des quatre coins du monde, pratique ton anglais et découvre ta ville sous un nouvel angle.</p>
-            <a href="/event/create/" class="btn btn-primary btn-lg mt-3">Rencontrer des étrangers</a>
+            <h1 class="fw-bold">Feel at home in Toulouse, wherever you’re from.</h1>
+            <p>Zanmi connects you with like-minded people for meaningful encounters and unforgettable adventures in the heart of the Pink City.</p>
+            <a href="/event/3/" class="btn btn-primary btn-lg mt-3">Join our next Event</a>
         </div>
     </div>
     {% endif %}
-
+    {% if request.resolver_match.url_name == 'event_list_fr' %}
+    <!-- Hero Image Section -->
+    <div class="hero-image">
+        <div class="hero-overlay">
+            <h1 class="fw-bold">Explore le monde... Sans prendre l'avion !</h1>
+            <p>Rencontre des personnes venues des quatre coins du monde, pratique ton anglais et découvre ta ville sous un nouvel angle.</p>
+            <a href="/event/3/" class="btn btn-primary btn-lg mt-3">Participe à la prochaine sortie</a>
+        </div>
+    </div>
+    {% endif %}
     <!-- Main Content -->
     <main class="wide-container mt-4">
         {% block content %}{% endblock %}
@@ -78,131 +87,129 @@
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="heading1">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="false" aria-controls="collapse1">
-                            <span class="faq-plus-icon">+</span> Zanmi, qu'est-ce que c'est ?
+                            <span class="faq-plus-icon">+</span> What is Zanmi?
                         </button>
                     </h2>
                     <div id="collapse1" class="accordion-collapse collapse" aria-labelledby="heading1" data-bs-parent="#faqAccordion">
                         <div class="accordion-body">
-                            Zanmi est une plateforme qui permet aux Toulousains et aux expatriés de se retrouver, d’échanger leurs cultures et de vivre des expériences uniques à travers la ville. Que vous soyez de passage ou résident, Zanmi vous propose des événements qui combinent découverte, convivialité et rencontres enrichissantes.
+                            Zanmi is a platform that connects locals and expats in Toulouse to share their cultures and enjoy unique experiences throughout the city. Whether you're visiting or a resident, Zanmi offers events that combine discovery, socializing, and enriching encounters.
                         </div>
                     </div>
                 </div>
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="heading2">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
-                            <span class="faq-plus-icon">+</span> Quel type d’événements sont organisés ?
+                            <span class="faq-plus-icon">+</span> What types of events are organized?
                         </button>
                     </h2>
                     <div id="collapse2" class="accordion-collapse collapse" aria-labelledby="heading2" data-bs-parent="#faqAccordion">
                         <div class="accordion-body">
-                            Zanmi propose une large variété d’événements pour satisfaire tous les goûts : sorties sociales, activités culturelles, sports et bien-être, et rencontres thématiques. Chaque événement est pensé pour créer des moments mémorables et adaptés aux préférences des participants.
+                            Zanmi offers a wide variety of events to suit all tastes: social outings, cultural activities, sports and wellness, and themed meetups. Every event is designed to create memorable moments tailored to participants' preferences.
                         </div>
                     </div>
                 </div>
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="heading3">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
-                            <span class="faq-plus-icon">+</span> C’est gratuit ? Comment participer à un événement ?
+                            <span class="faq-plus-icon">+</span> Is it free? How can I join an event?
                         </button>
                     </h2>
                     <div id="collapse3" class="accordion-collapse collapse" aria-labelledby="heading3" data-bs-parent="#faqAccordion">
                         <div class="accordion-body">
-                            Les événements proposés sur la plateforme sont payants, afin de couvrir les frais de gestion, de rémunérer les organisateurs et d’assurer une expérience de qualité. Cependant, Zanmi met à disposition un groupe WhatsApp où tout le monde peut organiser des sorties gratuitement et de manière spontanée.<br><br>
-                            Pour participer à un événement, rien de plus simple :<br>
-                            1. Inscrivez-vous sur la plateforme en créant un compte.<br>
-                            2. Consultez la liste des événements disponibles et sélectionnez celui qui vous intéresse.<br>
-                            3. Cliquez sur "Participer", effectuez le paiement sécurisé et attendez la confirmation de l’organisateur.<br>
-                            4. Vous recevrez ensuite toutes les informations nécessaires (lieu, heure, etc.) pour rejoindre l’événement.<br><br>
-                            Une fois inscrit, préparez-vous à passer un excellent moment avec d’autres participants !
+                            Events on the platform are paid to cover management costs, reward organizers, and ensure a quality experience. However, Zanmi provides a WhatsApp group where everyone can organize free and spontaneous meetups.<br><br>
+                            Joining an event is simple:<br>
+                            1. Sign up on the platform by creating an account.<br>
+                            2. Browse the list of available events and select one that interests you.<br>
+                            3. Click "Join," complete the secure payment, and wait for the organizer's confirmation.<br>
+                            4. You will then receive all the necessary details (location, time, etc.) to attend the event.<br><br>
+                            Once registered, get ready to have an amazing time with other participants!
                         </div>
                     </div>
                 </div>
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="heading4">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapse4">
-                            <span class="faq-plus-icon">+</span> Pourrai-je voir qui participe aux événements ?
+                            <span class="faq-plus-icon">+</span> Can I see who is attending the events?
                         </button>
                     </h2>
                     <div id="collapse4" class="accordion-collapse collapse" aria-labelledby="heading4" data-bs-parent="#faqAccordion">
                         <div class="accordion-body">
-                            Oui, chaque événement affiche la liste des participants, avec un aperçu de leurs profils (photo, prénom, âge et centres d’intérêt). Cela permet de savoir avec qui vous partagerez ce moment et d’instaurer un climat convivial avant même l’événement.
+                            Yes, each event displays a list of participants, with an overview of their profiles (photo, first name, age, and interests). This allows you to know who you'll be sharing the moment with and fosters a friendly atmosphere even before the event.
                         </div>
                     </div>
                 </div>
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="heading5">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse5" aria-expanded="false" aria-controls="collapse5">
-                            <span class="faq-plus-icon">+</span> Qui organise les événements ?
+                            <span class="faq-plus-icon">+</span> Who organizes the events?
                         </button>
                     </h2>
                     <div id="collapse5" class="accordion-collapse collapse" aria-labelledby="heading5" data-bs-parent="#faqAccordion">
                         <div class="accordion-body">
-                            Les événements sont organisés par des personnes triées sur le volet. Chaque organisateur est sélectionné pour son expérience, son sérieux et son envie de créer des moments uniques et chaleureux. Zanmi accompagne également ces organisateurs pour garantir des événements bien pensés et inclusifs.
+                            Events are organized by carefully selected individuals. Each organizer is chosen for their experience, reliability, and passion for creating unique and welcoming moments. Zanmi also supports these organizers to ensure well-planned and inclusive events.
                         </div>
                     </div>
                 </div>
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="heading6">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse6" aria-expanded="false" aria-controls="collapse6">
-                            <span class="faq-plus-icon">+</span> Est-ce que c’est sécurisé ?
+                            <span class="faq-plus-icon">+</span> Is it safe?
                         </button>
                     </h2>
                     <div id="collapse6" class="accordion-collapse collapse" aria-labelledby="heading6" data-bs-parent="#faqAccordion">
                         <div class="accordion-body">
-                            La sécurité des participants est une priorité. Tous les organisateurs doivent vérifier leur identité et respecter des critères stricts avant de proposer un événement. Les lieux choisis pour les rencontres sont publics, accessibles et réputés pour leur sécurité. Pour les femmes qui le souhaitent, des événements en mixité choisie sont proposés, permettant de participer à des sorties exclusivement féminines.
+                            Participant safety is a priority. All organizers must verify their identity and meet strict criteria before hosting an event. The venues chosen for meetups are public, accessible, and known for their safety. For women who prefer, gender-specific events are available, allowing them to join female-only gatherings.
                         </div>
                     </div>
                 </div>
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="heading7">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse7" aria-expanded="false" aria-controls="collapse7">
-                            <span class="faq-plus-icon">+</span> Dois-je être inscrit pour participer ?
+                            <span class="faq-plus-icon">+</span> Do I need to sign up to join?
                         </button>
                     </h2>
                     <div id="collapse7" class="accordion-collapse collapse" aria-labelledby="heading7" data-bs-parent="#faqAccordion">
                         <div class="accordion-body">
-                            Oui, l’inscription sur la plateforme est nécessaire pour participer aux événements. Cela permet de garantir un suivi des participants et d’assurer une communauté respectueuse et active.
+                            Yes, signing up on the platform is necessary to join events. This ensures participant tracking and fosters a respectful and active community.
                         </div>
                     </div>
                 </div>
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="heading8">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse8" aria-expanded="false" aria-controls="collapse8">
-                            <span class="faq-plus-icon">+</span> Puis-je annuler ma participation ?
+                            <span class="faq-plus-icon">+</span> Can I cancel my participation?
                         </button>
                     </h2>
                     <div id="collapse8" class="accordion-collapse collapse" aria-labelledby="heading8" data-bs-parent="#faqAccordion">
                         <div class="accordion-body">
-                            Oui, il est possible d'annuler sa participation à un événement à condition que l'annulation soit faire plus de deux jours avant la date de l'événement. Par exemple, si l'événement est organisé mardi, il sera impossible d'annuler sa venue lundi ni dimanche.
+                            Yes, you can cancel your participation as long as the cancellation is made more than two days before the event date. For example, if the event is on Tuesday, you won’t be able to cancel on Monday or Sunday.
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-
-
-
+    
 
     <footer class="text-white py-4">
         <div class="container">
             <div class="row">
                 <div class="col-md-4 mb-3">
-                    <h5>À propos de Rafiki Events</h5>
-                    <p>Rafiki Events connecte locaux et expatriés pour partager des expériences uniques et créer des souvenirs inoubliables.</p>
-                    <img src="{% static 'images/logo.png' %}" alt="Rafiki Logo" class="mt-3 img-fluid" style="max-width: 150px;">
+                    <h5>About Zanmi</h5>
+                    <p>Zanmi connects locals and expats to share unique experiences and create unforgettable memories.</p>
+                    <img src="{% static 'images/logo.png' %}" alt="Zanmi Logo" class="mt-3 img-fluid" style="max-width: 150px;">
                 </div>
                 <div class="col-md-4 mb-3">
-                    <h5>C'est safe ici !</h5>
+                    <h5>It’s safe here!</h5>
                     <ul class="list-unstyled">
-                        <li><i class="fas fa-check-circle text-success me-2"></i> Paiements sécurisés</li>
-                        <li><i class="fas fa-check-circle text-success me-2"></i> Événements vérifiés</li>
-                        <li><i class="fas fa-check-circle text-success me-2"></i> Assistance 7j/7</li>
+                        <li><i class="fas fa-check-circle text-success me-2"></i> Secure payments</li>
+                        <li><i class="fas fa-check-circle text-success me-2"></i> Verified events</li>
+                        <li><i class="fas fa-check-circle text-success me-2"></i> Support 7/7</li>
                     </ul>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <h5>Contactez-nous</h5>
-                    <p><i class="fas fa-envelope me-2"></i> contact@rafikievents.com</p>
+                    <h5>Contact Us</h5>
+                    <p><i class="fas fa-envelope me-2"></i> contact@zanmi.com</p>
                     <p><i class="fas fa-phone me-2"></i> +33 6 12 34 56 78</p>
                     <div class="d-flex">
                         <a href="#" class="text-white me-3"><i class="fab fa-facebook fa-lg"></i></a>
@@ -214,16 +221,15 @@
             </div>
         </div>
         <div class="text-center mt-3">
-            <p>&copy; 2024 Rafiki Events. Tous droits réservés.</p>
+            <p>&copy; 2024 Zanmi. All rights reserved.</p>
             <p class="footer-links">
-                <a href="{% url 'cgu' %}" class="footer-link">Conditions Générales d'Utilisation</a> |
-                <a href="{% url 'cgv' %}" class="footer-link">Conditions Générales de Vente</a> |
-                <a href="{% url 'confidentialite' %}" class="footer-link">Politique de Confidentialité</a> |
-                <a href="{% url 'mentions_legales' %}" class="footer-link">Mentions Légales</a>
+                <a href="{% url 'cgu' %}" class="footer-link">Terms of Use</a> |
+                <a href="{% url 'cgv' %}" class="footer-link">Terms of Sale</a> |
+                <a href="{% url 'confidentialite' %}" class="footer-link">Privacy Policy</a> |
+                <a href="{% url 'mentions_legales' %}" class="footer-link">Legal Notice</a>
             </p>
         </div>
     </footer>
-
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     {% block extra_scripts %}{% endblock %}
