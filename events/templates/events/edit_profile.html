@@ -22,6 +22,18 @@
                     <label for="birth_date" class="form-label fw-bold">Date de naissance</label>
                     {{ form.birth_date|add_class:"form-control" }}
                 </div>
+                <div class="mb-3">
+                    <label for="city" class="form-label fw-bold">Ville d'origine</label>
+                    {{ form.city|add_class:"form-control" }}
+                </div>
+                <div class="mb-3">
+                    <label for="country" class="form-label fw-bold">Pays d'origine</label>
+                    {{ form.country|add_class:"form-control" }}
+                </div>
+                <div class="mb-3">
+                    <label for="centers_of_interest" class="form-label fw-bold">Centres d'intérêt (en un petit paragraphe)</label>
+                    {{ form.centers_of_interest|add_class:"form-control" }}
+                </div>
                 <button type="submit" class="btn btn-primary w-100">Enregistrer</button>
             </form>
         </div>

@@ -17,22 +17,6 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 from django.utils import timezone
 
 
-def send_email(subject, template_name, context, recipient_list):
-    try:
-        html_message = render_to_string(template_name, context)
-        plain_message = strip_tags(html_message)
-        send_mail(
-            subject,
-            plain_message,
-            settings.DEFAULT_FROM_EMAIL,
-            recipient_list,
-            html_message=html_message,
-        )
-        print(f"Email envoyé à {recipient_list}")
-    except Exception as e:
-        print(f"Erreur dans send_email : {e}")
-
-
 def certification_demand(request):
     if request.method == 'POST':
         form = CertificationForm(request.POST, request.FILES)
@@ -65,6 +49,7 @@ def create_event(request):
             event = form.save(commit=False)
             event.organizer = request.user
             event.save()
+            
             return redirect('event_detail', event_id=event.id)
     else:
         form = EventForm()
@@ -193,6 +178,7 @@ def profile(request, username):
     profile_user = get_object_or_404(User, username=username)
     profile = get_object_or_404(UserProfile, user=profile_user)
     user = request.user
+    can_edit = False
     participations = Participation.objects.filter(
         user=profile.user,
         status=Participation.ACCEPTED,
@@ -200,21 +186,14 @@ def profile(request, username):
     if profile.can_edit(user):
         # Profil public
         can_edit = True
-        organized_events = Event.objects.filter(organizer=profile.user)
-        return render(request, 'events/profile.html', {
-            'can_edit': can_edit,
-            'profile': profile,
-            'participations': participations,
-            'organized_events': organized_events,
-        })
-    else:
         # Profil privé
-        can_edit = False
-        return render(request, 'events/profile.html', {
-            'can_edit': can_edit,
-            'profile': profile,
-            'participations': participations,
-        })
+    organized_events = Event.objects.filter(organizer=profile_user)
+    return render(request, 'events/profile.html', {
+        'can_edit': can_edit,
+        'profile': profile,
+        'participations': participations,
+        'organized_events': organized_events,
+    })
 
 
 @login_required
@@ -246,7 +225,6 @@ def edit_event(request, event_id):
     # Vérifie si l'utilisateur est l'organisateur de l'événement
     if not event.can_manage(request.user):
         return HttpResponseForbidden("Vous n'avez pas la permission de modifier cet événement.")
-
     if request.method == "POST":
         form = EventForm(request.POST, request.FILES, instance=event)
         if form.is_valid():
@@ -262,6 +240,10 @@ def edit_event(request, event_id):
             'date': event.date,  # Pré-remplit le champ date
             'price': event.price,
             'is_location_hidden': event.is_location_hidden,
+            'time': event.time,
+            'activity_type': event.activity_type,
+            'contact': event.contact,
+            'image': event.image,
         })
         if event.date:
             form.initial['date'] = event.date.strftime('%d/%m/%Y')

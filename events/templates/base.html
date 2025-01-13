@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{% static 'css/custom.css' %}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="icon" href="{% static 'images/favicon.jpg' %}" type="image/x-icon">
 
     {% block extra_head %}{% endblock %}
 </head>
@@ -27,9 +28,6 @@
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="/">Accueil</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/event/create/">Créer un événement</a>
                     </li>
 
                     {% if user.is_authenticated %}
@@ -60,18 +58,17 @@
 
     {% if request.resolver_match.url_name == 'event_list' %}
     <!-- Hero Image Section -->
-    <div class="hero-image position-relative text-white text-center">
-        <img src="{% static 'images/hero.jpg' %}" alt="People enjoying themselves" class="img-fluid w-100" style="height: 60vh; object-fit: cover; filter: brightness(50%);">
-        <div class="hero-text position-absolute top-50 start-50 translate-middle w-75">
-            <h1 class="fw-bold">Créez des événements pour connecter locaux et expatriés</h1>
-            <p>Faites découvrir votre culture, pratiquez de nouvelles langues et gagnez un revenu en organisant des rencontres enrichissantes avec des étudiants Erasmus et des expatriés.</p>
-            <a href="/event/create/" class="btn btn-primary btn-lg mt-3">Créer un événement</a>
+    <div class="hero-image">
+        <div class="hero-overlay">
+            <h1 class="fw-bold">Explore le monde... Sans prendre l'avion !</h1>
+            <p>Rencontre des personnes venues des quatre coins du monde, pratique ton anglais et découvre ta ville sous un nouvel angle.</p>
+            <a href="/event/create/" class="btn btn-primary btn-lg mt-3">Rencontrer des étrangers</a>
         </div>
     </div>
     {% endif %}
 
     <!-- Main Content -->
-    <main class="container mt-4">
+    <main class="wide-container mt-4">
         {% block content %}{% endblock %}
     </main>
     <section class="faq-section py-5">

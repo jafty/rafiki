@@ -10,6 +10,52 @@ h1, h2, h3 {
 
 .hero-image h1 {
     color: white;
+    font-size: 2.2rem;
+}
+
+.hero-image p {
+    font-size: 1.1rem;
+}
+
+.hero-image {
+    position: relative;
+    width: 100%;
+    height: calc(100vh - 60px); /* Hauteur ajustée pour tenir compte de la navbar */
+    background-image: url("/static/images/hero.jpg");
+    background-size: cover; /* L'image couvre tout le container */
+    background-position: center; /* Centre l'image */
+    background-repeat: no-repeat; /* Évite les répétitions */
+}
+
+.navbar {
+    --navbar-height: 60px; /* Ajuste cette valeur en fonction de la hauteur réelle de ta navbar */
+}
+
+.hero-overlay {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* Prend toute la hauteur de .hero-image */
+    color: white;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.5); /* Ajoute un overlay sombre pour améliorer la lisibilité du texte */
+}
+
+.hero-overlay h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.hero-overlay p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+}
+
+.hero-overlay a {
+    font-size: 1.1rem;
+    padding: 10px 20px;
 }
 
 a {
@@ -74,9 +120,6 @@ a {
 }
 
 .block-content {
-
-    padding-left: 5%;
-    padding-right: 5%;
     padding-top: 50px;
     padding-bottom: 100px;
 }
@@ -266,7 +309,6 @@ footer .col-md-4:nth-child(1), .col-md-4:nth-child(2) {
 
 .thick-box p {
     font-size: 0.9em;
-    margin-top: 30px;
 }
 
 .avatar-rounded {
@@ -366,3 +408,16 @@ footer .col-md-4:nth-child(1), .col-md-4:nth-child(2) {
     font-family: 'Source Sans Pro', sans-serif;
 }
 
+.profile-card .fa-map-marker-alt {
+    font-size: 1.2rem;
+}
+
+.profile-card .d-flex {
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.wide-container {
+    max-width: 80%;
+    margin: 0 auto;
+}

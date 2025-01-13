@@ -9,6 +9,7 @@ from django.core.exceptions import ValidationError
 from rafiki import settings
 from django.core.mail import send_mail
 from django.core.validators import RegexValidator
+from datetime import time
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
@@ -19,6 +20,9 @@ class UserProfile(models.Model):
     slug = models.SlugField(unique=True, blank=True)
     consent_date = models.DateTimeField(null=True, blank=True, default=None)
     is_certified = models.BooleanField(default=False)
+    city = models.CharField(max_length=100)
+    country = models.CharField(max_length=100)
+    centers_of_interest = models.TextField(blank=True, null=True, help_text="Qu'appréciez-vous ?")
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -42,7 +46,7 @@ class UserProfileForm(forms.ModelForm):
     )
     class Meta:
         model = UserProfile
-        fields = ['avatar', 'description', 'birth_date']
+        fields = ['avatar', 'description', 'birth_date', 'city', 'country', 'centers_of_interest']
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True, widget=forms.EmailInput(attrs={'class': 'form-control'}))
@@ -72,12 +76,14 @@ class Event(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
     date = models.DateTimeField()
-    time = models.TimeField(
-        verbose_name="Heure",
-        validators=[RegexValidator(
-            regex=r'^([01]\d|2[0-3]):([0-5]\d)$',
-            message="L'heure doit être au format HH:MM (24 heures)."
-        )],
+    time = models.CharField(
+        max_length=6,
+        validators=[
+            RegexValidator(
+                regex=r'^([01]\d|2[0-3]):([0-5]\d)$',
+                message="L'heure doit être au format HH:MM (24 heures)."
+            )
+        ],
         help_text="Veuillez entrer l'heure au format HH:MM."
     )
     is_location_hidden = models.BooleanField(default=True)
@@ -157,21 +163,14 @@ class EventForm(forms.ModelForm):
         widget=forms.TextInput(attrs={'placeholder': 'DD/MM/YYYY'}),
     )
 
+    time = forms.CharField(
+        label="Heure (de préférence au format HH:MM)",
+        widget=forms.TextInput(attrs={'placeholder': 'HH:MM'}),
+    )
+
     class Meta:
         model = Event
         fields = ['title', 'description', 'price', 'date', 'time', 'location', 'activity_type', 'is_location_hidden', 'contact',  'image',]
-        widgets = {
-            'time': forms.TimeInput(attrs={
-                'type': 'time',
-                'class': 'form-control',
-                'placeholder': 'HH:MM'
-            }, format='%H:%M'),
-            'contact': forms.TimeInput(attrs={
-                'type': 'contact',
-                'class': 'form-control',
-                'placeholder': 'Comment vous contacter ?'
-            }),
-        }
 
     def clean_date(self):
         date_str = self.cleaned_data['date']
@@ -180,6 +179,10 @@ class EventForm(forms.ModelForm):
         except ValueError:
             raise forms.ValidationError("Le format de la date doit être DD/MM/YYYY.")
 
+    def clean_time(self):
+        time = self.cleaned_data.get('time', '').strip()
+        return time
+    
 
 class Participation(models.Model):
     ACCEPTED = "accepted"
@@ -221,7 +224,7 @@ class Participation(models.Model):
             send_mail(
                 f"Your demand for {self.event.title} has been rejected",
                 "Sorry, but your request to join {self.event.title} has been rejected.\
-                You can asj to join to our other events  <br><br>Team Zanmi",
+                You can ask to join our other events  <br><br>Team Zanmi",
                 settings.DEFAULT_FROM_EMAIL,
                 [self.user.email]
             )
@@ -233,9 +236,10 @@ class Participation(models.Model):
         else:
             send_mail(
                 f"Your demand for {self.event.title} has been accepted",
-                "Congrats! You have been accepted to the event {self.event.title}.<br>\
-                Here is the location of the event, that you can find on our website : {self.event.location}\
-                <br><br>Team Zanmi",
+                f"Congrats! You have been accepted to the event {self.event.title}.<br>\
+                Here is the location of the event, that you can find on our website : {self.event.location}.<br><br>\
+                Here is how to contact the organizer:<br>\
+                {self.event.contact}<br><br>Team Zanmi",
                 settings.DEFAULT_FROM_EMAIL,
                 [self.user.email]
             )

@@ -133,6 +133,7 @@ class ParticipationUnitTests(TestCase):
             organizer=self.organizer,
             location="123 Test Street",
             date=datetime.now() + timedelta(days=1),
+            contact="Test Contact",
         )
         self.participation = Participation.objects.create(
             event=self.event,
@@ -214,9 +215,12 @@ class ParticipationUnitTests(TestCase):
             settings.DEFAULT_FROM_EMAIL,
             [self.participant.email],
         )
+        mail_body, _ = mock_send_mail.call_args
         notification = Notification.objects.filter(user=self.participant, event=self.event, is_read=False).first()
         self.assertIsNotNone(notification)
         self.assertIn("accepted", notification.message)
+        self.assertIn("Test Contact", mail_body[1])
+        self.assertIn("123 Test Street", mail_body[1])
 
 
 

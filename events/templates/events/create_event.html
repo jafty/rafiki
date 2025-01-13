@@ -36,6 +36,10 @@
                                 {{ form.date|add_class:"form-control" }}
                             </div>
                             <div class="mb-3">
+                                <label for="time" class="form-label fw-bold">Heure</label>
+                                {{ form.time|add_class:"form-control" }}
+                            </div>
+                            <div class="mb-3">
                                 <label for="price" class="form-label fw-bold">Prix en euros</label>
                                 {{ form.price|add_class:"form-control" }}
                             </div>
@@ -44,8 +48,16 @@
                                 {{ form.location|add_class:"form-control" }}
                             </div>
                             <div class="mb-3">
+                                <label for="activity_type" class="form-label fw-bold">Type d'activité</label>
+                                {{ form.activity_type|add_class:"form-control" }}
+                            </div>
+                            <div class="mb-3">
                                 <label for="description" class="form-label fw-bold">Description</label>
                                 {{ form.description|add_class:"form-control" }}
+                            </div>
+                            <div class="mb-3">
+                                <label for="contact" class="form-label fw-bold">Comment vous contacter</label>
+                                {{ form.contact|add_class:"form-control" }}
                             </div>
                             <div class="mb-3">
                                 <label for="image" class="form-label fw-bold">Image</label>

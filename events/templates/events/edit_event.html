@@ -3,7 +3,7 @@
 {% block title %}Modifier l'événement{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
+<div class=" mt-4">
     <h1>Modifier l'événement</h1>
     <form id="contactForm" enctype="multipart/form-data" name="contactForm" method="post">
         {% csrf_token %}
@@ -23,6 +23,10 @@
             {{ form.date|add_class:"form-control"|attr:"readonly:readonly" }}
         </div>
         <div class="mb-3">
+            <label for="time" class="form-label fw-bold">Heure</label>
+            {{ form.time|add_class:"form-control" }}
+        </div>
+        <div class="mb-3">
             <label for="date" class="form-label fw-bold">Prix</label>
             {{ form.price|add_class:"form-control" }}
         </div>
@@ -31,8 +35,16 @@
             {{ form.location|add_class:"form-control" }}
         </div>
         <div class="mb-3">
+            <label for="contact" class="form-label fw-bold">Comment vous contacter</label>
+            {{ form.contact|add_class:"form-control" }}
+        </div>
+        <div class="mb-3">
             <label for="description" class="form-label fw-bold">Description</label>
             {{ form.description|add_class:"form-control" }}
+        </div>
+        <div class="mb-3">
+            <label for="activity_type" class="form-label fw-bold">Type d'activité</label>
+            {{ form.activity_type|add_class:"form-control" }}
         </div>
         <div class="mb-3">
             <label for="image" class="form-label fw-bold">Image</label>
@@ -42,6 +54,7 @@
             <label for="is_location_hidden" class="form-check-label fw-bold">Adresse masquée ?</label>
             {{ form.is_location_hidden|add_class:"form-check-input" }}
         </div>
+  
         <button type="submit" class="btn btn-primary w-25">Modifier l'événement</button>
     </form>
 </div>

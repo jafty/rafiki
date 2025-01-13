@@ -1,31 +1,49 @@
 {% extends 'base.html' %}
 
 {% block title %}Profil de {{ profile.user.username }}{% endblock %}
-
+{% load custom_filters %}
 {% block content %}
-<div class="container mt-4">
+<div class="mt-4">
     <div class="row justify-content-center">
         <!-- Left Section: Avatar, Username, Description -->
         <div class="col-md-3">
             <div class="profile-card">
-                <img src="{{ profile.avatar.url }}" alt="Avatar" class="img-fluid avatar-rounded  mb-3">
+                <!-- Nouvelle ligne pour Pays, Ville et Âge -->
+
+            
+                <!-- Avatar et description -->
+                <img src="{{ profile.avatar.url }}" alt="Avatar" class="img-fluid avatar-rounded  mb-3" style="object-fit: cover; width: 150px; height: 150px;">
+                
                 <h3 class="text-center font-weight-bold">{{ profile.user.username }}</h3>
-                <p class="text-center">{{ profile.description|default:"Aucune description."|linebreaks }}</p>
-                {% if can_edit %}
-                <p><a href="{% url 'edit_profile' profile.user.username %}" class="btn btn-primary">Éditer mon profil</a></p>
-                <p>
-                    <form action="{% url 'logout' %}" method="post" style="display: inline;">
-                        {% csrf_token %}
-                        <button type="submit" class="nav-link btn btn-link" id="logout" style="display: inline; padding: 0; color: inherit; text-decoration: none;">Déconnexion</button>
-                    </form>
+                <p class="d-flex align-items-center justify-content-center mb-3">
+                    <i class="fas fa-map-marker-alt me-2" style="color: #FC6C85;"></i> 
+                    {{ profile.city }}, {{ profile.country }} 
+                    <span class="mx-2" style="border-left: 2px solid #ddd; height: 16px;"></span> 
+                    {% if profile.birth_date %}
+                        {{ profile.birth_date|calculate_age }} ans
+                    {% else %}
+                        Non renseigné
+                    {% endif %}
                 </p>
-                <p><a href="{% url 'certification_demand' %}">Faire certifier mon profil</a></p>
+                <p class="text-center">{{ profile.description|default:"Aucune description."|linebreaks }}</p>
+            
+                <!-- Boutons -->
+                {% if can_edit %}
+                    <p><a href="{% url 'edit_profile' profile.user.username %}" class="btn btn-primary">Éditer mon profil</a></p>
+                    <p>
+                        <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="nav-link btn btn-link" id="logout" style="display: inline; padding: 0; color: inherit; text-decoration: none;">Déconnexion</button>
+                        </form>
+                    </p>
+                    <p><a href="{% url 'certification_demand' %}">Faire certifier mon profil</a></p>
                 {% endif %}
             </div>
+            
         </div>
 
         <!-- Right Section: Events Participation and Organized Events -->
-        <div class="col-md-7">
+        <div class="col-md-9">
             <h3 class="font-weight-bold">Événements où {{ profile.user.username }} participe</h3>
             <div class="row">
                 {% for participation in participations %}
