@@ -42,13 +42,15 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'profile' user.username %}">Profile</a>
                         </li>
-
+                        <li class="nav-item nav-btn-li">
+                            <a class="btn btn-primary btn-sm" href="{% url 'event_list' %}">Meet strangers</a>
+                        </li>
                     {% else %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'login' %}">Log In</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'register' %}">Sign Up</a>
+                        <li class="nav-item nav-btn-li">
+                            <a class="btn btn-primary btn-sm" href="{% url 'register' %}">Sign Up</a>
                         </li>
                     {% endif %}
                 </ul>
@@ -56,180 +58,176 @@
         </div>
     </nav>
 
-    {% if request.resolver_match.url_name == 'event_list' %}
+    {% if request.resolver_match.url_name == 'event_list' and not request.user.is_authenticated %}
     <!-- Hero Image Section -->
     <div class="hero-image">
         <div class="hero-overlay">
-            <h1 class="fw-bold">Feel at home in Toulouse, wherever you’re from.</h1>
-            <p>Zanmi connects you with like-minded people for meaningful encounters and unforgettable adventures in the heart of the Pink City.</p>
-            <a href="/event/3/" class="btn btn-primary btn-lg mt-3">Join our next Event</a>
+            <h1 class="fw-bold">Rediscover Toulouse with locals and foreigners <br>who match your vibe</h1>
+            <p>From relaxed evenings to lively nights, explore Toulouse’s iconic spots and hidden gems <br>while making connections with locals, tourists, erasmus students, expats...</p>
+            <a href="#events" class="btn btn-primary btn-lg mt-3">Have a drink with us this week</a>
         </div>
     </div>
-    {% endif %}
-    {% if request.resolver_match.url_name == 'event_list_fr' %}
-    <!-- Hero Image Section -->
-    <div class="hero-image">
-        <div class="hero-overlay">
-            <h1 class="fw-bold">Explore le monde... Sans prendre l'avion !</h1>
-            <p>Rencontre des personnes venues des quatre coins du monde, pratique ton anglais et découvre ta ville sous un nouvel angle.</p>
-            <a href="/event/3/" class="btn btn-primary btn-lg mt-3">Participe à la prochaine sortie</a>
-        </div>
-    </div>
-    {% endif %}
-    <!-- Main Content -->
-    <main class="wide-container mt-4">
-        {% block content %}{% endblock %}
-    </main>
-    <section class="faq-section py-5">
+    <section class="how-it-works">
         <div class="container">
-            <h2 class="text-center mb-4">FAQ</h2>
-            <div class="accordion" id="faqAccordion">
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading1">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="false" aria-controls="collapse1">
-                            <span class="faq-plus-icon">+</span> What is Zanmi?
-                        </button>
-                    </h2>
-                    <div id="collapse1" class="accordion-collapse collapse" aria-labelledby="heading1" data-bs-parent="#faqAccordion">
-                        <div class="accordion-body">
-                            Zanmi is a platform that connects locals and expats in Toulouse to share their cultures and enjoy unique experiences throughout the city. Whether you're visiting or a resident, Zanmi offers events that combine discovery, socializing, and enriching encounters.
-                        </div>
+            <h2 class="text-center mb-5">How to Meet Your Future Friends</h2>
+            <div class="row text-center">
+                <!-- Étape 1 -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="quick-guide-card">
+                        <img src="{% static 'images/event1.jpg' %}" alt="Event 1" class="quick-guide-img">
+                        <h3 class="guide-title">Find Your Event</h3>
+                        <hr>
+                        <p class="guide-text">Explore a variety of curated events and pick one that matches your vibe.</p>
                     </div>
                 </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading2">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
-                            <span class="faq-plus-icon">+</span> What types of events are organized?
-                        </button>
-                    </h2>
-                    <div id="collapse2" class="accordion-collapse collapse" aria-labelledby="heading2" data-bs-parent="#faqAccordion">
-                        <div class="accordion-body">
-                            Zanmi offers a wide variety of events to suit all tastes: social outings, cultural activities, sports and wellness, and themed meetups. Every event is designed to create memorable moments tailored to participants' preferences.
-                        </div>
+                <!-- Étape 2 -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="quick-guide-card">
+                        <img src="{% static 'images/event2.jpg' %}" alt="Event 2" class="quick-guide-img">
+                        <h3 class="guide-title">Request to Join</h3>
+                        <hr>
+                        <p class="guide-text">Complete your profile and let the organizer know you'd like to attend.</p>
                     </div>
                 </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading3">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
-                            <span class="faq-plus-icon">+</span> Is it free? How can I join an event?
-                        </button>
-                    </h2>
-                    <div id="collapse3" class="accordion-collapse collapse" aria-labelledby="heading3" data-bs-parent="#faqAccordion">
-                        <div class="accordion-body">
-                            Events on the platform are paid to cover management costs, reward organizers, and ensure a quality experience. However, Zanmi provides a WhatsApp group where everyone can organize free and spontaneous meetups.<br><br>
-                            Joining an event is simple:<br>
-                            1. Sign up on the platform by creating an account.<br>
-                            2. Browse the list of available events and select one that interests you.<br>
-                            3. Click "Join," complete the secure payment, and wait for the organizer's confirmation.<br>
-                            4. You will then receive all the necessary details (location, time, etc.) to attend the event.<br><br>
-                            Once registered, get ready to have an amazing time with other participants!
-                        </div>
+                <!-- Étape 3 -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="quick-guide-card">
+                        <img src="{% static 'images/event3.jpg' %}" alt="Event 3" class="quick-guide-img">
+                        <h3 class="guide-title">Meet People You Will Love</h3>
+                        <hr>
+                        <p class="guide-text">Connect with locals and expats who share your interests and energy.</p>
                     </div>
                 </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading4">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapse4">
-                            <span class="faq-plus-icon">+</span> Can I see who is attending the events?
-                        </button>
-                    </h2>
-                    <div id="collapse4" class="accordion-collapse collapse" aria-labelledby="heading4" data-bs-parent="#faqAccordion">
-                        <div class="accordion-body">
-                            Yes, each event displays a list of participants, with an overview of their profiles (photo, first name, age, and interests). This allows you to know who you'll be sharing the moment with and fosters a friendly atmosphere even before the event.
-                        </div>
+                <!-- Étape 4 -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="quick-guide-card">
+                        <img src="{% static 'images/event4.jpg' %}" alt="Event 4" class="quick-guide-img">
+                        <h3 class="guide-title">Rediscover Toulouse</h3>
+                        <hr>
+                        <p class="guide-text">Explore hidden gems, vibrant neighborhoods, and unique spots chosen by thoughtful organizers.</p>
                     </div>
                 </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading5">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse5" aria-expanded="false" aria-controls="collapse5">
-                            <span class="faq-plus-icon">+</span> Who organizes the events?
-                        </button>
-                    </h2>
-                    <div id="collapse5" class="accordion-collapse collapse" aria-labelledby="heading5" data-bs-parent="#faqAccordion">
-                        <div class="accordion-body">
-                            Events are organized by carefully selected individuals. Each organizer is chosen for their experience, reliability, and passion for creating unique and welcoming moments. Zanmi also supports these organizers to ensure well-planned and inclusive events.
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading6">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse6" aria-expanded="false" aria-controls="collapse6">
-                            <span class="faq-plus-icon">+</span> Is it safe?
-                        </button>
-                    </h2>
-                    <div id="collapse6" class="accordion-collapse collapse" aria-labelledby="heading6" data-bs-parent="#faqAccordion">
-                        <div class="accordion-body">
-                            Participant safety is a priority. All organizers must verify their identity and meet strict criteria before hosting an event. The venues chosen for meetups are public, accessible, and known for their safety. For women who prefer, gender-specific events are available, allowing them to join female-only gatherings.
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading7">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse7" aria-expanded="false" aria-controls="collapse7">
-                            <span class="faq-plus-icon">+</span> Do I need to sign up to join?
-                        </button>
-                    </h2>
-                    <div id="collapse7" class="accordion-collapse collapse" aria-labelledby="heading7" data-bs-parent="#faqAccordion">
-                        <div class="accordion-body">
-                            Yes, signing up on the platform is necessary to join events. This ensures participant tracking and fosters a respectful and active community.
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading8">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse8" aria-expanded="false" aria-controls="collapse8">
-                            <span class="faq-plus-icon">+</span> Can I cancel my participation?
-                        </button>
-                    </h2>
-                    <div id="collapse8" class="accordion-collapse collapse" aria-labelledby="heading8" data-bs-parent="#faqAccordion">
-                        <div class="accordion-body">
-                            Yes, you can cancel your participation as long as the cancellation is made more than two days before the event date. For example, if the event is on Tuesday, you won’t be able to cancel on Monday or Sunday.
-                        </div>
-                    </div>
+            </div>
+    
+            <!-- Call to Action -->
+            <div class="row text-center mt-5">
+                <div class="col">
+                    <a href="{% url 'register' %}" class="btn btn-primary btn-lg">
+                        Sign-up in seconds and make friends today
+                    </a>
+                    <p class="mt-2 cta-subtext">(It’s free!)</p>
                 </div>
             </div>
         </div>
     </section>
-    
 
-    <footer class="text-white py-4">
+    <section class="why-zanmi">
         <div class="container">
-            <div class="row">
-                <div class="col-md-4 mb-3">
-                    <h5>About Zanmi</h5>
-                    <p>Zanmi connects locals and expats to share unique experiences and create unforgettable memories.</p>
-                    <img src="{% static 'images/logo.png' %}" alt="Zanmi Logo" class="mt-3 img-fluid" style="max-width: 150px;">
+            <h2 class="text-center mb-5">Nervous about joining? <br>We'll make it easy for you. Here's how:</h2>
+            
+            <!-- Compatibility and Connection -->
+            <div class="row align-items-center">
+                <div class="col-md-6 p-0">
+                    <img src="{% static 'images/compatibility.jpg' %}" alt="Compatibility" class="why-image">
                 </div>
-                <div class="col-md-4 mb-3">
-                    <h5>It’s safe here!</h5>
-                    <ul class="list-unstyled">
-                        <li><i class="fas fa-check-circle text-success me-2"></i> Secure payments</li>
-                        <li><i class="fas fa-check-circle text-success me-2"></i> Verified events</li>
-                        <li><i class="fas fa-check-circle text-success me-2"></i> Support 7/7</li>
-                    </ul>
+                <div class="col-md-6 why-col">
+                    <h3 class="why-title">Compatibility and Connection</h3>
+                    <p class="why-text">
+                        Our organizers carefully design private events to bring together people who share your vibe and energy.
+                    </p>
                 </div>
-                <div class="col-md-4 mb-3">
-                    <h5>Contact Us</h5>
-                    <p><i class="fas fa-envelope me-2"></i> contact@zanmi.com</p>
-                    <p><i class="fas fa-phone me-2"></i> +33 6 12 34 56 78</p>
-                    <div class="d-flex">
-                        <a href="#" class="text-white me-3"><i class="fab fa-facebook fa-lg"></i></a>
-                        <a href="#" class="text-white me-3"><i class="fab fa-twitter fa-lg"></i></a>
-                        <a href="#" class="text-white me-3"><i class="fab fa-instagram fa-lg"></i></a>
-                        <a href="#" class="text-white"><i class="fab fa-youtube fa-lg"></i></a>
-                    </div>
+            </div>
+    
+            <!-- Discover and Experience -->
+            <div class="row align-items-center flex-md-row-reverse">
+                <div class="col-md-6 p-0">
+                    <img src="{% static 'images/discover.jpg' %}" alt="Discover" class="why-image">
+                </div>
+                <div class="col-md-6 why-col">
+                    <h3 class="why-title">Discover and Experience</h3>
+                    <p class="why-text">
+                        Enjoy curated events that take you to new restaurants, lively neighborhoods, and unique cultural spots in Toulouse.
+                    </p>
+                </div>
+            </div>
+    
+            <!-- Safe and Inclusive -->
+            <div class="row align-items-center ">
+                <div class="col-md-6 p-0">
+                    <img src="{% static 'images/safe.jpg' %}" alt="Safety" class="why-image">
+                </div>
+                <div class="col-md-6 why-col">
+                    <h3 class="why-title">Safe and Inclusive</h3>
+                    <p class="why-text">
+                        All event locations are private and accessible only to approved participants. For women who prefer, non-mixed events are available.
+                    </p>
                 </div>
             </div>
         </div>
-        <div class="text-center mt-3">
-            <p>&copy; 2024 Zanmi. All rights reserved.</p>
+    </section>
+    {% if not request.user.is_authenticated %}
+    <section class="zanmi-story-section position-relative">
+        <!-- Image de fond -->
+        <div class="story-overlay"></div>
+        <div class="container">
+            <div class="row align-items-center">
+                <h2 class="story-title text-center">Make Toulouse a village again</h2>
+                <!-- Colonne Gauche : Texte -->
+                <div class="col-md-6">
+                    
+                    <p class="story-text ">
+                        Moving to a new city or country can feel isolating. Even long-time locals know the struggle: friends move away, schedules get busier, and meeting new people becomes harder.
+                    </p>
+                    <p class="story-text ">
+                        Toulouse is home to locals, expats, and students from all over the world — yet too often, they live parallel lives without crossing paths.
+                    </p>
+                    <p class="story-text ">
+                        Zanmi bridges that gap. It’s a platform created by people just like you, to connect locals and internationals for shared stories, cultures, and experiences. Let’s make Toulouse feel like home, together.
+                    </p>
+
+                </div>
+
+                <!-- Colonne Droite : Image -->
+                <div class="col-md-6">
+                    <img src="{% static 'images/young-smiling.jpg' %}" alt="Smiling young person" >
+                </div>
+            </div>
+            <!-- Bouton d’appel à l’action -->
+            <a href="/signup" class="btn btn-primary btn-lg mt-4">Join Us and Start Your Journey Today!</a>
+            <p class="cta-reassurance mt-3 text-dark">
+                It’s free and takes less than 20 seconds.
+            </p>
+        </div>
+    </section>
+    {% endif %}
+    {% endif %}
+
+    <!-- Main Content -->
+    <main class="wide-container mt-4">
+        {% block content %}{% endblock %}
+    </main>
+    {% if not request.user.is_authenticated %}
+    <section class="cta-section py-5">
+        <div class="container text-center">
+            <h2 class="cta-title">Feel like no one’s around? You’re one step away from meeting your crew.</h2>
+            <p class="cta-subtext">No awkwardness, just good vibes. Join us and feel at home anywhere.</p>
+            <a href="/signup" class="btn btn-primary btn-lg mt-3">Sign Up in Seconds (It’s Free!)</a>
+        </div>
+    </section>
+    {% endif %}
+    
+    <footer class="footer-simple py-3">
+        <div class="container text-center">
+            <p class="mb-1">&copy; 2025 Zanmi. All rights reserved.</p>
             <p class="footer-links">
-                <a href="{% url 'cgu' %}" class="footer-link">Terms of Use</a> |
                 <a href="{% url 'cgv' %}" class="footer-link">Terms of Sale</a> |
+                <a href="{% url 'cgu' %}" class="footer-link">Terms of Use</a> |
                 <a href="{% url 'confidentialite' %}" class="footer-link">Privacy Policy</a> |
                 <a href="{% url 'mentions_legales' %}" class="footer-link">Legal Notice</a>
             </p>
         </div>
     </footer>
+    
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     {% block extra_scripts %}{% endblock %}

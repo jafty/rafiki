@@ -7,58 +7,70 @@
 
     <!-- Event Image -->
     <div class="mb-4">
-        <img src="{{ event.image.url }}" alt="{{ event.title }}" class="img-fluid w-100 rounded event-image">
+        <img src="{{ event.image.url }}" alt="{{ event.title }}" class="img-fluid w-100 event-image">
     </div>
 
     <div class="row">
         <!-- Column 1: Description, organizer, participants -->
+        <h1 class="mb-4">{{ event.title }}</h1>
         <div class="col-md-8">
             <!-- Event Title -->
-            <h1 class="mb-4">{{ event.title }}</h1>
-            <p class="d-flex align-items-center">
-                <img src="{{ event.organizer.profile.avatar.url }}" alt="Organizer's Avatar" class="avatar-img me-2" style="width: 40px; height: 40px;">
-                <a href="{% url 'profile' event.organizer.username %}">{{ event.organizer }}</a>
-            </p>
-            <hr class="my-3">
-            <p><b>Price: {{ event.price }}€</b></p>
+
+
+            <!-- Organizer Card -->
+            <div class="organizer-card d-flex align-items-center p-3 mb-4" style="background-color: #E1E2EF; ">
+                <img src="{{ event.organizer.profile.avatar.url }}" alt="Organizer's Avatar" class="avatar-img me-3" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;">
+                <div>
+                    <p class="mb-0">Hosted by:</p>
+                    <p><a href="{% url 'profile' event.organizer.username %}" class="fw-bold">{{ event.organizer }}</a></p>
+                </div>
+            </div>
+
+            <!-- Event Description -->
             <p>{{ event.description|linebreaks }}</p>
-            <hr class="my-3">
-            <h2>Participants</h2>
-            <ul>
-                {% for participant in participations %}
-                    <li class="d-flex align-items-center mb-2">
-                        <img src="{{ participant.user.profile.avatar.url }}" alt="Avatar of {{ participant.user.username }}" class="avatar-img me-2" style="width: 30px; height: 30px;">
-                        <a href="{% url 'profile' participant.user.username %}">{{ participant.user.username }}</a>
-                    </li>
-                {% empty %}
-                    <p>No participants yet.</p>
-                {% endfor %}
-            </ul>
+            <hr class="my-4">
+
+            <!-- Participants -->
+            {% if is_accepted or can_manage %}
+                <h2 class="fw-bold mb-3">Participants</h2>
+                <ul class="list-unstyled">
+                    {% for participant in participations %}
+                        <li class="d-flex align-items-center mb-3">
+                            <img src="{{ participant.user.profile.avatar.url }}" alt="Avatar of {{ participant.user.username }}" class="avatar-img me-2" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+                            <a href="{% url 'profile' participant.user.username %}" class="text-dark">{{ participant.user.username }}</a>
+                        </li>
+                    {% empty %}
+                        <p>No participants yet.</p>
+                    {% endfor %}
+                </ul>
+            {% endif %}
         </div>
 
         <!-- Column 2: Details and form -->
         <div class="col-md-4">
-            <div class="p-3 border thick-box rounded">
-                <p><i class="fas fa-calendar-alt"></i> <strong>Date:</strong> {{ event.date|date:"d/m/Y" }}</p>
-                <p><i class="fas fa-clock"></i> <strong>Time:</strong> {{ event.time }}</p>
-                <p><i class="fas fa-map-marker-alt"></i> <strong>Location:</strong> {{ location }}</p>
-                <p><i class="fas fa-tag"></i> <strong>Activity Type:</strong> {{ event.activity_type }}</p>
+            <div class="p-4 thick-box">
+                <p><i class="fas fa-calendar-alt  me-2"></i> <strong>Date:</strong> {{ event.date|date:"d/m/Y" }}</p>
+                <p><i class="fas fa-clock  me-2"></i> <strong>Time:</strong> {{ event.time }}</p>
+                <p><i class="fas fa-map-marker-alt  me-2"></i> <strong>Location:</strong> {{ location }}</p>
+                <p><i class="fas fa-tag  me-2"></i> <strong>Activity Type:</strong> {{ event.activity_type }}</p>
+                <p class="event-price">Total: {{ event.price }}€</p>
+
+                <!-- Join Event Button or Management Links -->
                 {% if is_accepted %}
-                    <p class="text-success">You are participating in this event.</p>
+                    <p class="text-success text-center fw-bold mt-3">You are participating in this event.</p>
                 {% elif is_pending %}
-                    <p class="text-warning">Your request is pending.</p>
+                    <p class="text-warning text-center fw-bold mt-3">Your request is pending.</p>
                 {% elif is_rejected %}
-                    <p class="text-danger">Your request has been rejected.</p>
+                    <p class="text-danger text-center fw-bold mt-3">Your request has been rejected.</p>
                 {% elif not can_manage %}
-                    <h2>Join the Event</h2>
                     <form method="post">
                         {% csrf_token %}
                         <div class="mb-3">
                             {{ form.message }}
                         </div>
-                        <button type="submit" class="btn btn-primary w-100">Send and pay {{ event.price }}€</button>
+                        <button type="submit" class="btn btn-primary w-100">Join the Event</button>
                     </form>
-                    <p>Once you send your participation request, you will be redirected to a payment form. If the organizer does not accept your request, the transaction will be canceled.</p>
+                    <p class="sub-payment text-muted mt-2 text-center" style="font-size: 0.9rem;">No amount will be charged until the organizer accepts your request.</p>
                 {% else %}
                     <a href="{% url 'manage_participants' event.id %}" class="btn btn-secondary mt-2 w-100">Manage Participants</a>
                     <a href="{% url 'edit_event' event.id %}" class="btn btn-secondary mt-2 w-100">Edit Event</a>

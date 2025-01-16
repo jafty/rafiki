@@ -1,13 +1,109 @@
-@import url('https://fonts.googleapis.com/css2?family=Judson:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
 
-h1, h2, h3 {
-    font-family: 'Judson', serif;
-    font-weight: bold;
-    color: #333;
-    letter-spacing: 1px;
-    line-height: 1.4;
+/* Styles isolés */
+html {
+    scroll-behavior: smooth;
 }
 
+h1, h2, h3 {
+    font-family: 'Poppins', sans-serif; /* Police moderne */
+    font-weight: 800; /* Extra bold */
+    text-transform: uppercase; /* Lettres capitales */
+    color: #120D31; /* Couleur principale */
+    letter-spacing: 1px; /* Espacement entre les lettres */
+    line-height: 1.2; /* Hauteur de ligne légèrement resserrée */
+    margin-bottom: 20px; /* Espacement sous les titres */
+}
+
+a {
+    text-decoration: none;
+    color: #FF0054; /* Couleur rose pour les liens */
+}
+
+a:hover {
+    color: #D40048; /* Couleur rose foncé au survol */
+}
+
+h1 {
+    font-size: 3rem; /* Très grand pour le titre principal */
+}
+
+h2 {
+    font-size: 2.5rem; /* Titre de section */
+}
+
+h3 {
+    font-size: 2rem; /* Sous-section */
+}
+
+body {
+    font-family: 'Poppins', sans-serif; /* Police par défaut */
+    color: #120D31; /* Couleur principale du texte */
+    line-height: 1.6; /* Hauteur de ligne agréable */
+    background-color: white; /* Fond beige clair */
+}
+
+main {
+    padding-bottom: 30px;
+}
+
+#logout {
+    color: red !important;
+    font-size: 12px;
+}
+
+a {
+    font-weight: bold;
+    color: #FF0054;
+}
+
+p {
+    font-size: 1.2rem; /* Taille standard */
+    font-weight: 400; /* Poids normal */
+    margin-bottom: 20px; /* Espacement sous le texte */
+}
+
+
+
+/* Supprimer les contours bleus par défaut */
+.btn:focus, .btn:active {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.thick-box {
+    background-color: white;
+    border: 2px solid #120D31;
+}
+
+.thick-box p {
+    font-size: 1.1em;
+}
+
+.thick-box .event-price {
+    font-size: 1.9em;
+}
+
+.thick-box .sub-payment {
+    font-size: 0.9em;
+    margin-top: 15px;
+}
+
+.thick-box .btn-primary {
+    font-size: 1.1em;
+}
+
+.thick-box textarea {
+    height: 210px;
+}
+
+.wide-container {
+    max-width: 80%;
+    margin: 0 auto;
+}
+
+
+/* Hero */
 .hero-image h1 {
     color: white;
     font-size: 2.2rem;
@@ -20,15 +116,11 @@ h1, h2, h3 {
 .hero-image {
     position: relative;
     width: 100%;
-    height: calc(100vh - 60px); /* Hauteur ajustée pour tenir compte de la navbar */
+    height: calc(100vh - 60px); 
     background-image: url("/static/images/hero.jpg");
     background-size: cover; /* L'image couvre tout le container */
-    background-position: center; /* Centre l'image */
+    background-position: top; /* Centre l'image */
     background-repeat: no-repeat; /* Évite les répétitions */
-}
-
-.navbar {
-    --navbar-height: 60px; /* Ajuste cette valeur en fonction de la hauteur réelle de ta navbar */
 }
 
 .hero-overlay {
@@ -58,41 +150,8 @@ h1, h2, h3 {
     padding: 10px 20px;
 }
 
-a {
-    text-decoration: none;
-}
 
-h1 {
-    font-size: 1.9rem;
-    margin-bottom: 20px;
-}
-
-h2 {
-    font-size: 1.7rem;
-    margin-bottom: 15px;
-}
-
-h3 {
-    font-size: 1.5rem;
-    margin-bottom: 10px;
-}
-
-/* Styles globaux */
-body {
-    background-color: #F5EFE6; /* Fond beige */
-    font-family: 'Source Sans Pro', 'Open Sans', sans-serif; /* Polices mises à jour */
-    color: #333;
-}
-
-main {
-    padding-bottom: 30px;
-}
-
-#logout {
-    color: red !important;
-    font-size: 12px;
-}
-
+/* Forms */
 form.rounded {
     background-color: white;
 }
@@ -110,10 +169,6 @@ form.rounded {
     cursor: pointer;
 }
 
-a {
-    font-weight: bold;
-    color: #FC6C85;
-}
 
 .border h2 {
     font-size: 20px;
@@ -125,131 +180,266 @@ a {
 }
 
 /* Barre de navigation */
+/* Récente légèrement le contenu de la navbar sur desktop */
+@media (min-width: 768px) { /* Applique uniquement sur les écrans ≥ 768px */
+    .navbar {
+        padding-left: 10%;
+        padding-right: 10%;
+    }
+}
+
 .navbar {
-    background-color: #E9B8B1; /* Couleur rose */
-    border-bottom: 2px solid #333;
+    font-family: 'Poppins', sans-serif;
+    border-bottom: 1px solid #E1E2EF;
 }
 
 .navbar-brand {
-    font-weight: bold;
-    color: #333 !important;
-    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 1.5rem; /* Taille visible */
+    font-weight: 800; /* Extra bold */
+    text-transform: uppercase;
+    color: #120D31; /* Couleur principale */
 }
 
 .navbar-nav .nav-link {
-    color: #333 !important;
-    font-family: 'Source Sans Pro', sans-serif;
-    font-weight: 600;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    color: #120D31;
 }
 
-.navbar-nav .nav-link:hover {
-    color: #7A5244 !important; /* Brun légèrement plus foncé pour hover */
+.nav-btn-li {
+    padding-left: 30px;
 }
 
-/* Pied de page */
-footer {
-    background-color: #192d5a; /* Fond bleu */
-    color: #fff;
-    padding: 10px 0;
-    font-size: 12px;
-    border-top: 2px solid #333;
+.navbar img {
+    height: 30px !important;
+    margin-right: 10px;
+    mix-blend-mode: multiply;
 }
 
-footer p, footer ul, footer a {
-    font-family: 'Source Sans Pro', sans-serif;
+.navbar a.btn {
+    font-size: 1.1rem;
+    padding: 10px 20px;
 }
 
-.img-fluid {
-    border: 2px solid #333;
-}
-
-footer h5 {
-    font-family: 'Judson', serif !important;
-    color: #b4dcff !important;
-}
-
-footer .col-md-4:nth-child(1), .col-md-4:nth-child(2) {
-    border-right: 1px solid white;
-    padding-right: 15px;
-}
-
-.footer-links {
-    font-size: 0.9rem; /* Taille plus petite */
-    margin-top: 10px;
-    color: #ccc; /* Couleur légèrement grisée */
+.footer-simple {
+    background-color: #120D31; /* Bleu foncé */
+    color: #FFFFFF; /* Texte blanc */
+    font-size: 0.9rem;
+    border-top: 1px solid #E1E2EF; /* Ligne fine en bleu clair */
 }
 
 .footer-links a {
-    font-weight: normal; /* Pas en gras */
+    color: #F15D58; /* Rose intense pour les liens */
     text-decoration: none;
-    color: #ccc; /* Harmonise avec la couleur de la section */
 }
 
 .footer-links a:hover {
-    text-decoration: underline; /* Souligne au survol pour une meilleure accessibilité */
-    color: #fff; /* Change de couleur au survol pour plus de visibilité */
+    text-decoration: underline;
+    color: #FFE4C4; /* Couleur légèrement différente au hover */
 }
+
 
 /* Cartes */
 .card {
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
 }
 
 .card img {
     max-height: 150px;
     object-fit: cover;
-    border-radius: 10px;
 }
 
 .card-title {
     font-family: 'Open Sans', sans-serif;
     font-size: 1.5rem;
     font-weight: 700;
-    color: #FC6C85;
+    color: #FF0054;
 }
 
 /* Boutons */
+/* Boutons génériques */
+.btn {
+    font-family: 'Poppins', sans-serif; /* Cohérence avec le reste du site */
+    font-weight: 800; /* Extra bold pour impact visuel */
+    text-transform: uppercase; /* Texte en capital */
+    font-size: 1rem; /* Taille standard */
+    padding: 12px 20px; /* Espacement interne */
+    border-radius: 0; /* Bords carrés */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    border: none;
+}
+
+/* Style du bouton CTA */
 .btn-primary {
-    background-color: #D8A097; /* Couleur rose */
-    border: 2px border #192d5a;
-    font-weight:bold;
-    transition: background-color 0.3s ease;
-    color: #192d5a;
-    font-family: 'Source Sans Pro', sans-serif;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    text-transform: uppercase;
+    background-color: #FF0054; /* Rose intense */
+    border: none; /* Pas de bordure */
+    color: #fff; /* Texte blanc */
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 1.2rem; /* Taille légèrement augmentée */
+    text-transform: uppercase; /* Texte en majuscules */
+    padding: 10px 20px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .btn-primary:hover {
-    background-color: #192d5a;
-    color: #fff;
+    background-color: #D60044; /* Couleur légèrement plus sombre au hover */
+    transform: scale(1.05); /* Léger agrandissement */
 }
 
-/* Événements */
+.cta-section {
+    background-color: #FADF7F; /* Jaune moutarde */
+    color: #120D31; /* Bleu foncé */
+    padding: 60px 0;
+}
+
+.cta-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    line-height: 1.3;
+    margin-bottom: 20px;
+}
+
+.cta-subtext {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 400;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    color: #120D31; /* Gris légèrement plus doux pour contraster */
+}
+
+/* Section Zanmi Story */
+.zanmi-story-section {
+    background-image: url('/static/images/toulouse-by-night.jpg');
+    background-size: cover; /* L'image couvre tout le container */
+    background-position: center; /* Centre l'image */
+    background-repeat: no-repeat; /* Évite les répétitions */
+    color: #120D31; /* Texte blanc */
+    position: relative;
+    text-align: left; /* Texte aligné à gauche */
+    padding: 100px 0; /* Marge généreuse pour l'espacement */
+    border-top: 4px solid #b9b2e0;
+    border-bottom: 4px solid #b9b2e0;
+}
+
+/* Image de fond */
+.story-bg-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    z-index: 1;
+}
+
+/* Overlay bleu clair */
+.story-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(160, 207, 211, 0.7); /* Overlay bleu clair semi-transparent */
+    z-index: 2;
+}
+
+/* Contenu de la section */
+.container {
+    position: relative;
+    z-index: 3; /* Contenu par-dessus l'overlay */
+}
+
+/* Titre */
+.story-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+
+/* Texte */
+.story-text {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    margin-bottom: 15px;
+}
+
+/* Bouton principal */
+.btn-primary {
+    background-color: #FF0054; /* Rose intense */
+    border: none;
+    font-size: 1.3rem;
+    font-weight: 700;
+    padding: 12px 24px;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease;
+}
+
+/* Bouton hover */
+.btn-primary:hover {
+    background-color: #BB0044; /* Rose foncé */
+    color: white;
+}
+
+/* Message rassurant sous le bouton */
+.cta-reassurance {
+    font-size: 1rem;
+    font-style: italic;
+    color: white;
+    opacity: 0.9;
+    margin-top: 10px;
+}
+
+
+
+.btn-secondary {
+    background-color: #E1E2EF; /* Bleu pastel */
+    color: #120D31; /* Texte gris foncé */
+}
+
+.btn-secondary:hover {
+    background-color: #99D2DF; /* Bleu pastel plus foncé */
+}
+
+
+/* Style de base pour les cartes d'événements */
 .event-card {
+    position: relative;
     text-decoration: none;
     color: inherit;
+    transition: transform 0.3s ease-in-out;
 }
 
+.event-card:hover {
+    transform: scale(1.02); /* Zoom léger au survol */
+}
+
+/* Section de l'image */
 .event-card-image {
     position: relative;
     width: 100%;
     height: 285px;
     background-size: cover;
     background-position: center;
-    border-radius: 10px;
     overflow: hidden;
     display: flex;
     align-items: flex-end;
+    justify-content: center; /* Centrer le bouton */
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
+/* Overlay sur l'image */
 .event-card-overlay {
+    position: absolute;
+    bottom: 0;
     width: 100%;
     padding: 10px;
-    background: rgba(0, 0, 0, 0.7); /* Contraste légèrement amélioré */
+    background: rgba(0, 0, 0, 0.6); /* Overlay sombre */
     color: #fff;
     text-align: center;
 }
@@ -258,20 +448,70 @@ footer .col-md-4:nth-child(1), .col-md-4:nth-child(2) {
     font-size: 1.25rem;
     font-weight: bold;
     color: white;
+    margin-bottom: 5px;
 }
 
 .event-card-date {
     font-size: 0.9rem;
     font-style: italic;
-    margin-top: 5px;
+    margin-bottom: 10px;
 }
 
+/* Bouton sur l'image */
+.event-card-overlay .btn-cta {
+    display: inline-block;
+    padding: 8px 15px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #fff;
+    background-color: #FF0054; /* Rose intense */
+    border: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.event-card-overlay .btn-cta:hover {
+    background-color: #120D31; /* Bleu foncé au survol */
+    transform: scale(1.05); /* Léger agrandissement */
+    color: #fff;
+}
+
+
 /* Profils */
+.profile-description-box {
+    background-color: #E1E2EF; /* Bleu clair */
+    padding: 20px;
+    border-radius: 8px;
+    border: 2px solid #120D31; /* Optionnel : Bordure sombre */
+    color: #120D31; /* Texte bleu foncé */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Légère ombre pour donner du relief */
+}
+
+.profile-description-box h3 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: #120D31;
+    font-weight: bold;
+}
+
+.profile-card .fa-map-marker-alt {
+    font-size: 1.2rem;
+}
+
+.profile-card .d-flex {
+    font-size: 1.1rem;
+    color: #120D31;
+}
+
+.profile-card .btn {
+    width: 100%;
+}
+
 .profile-card {
     text-align: center;
     border: 1px solid #ddd;
     padding: 20px;
-    border-radius: 10px;
     background-color: #f9f9f9;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     margin-bottom: 35px;
@@ -285,7 +525,7 @@ footer .col-md-4:nth-child(1), .col-md-4:nth-child(2) {
 
 .profile-card h2 {
     font-size: 1.5rem;
-    color: #FC6C85;
+    color: #FF0054;
     margin-bottom: 10px;
 }
 
@@ -294,30 +534,13 @@ footer .col-md-4:nth-child(1), .col-md-4:nth-child(2) {
     color: #666;
 }
 
-/* Logo dans la navbar */
-.navbar img {
-    height: 30px !important;
-    margin-right: 10px;
-    mix-blend-mode: multiply;
-}
-
-.thick-box {
-    border: 2px solid #333 !important;
-    background-color: white;
-    margin-top: 100px;
-}
-
-.thick-box p {
-    font-size: 0.9em;
-}
-
 .avatar-rounded {
     width: 150px; /* Taille fixe pour le cercle */
     height: 150px; /* Hauteur égale pour former un cercle */
     border-radius: 50%; /* Rond */
     object-fit: cover; /* Conserve les proportions de l'image */
     object-position: center; /* Centre l'image */
-    border: 3px solid #FC6C85; /* Ajout d'une bordure pour le style */
+    border: 3px solid #120D31; /* Ajout d'une bordure pour le style */
     margin: 0 auto; /* Centrer l'avatar */
     display: block; /* S'assurer que c'est un bloc pour le centrage */
 }
@@ -328,7 +551,7 @@ footer .col-md-4:nth-child(1), .col-md-4:nth-child(2) {
     border-radius: 50%; /* Rend l'image ronde */
     object-fit: cover; /* Ajuste l'image pour remplir le conteneur sans déformation */
     object-position: center; /* Centre l'image */
-    border: 2px solid #FC6C85; /* Optionnel : Ajoute une bordure pour le style */
+    border: 2px solid #120D31; /* Optionnel : Ajoute une bordure pour le style */
 }
 
 .event-image {
@@ -338,86 +561,134 @@ footer .col-md-4:nth-child(1), .col-md-4:nth-child(2) {
     object-position: center; /* Centre l'image si elle est recadrée */
 }
 
-.faq-section {
-    background-color: #b4dcff;
-    padding: 50px 0;
-    border-top: 2px solid #333;
-}
-
-.accordion-item {
-    border: 2px solid #333;
-}
-
-.accordion-button {
-    background-color: white;
-    color: #333;
-    font-weight: bold;
-    font-size: 1rem;
-    padding: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 10px;
-    position: relative;
-}
-
-.accordion-button::after {
-    display: none;
-}
-
-.faq-plus-icon {
-    font-size: 1.5rem;
-    color: #333;
-    margin-right: 10px;
-}
-
-.accordion-body {
-    background-color: white;
-    color: #333;
-    padding: 15px;
-    font-size: 0.9rem;
-    line-height: 1.6;
-}
-
 .accordion-button:not(.collapsed) .faq-plus-icon {
     content: "-";
     transform: rotate(45deg);
 }
 
-/* Encarts de mode d'emploi */
-.quick-guide-card {
-    background-color: white;
-    border: 2px solid #333; /* Contour noir */
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    height: 100%; /* Permet de garder une hauteur uniforme */
+/* Section How It Works */
+.how-it-works {
+    background-color: white; /* Fond global blanc */
+    padding-top: 120px;
 }
 
-.quick-guide-card .guide-number {
-    font-size: 2rem;
-    font-weight: bold;
-    color: #192d5a; /* Couleur bleue spécifique */
+.how-it-works h2, .why-zanmi h2 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #120D31; /* Texte bleu foncé */
+    margin-bottom: 40px;
+}
+
+/* Quick Guide Cards */
+.quick-guide-card {
+    background-color: #E1E2EF ; /* Fond bleu clair */
+    border: 2px solid #120D31; /* Contour bleu foncé */
+    border-radius: 0; /* Bords carrés */
+    padding: 25px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    height: 100%; /* Uniformise la hauteur */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.quick-guide-card:hover {
+    transform: translateY(-5px); /* Légère élévation au survol */
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.1); /* Ombre subtile */
+}
+
+/* Images des encarts */
+.quick-guide-img {
+    width: 100%; /* Prend toute la largeur disponible */
+    height: 200px; /* Hauteur fixe */
+    object-fit: cover; /* Ajuste l'image pour remplir sans déformation */
+    margin-bottom: 15px; /* Espace sous l'image */
+}
+
+/* Contenu des cartes */
+.guide-number {
+    font-size: 3rem;
+    font-weight: 900;
+    color: #FF0054; /* Rose intense pour les numéros */
+    margin-bottom: 15px;
+}
+
+.guide-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #120D31; /* Texte bleu foncé */
+    text-transform: uppercase;
+    margin-bottom: 10px;
+
+}
+
+/* Barre fine entre le titre et le texte */
+.quick-guide-card hr {
+    border: 0;
+    border-top: 2px solid #120D31; /* Barre fine bleu foncé */
+    margin: 10px 0;
+    width: 50%; /* Barre centrée plus courte */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.guide-text {
+    font-size: 1rem;
+    color: #120D31; /* Texte bleu foncé */
+    line-height: 1.5;
+    margin-top: 10px;
+    min-height: 100px;
+}
+
+.why-zanmi {
+    /* background-color: #E1E2EF ;  */
+    background-color: #fff ; 
+    padding-bottom: 160px;
+    padding-top: 90px;
+
+.why-col {
+    /* background-color: #E1E2EF ;  */
+    padding: 80px;
+}
+
+.why-image {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    display: block;
+}
+
+.row > .col-md-6.p-0 {
+    padding: 0; /* Supprime tout espace entre les images */
+}
+
+.why-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #120D31; /* Bleu foncé */
     margin-bottom: 10px;
 }
 
-.quick-guide-card .guide-text {
+.why-text {
     font-size: 1rem;
-    color: #333;
-    line-height: 1.5;
-    font-family: 'Source Sans Pro', sans-serif;
+    line-height: 1.6;
+    color: #120D31; /* Bleu foncé */
 }
 
-.profile-card .fa-map-marker-alt {
-    font-size: 1.2rem;
+@media (max-width: 768px) {
+    .why-title {
+        text-align: center; /* Centrer le titre sur mobile */
+    }
+    .why-text {
+        text-align: center; /* Centrer le texte sur mobile */
+    }
+    .row {
+        margin-bottom: 30px; /* Réduit l’espacement sur mobile */
+    }
 }
 
-.profile-card .d-flex {
-    font-size: 1.1rem;
-    color: #333;
-}
 
-.wide-container {
-    max-width: 80%;
-    margin: 0 auto;
-}
+

@@ -4,54 +4,33 @@
 
 {% block content %}
 
-<div class="block-content mt-4">
-    <!-- Two-column content -->
-    <div class="row text-center mt-5 mb-5">
-        <div class="mb-4">
-            <h2 class="fw-bold">How Does It Work?</h2>
-        </div>
-        <div class="col-md-3 mb-4">
-            <div class="quick-guide-card">
-                <h3 class="guide-number">1️⃣</h3>
-                <p class="guide-text">Sign up in just a few minutes<br>Create your account to discover the events available. It's quick and free!</p>
-            </div>
-        </div>
-        <div class="col-md-3 mb-4">
-            <div class="quick-guide-card">
-                <h3 class="guide-number">2️⃣</h3>
-                <p class="guide-text">Personalize your profile<br>Your profile, visible to other members and organizers, will help them understand who you are and what you're looking for.</p>
-            </div>
-        </div>
-        <div class="col-md-3 mb-4">
-            <div class="quick-guide-card">
-                <h3 class="guide-number">3️⃣</h3>
-                <p class="guide-text">Choose your event and participate<br>Find an event you like, send a short message to the organizer to share your enthusiasm, and request to join.</p>
-            </div>
-        </div>
-        <div class="col-md-3 mb-4">
-            <div class="quick-guide-card">
-                <h3 class="guide-number">4️⃣</h3>
-                <p class="guide-text">Travel without leaving your city<br>Meet unique people from around the world, explore new cultures, and discover your city from a fresh perspective.</p>
-            </div>
-        </div>
+<div class="block-content mt-4" id="events">
+    <!-- Section Title -->
+    <div class="mb-4 text-center">
+        <h2 class="fw-bold">No plans this week? Pick one... <br>...and meet your next friends!</h2>
+        <p>
+            From pique-niques to techno parties, we do our best to organize events for every vibe, age, and interest. 
+            Our organizers make sure you’ll always find the perfect match, no matter your mood or preferences. 
+            Feeling shy? Don’t worry – our events are designed to make you feel welcome from the start.
+        </p>
     </div>
+
+    <!-- Event Cards -->
     <div class="row g-4">
-        <div class="mb-4">
-            <h2 class="fw-bold">Explore Available Events</h2>
-            <p>Zanmi Events lets you meet expats, share your culture, and enjoy enriching experiences. Look for an event that inspires you or create your own to connect people around shared interests! It’s simple: click on an event you like, request to join by sending a message to the organizer, and if accepted, you’ll gain access to the exact address if it’s hidden.</p>
-        </div>
         {% for event in events %}
-        <div class="col-md-6">
+        <div class="col-md-3">
             <a href="{% url 'event_detail' event_id=event.id %}" class="event-card">
                 <div class="event-card-image" style="background-image: url('{{ event.image.url }}');">
                     <div class="event-card-overlay">
                         <h3 class="event-card-title">{{ event.title }}</h3>
                         <p class="event-card-date">{{ event.date|date:"d/m/Y" }}</p>
+                        <a href="{% url 'event_detail' event_id=event.id %}" class="btn-cta">Come With Us</a>
                     </div>
                 </div>
             </a>
-        </div>
+        </div>        
         {% endfor %}
     </div>
 </div>
+
 {% endblock %}

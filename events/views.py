@@ -218,6 +218,8 @@ def event_list(request):
     events = sorted(events, key=lambda event: event.date)
     return render(request, 'events/event_list.html', {'events': events})
 
+def featured_event(request):
+    return redirect('event_detail', event_id="1")
 
 def event_list_fr(request):
     events = [event for event in Event.objects.all() if event.is_joinable()]

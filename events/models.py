@@ -261,7 +261,7 @@ class ParticipationForm(forms.ModelForm):
     message = forms.CharField(
         required=False,
         widget=forms.Textarea(attrs={
-            'placeholder': "Écrivez un message à l'organisateur...",
+            'placeholder': "Share a few words about yourself and why you want to join. This helps our organizers ensure a great match between participants and maintain a safe and welcoming environment for everyone.",
             'rows': 3,
             'class': 'form-control'
         }),
