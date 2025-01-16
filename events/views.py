@@ -99,19 +99,30 @@ def stripe_webhook(request):
     return JsonResponse({"status": "success"}, status=200)
 
 
-@login_required
 def event_detail(request, event_id):
-    user = request.user
+    user = request.user if request.user.is_authenticated else None
     event = get_object_or_404(Event, id=event_id)
     participations = Participation.objects.filter(event=event, status=Participation.ACCEPTED)
-    participation = Participation.objects.filter(user=user, event=event).first()
-    is_accepted = participation.is_accepted() if participation else False
-    is_pending = participation.is_pending() if participation else False
-    is_rejected = participation.is_rejected() if participation else False
+
+    participation = None
+    is_accepted = False
+    is_pending = False
+    is_rejected = False
     location = event.location
-    if not is_accepted and not event.can_manage(user) and event.is_location_hidden:
-        location = "Addresse masquée"
+
+    if user:
+        participation = Participation.objects.filter(user=user, event=event).first()
+        is_accepted = participation.is_accepted() if participation else False
+        is_pending = participation.is_pending() if participation else False
+        is_rejected = participation.is_rejected() if participation else False
+
+        # Masquer l'adresse si l'utilisateur n'est pas accepté et n'est pas l'organisateur
+        if not is_accepted and not event.can_manage(user) and event.is_location_hidden:
+            location = "Adresse masquée"
+
     if request.method == "POST":
+        if not user:
+            return redirect('login')  # Redirige les utilisateurs non connectés vers la page de connexion
         form = ParticipationForm(request.POST)
         if form.is_valid():
             message = form.cleaned_data.get('message')
@@ -124,14 +135,14 @@ def event_detail(request, event_id):
                     'message': message,  # Ajoute le message ici
                 }
             )
-        return redirect(session.url)
+            return redirect(session.url)
     else:
-        form = ParticipationForm()
+        form = ParticipationForm() if user else None
 
     return render(request, 'events/event_detail.html', {
         'event': event,
         'participations': participations,
-        'can_manage': event.can_manage(user),
+        'can_manage': event.can_manage(user) if user else False,
         'is_accepted': is_accepted,
         'location': location,
         'is_pending': is_pending,
