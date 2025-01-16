@@ -108,7 +108,7 @@
                     </div>
                 </div>
             </div>
-    
+
             <!-- Call to Action -->
             <div class="row text-center mt-5">
                 <div class="col">
@@ -124,7 +124,7 @@
     <section class="why-zanmi">
         <div class="container">
             <h2 class="text-center mb-5">Nervous about joining? <br>We'll make it easy for you. Here's how:</h2>
-            
+
             <!-- Compatibility and Connection -->
             <div class="row align-items-center">
                 <div class="col-md-6 p-0">
@@ -133,33 +133,33 @@
                 <div class="col-md-6 why-col">
                     <h3 class="why-title">Compatibility and Connection</h3>
                     <p class="why-text">
-                        Our organizers carefully design private events to bring together people who share your vibe and energy.
+                        Our organizers carefully design private events and make sure that other participants vibe match with yours, so you can easily make new friends.
                     </p>
                 </div>
             </div>
-    
+
             <!-- Discover and Experience -->
             <div class="row align-items-center flex-md-row-reverse">
                 <div class="col-md-6 p-0">
                     <img src="{% static 'images/discover.jpg' %}" alt="Discover" class="why-image">
                 </div>
                 <div class="col-md-6 why-col">
-                    <h3 class="why-title">Discover and Experience</h3>
+                    <h3 class="why-title">Discovery and Experience</h3>
                     <p class="why-text">
-                        Enjoy curated events that take you to new restaurants, lively neighborhoods, and unique cultural spots in Toulouse.
+                        Enjoy curated events that take you to new restaurants, lively neighborhoods, and unique cultural spots in Toulouse. Organizers will also animate the events so that each experience is packed with smiles, laughters and core memories.
                     </p>
                 </div>
             </div>
-    
+
             <!-- Safe and Inclusive -->
             <div class="row align-items-center ">
                 <div class="col-md-6 p-0">
                     <img src="{% static 'images/safe.jpg' %}" alt="Safety" class="why-image">
                 </div>
                 <div class="col-md-6 why-col">
-                    <h3 class="why-title">Safe and Inclusive</h3>
+                    <h3 class="why-title">Safety and Inclusivity</h3>
                     <p class="why-text">
-                        All event locations are private and accessible only to approved participants. For women who prefer, non-mixed events are available.
+                        All event locations are private and accessible only to approved participants. Organizers will make sure that everyone is safe during their events, ensuring respect for every attendees? For women who prefer, non-mixed events will be available.
                     </p>
                 </div>
             </div>
@@ -174,7 +174,7 @@
                 <h2 class="story-title text-center">Make Toulouse a village again</h2>
                 <!-- Colonne Gauche : Texte -->
                 <div class="col-md-6">
-                    
+
                     <p class="story-text ">
                         Moving to a new city or country can feel isolating. Even long-time locals know the struggle: friends move away, schedules get busier, and meeting new people becomes harder.
                     </p>
@@ -193,7 +193,7 @@
                 </div>
             </div>
             <!-- Bouton d’appel à l’action -->
-            <a href="/signup" class="btn btn-primary btn-lg mt-4">Join Us and Start Your Journey Today!</a>
+            <a href="{% url 'register' %}" class="btn btn-primary btn-lg mt-4">Join Us and Start Your Journey Today!</a>
             <p class="cta-reassurance mt-3 text-dark">
                 It’s free and takes less than 20 seconds.
             </p>
@@ -211,11 +211,11 @@
         <div class="container text-center">
             <h2 class="cta-title">Feel like no one’s around? You’re one step away from meeting your crew.</h2>
             <p class="cta-subtext">No awkwardness, just good vibes. Join us and feel at home anywhere.</p>
-            <a href="/signup" class="btn btn-primary btn-lg mt-3">Sign Up in Seconds (It’s Free!)</a>
+            <a href="{% url 'register' %}" class="btn btn-primary btn-lg mt-3">Sign Up in Seconds (It’s Free!)</a>
         </div>
     </section>
     {% endif %}
-    
+
     <footer class="footer-simple py-3">
         <div class="container text-center">
             <p class="mb-1">&copy; 2025 Zanmi. All rights reserved.</p>
@@ -227,7 +227,7 @@
             </p>
         </div>
     </footer>
-    
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     {% block extra_scripts %}{% endblock %}

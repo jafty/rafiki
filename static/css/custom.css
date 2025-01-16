@@ -25,15 +25,15 @@ a:hover {
 }
 
 h1 {
-    font-size: 3rem; /* Très grand pour le titre principal */
+    font-size: 2.4rem; /* Très grand pour le titre principal */
 }
 
 h2 {
-    font-size: 2.5rem; /* Titre de section */
+    font-size: 2rem; /* Titre de section */
 }
 
 h3 {
-    font-size: 2rem; /* Sous-section */
+    font-size: 1.8rem; /* Sous-section */
 }
 
 body {
@@ -116,7 +116,7 @@ p {
 .hero-image {
     position: relative;
     width: 100%;
-    height: calc(100vh - 60px); 
+    height: calc(100vh - 60px);
     background-image: url("/static/images/hero.jpg");
     background-size: cover; /* L'image couvre tout le container */
     background-position: top; /* Centre l'image */
@@ -136,7 +136,7 @@ p {
 }
 
 .hero-overlay h1 {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
     margin-bottom: 20px;
 }
 
@@ -324,6 +324,12 @@ form.rounded {
     border-top: 4px solid #b9b2e0;
     border-bottom: 4px solid #b9b2e0;
 }
+
+.zanmi-story-section img {
+    width: 100%;
+    object-fit: cover;
+}
+
 
 /* Image de fond */
 .story-bg-image {
@@ -574,7 +580,7 @@ form.rounded {
 
 .how-it-works h2, .why-zanmi h2 {
     font-family: 'Poppins', sans-serif;
-    font-size: 2.5rem;
+    font-size: 2rem;
     font-weight: 800;
     text-transform: uppercase;
     color: #120D31; /* Texte bleu foncé */
@@ -645,7 +651,7 @@ form.rounded {
 
 .why-zanmi {
     /* background-color: #E1E2EF ;  */
-    background-color: #fff ; 
+    background-color: #fff ;
     padding-bottom: 160px;
     padding-top: 90px;
 
