@@ -109,17 +109,17 @@
                 </div>
             </div>
 
-            <!-- Call to Action -->
-            <div class="row text-center mt-5">
-                <div class="col">
-                    <a href="{% url 'register' %}" class="btn btn-primary btn-lg">
-                        Sign-up in seconds and make friends today
-                    </a>
-                    <p class="mt-2 cta-subtext">(It’s free!)</p>
-                </div>
-            </div>
         </div>
     </section>
+    {% if not request.user.is_authenticated %}
+    <section class="cta-section py-5">
+        <div class="container text-center">
+            <h2 class="cta-title">Feel like no one’s around? You’re one step away from meeting your crew.</h2>
+            <p class="cta-subtext">No awkwardness, just good vibes. Join us and feel at home anywhere.</p>
+            <a href="{% url 'register' %}" class="btn btn-primary btn-lg mt-3">Sign Up in Seconds (It’s Free!)</a>
+        </div>
+    </section>
+    {% endif %}
 
     <section class="why-zanmi">
         <div class="container">
@@ -194,7 +194,7 @@
             </div>
             <!-- Bouton d’appel à l’action -->
             <a href="{% url 'register' %}" class="btn btn-primary btn-lg mt-4">Join Us and Start Your Journey Today!</a>
-            <p class="cta-reassurance mt-3 text-dark">
+            <p class="cta-reassurance mt-3">
                 It’s free and takes less than 20 seconds.
             </p>
         </div>
@@ -206,15 +206,6 @@
     <main class="wide-container mt-4">
         {% block content %}{% endblock %}
     </main>
-    {% if not request.user.is_authenticated %}
-    <section class="cta-section py-5">
-        <div class="container text-center">
-            <h2 class="cta-title">Feel like no one’s around? You’re one step away from meeting your crew.</h2>
-            <p class="cta-subtext">No awkwardness, just good vibes. Join us and feel at home anywhere.</p>
-            <a href="{% url 'register' %}" class="btn btn-primary btn-lg mt-3">Sign Up in Seconds (It’s Free!)</a>
-        </div>
-    </section>
-    {% endif %}
 
     <footer class="footer-simple py-3">
         <div class="container text-center">

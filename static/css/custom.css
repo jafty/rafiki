@@ -17,7 +17,7 @@ h1, h2, h3 {
 
 a {
     text-decoration: none;
-    color: #FF0054; /* Couleur rose pour les liens */
+    color: #FF5376; /* Couleur rose pour les liens */
 }
 
 a:hover {
@@ -54,7 +54,7 @@ main {
 
 a {
     font-weight: bold;
-    color: #FF0054;
+    color: #FF5376;
 }
 
 p {
@@ -119,7 +119,7 @@ p {
     height: calc(100vh - 60px);
     background-image: url("/static/images/hero.jpg");
     background-size: cover; /* L'image couvre tout le container */
-    background-position: center; 
+    background-position: center;
     background-repeat: no-repeat; /* Évite les répétitions */
 }
 
@@ -190,7 +190,7 @@ form.rounded {
 
 .navbar {
     font-family: 'Poppins', sans-serif;
-    border-bottom: 1px solid #E1E2EF;
+    border-bottom: 1px solid #ACECF7;
 }
 
 .navbar-brand {
@@ -225,7 +225,7 @@ form.rounded {
     background-color: #120D31; /* Bleu foncé */
     color: #FFFFFF; /* Texte blanc */
     font-size: 0.9rem;
-    border-top: 1px solid #E1E2EF; /* Ligne fine en bleu clair */
+    border-top: 1px solid #ACECF7; /* Ligne fine en bleu clair */
 }
 
 .footer-links a {
@@ -253,7 +253,7 @@ form.rounded {
     font-family: 'Open Sans', sans-serif;
     font-size: 1.5rem;
     font-weight: 700;
-    color: #FF0054;
+    color: #FF5376;
 }
 
 /* Boutons */
@@ -271,7 +271,7 @@ form.rounded {
 
 /* Style du bouton CTA */
 .btn-primary {
-    background-color: #FF0054; /* Rose intense */
+    background-color: #FF5376; /* Rose intense */
     border: none; /* Pas de bordure */
     color: #fff; /* Texte blanc */
     font-family: 'Poppins', sans-serif;
@@ -288,7 +288,7 @@ form.rounded {
 }
 
 .cta-section {
-    background-color: #FADF7F; /* Jaune moutarde */
+    background-color: #F8C0C8; /* Jaune moutarde */
     color: #120D31; /* Bleu foncé */
     padding: 60px 0;
 }
@@ -313,11 +313,11 @@ form.rounded {
 
 /* Section Zanmi Story */
 .zanmi-story-section {
-    background-image: url('/static/images/toulouse-by-night.jpg');
+    background-image: url('/static/images/image.jpg');
     background-size: cover; /* L'image couvre tout le container */
     background-position: center; /* Centre l'image */
     background-repeat: no-repeat; /* Évite les répétitions */
-    color: #120D31; /* Texte blanc */
+    color: white; /* Texte blanc */
     position: relative;
     text-align: left; /* Texte aligné à gauche */
     padding: 100px 0; /* Marge généreuse pour l'espacement */
@@ -350,7 +350,7 @@ form.rounded {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(160, 207, 211, 0.7); /* Overlay bleu clair semi-transparent */
+    background-color: rgba(0, 0, 0, 0.5);
     z-index: 2;
 }
 
@@ -366,6 +366,7 @@ form.rounded {
     font-weight: 700;
     text-transform: uppercase;
     margin-bottom: 20px;
+    color: white;
 }
 
 /* Texte */
@@ -377,7 +378,7 @@ form.rounded {
 
 /* Bouton principal */
 .btn-primary {
-    background-color: #FF0054; /* Rose intense */
+    background-color: #FF5376; /* Rose intense */
     border: none;
     font-size: 1.3rem;
     font-weight: 700;
@@ -404,7 +405,7 @@ form.rounded {
 
 
 .btn-secondary {
-    background-color: #E1E2EF; /* Bleu pastel */
+    background-color: #ACECF7; /* Bleu pastel */
     color: #120D31; /* Texte gris foncé */
 }
 
@@ -471,7 +472,7 @@ form.rounded {
     font-weight: bold;
     text-transform: uppercase;
     color: #fff;
-    background-color: #FF0054; /* Rose intense */
+    background-color: #FF5376; /* Rose intense */
     border: none;
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
@@ -485,7 +486,7 @@ form.rounded {
 
 /* Profils */
 .profile-description-box {
-    background-color: #E1E2EF; /* Bleu clair */
+    background-color: #ACECF7; /* Bleu clair */
     padding: 20px;
     border-radius: 8px;
     border: 2px solid #120D31; /* Optionnel : Bordure sombre */
@@ -503,7 +504,7 @@ form.rounded {
 
 .profile-card .fa-map-marker-alt {
     font-size: 1.5rem; /* Augmente la taille */
-    color: #A0CFD3; /* Bleu clair */
+    color: #ACECF7; /* Bleu clair */
 }
 
 .profile-card .d-flex {
@@ -532,7 +533,7 @@ form.rounded {
 
 .profile-card h2 {
     font-size: 1.5rem;
-    color: #FF0054;
+    color: #FF5376;
     margin-bottom: 10px;
 }
 
@@ -575,8 +576,9 @@ form.rounded {
 
 /* Section How It Works */
 .how-it-works {
-    background-color: white; /* Fond global blanc */
-    padding-top: 120px;
+    background-color: white;
+    padding-top: 70px;
+    padding-BOTTOM: 70px;
 }
 
 .how-it-works h2, .why-zanmi h2 {
@@ -590,7 +592,7 @@ form.rounded {
 
 /* Quick Guide Cards */
 .quick-guide-card {
-    background-color: #E1E2EF ; /* Fond bleu clair */
+    background-color: #ACECF7 ; /* Fond bleu clair */
     border: 2px solid #120D31; /* Contour bleu foncé */
     border-radius: 0; /* Bords carrés */
     padding: 25px;
@@ -619,7 +621,7 @@ form.rounded {
 .guide-number {
     font-size: 3rem;
     font-weight: 900;
-    color: #FF0054; /* Rose intense pour les numéros */
+    color: #FF5376; /* Rose intense pour les numéros */
     margin-bottom: 15px;
 }
 
@@ -651,14 +653,14 @@ form.rounded {
 }
 
 .why-zanmi {
-    /* background-color: #E1E2EF ;  */
+    /* background-color: #ACECF7 ;  */
     background-color: #fff ;
     padding-bottom: 160px;
     padding-top: 90px;
 }
 
 .why-col {
-    /* background-color: #E1E2EF ;  */
+    /* background-color: #ACECF7 ;  */
     padding: 80px;
 }
 
