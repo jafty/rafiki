@@ -264,7 +264,7 @@ form.rounded {
     text-transform: uppercase; /* Texte en capital */
     font-size: 1rem; /* Taille standard */
     padding: 12px 20px; /* Espacement interne */
-    border-radius: 0; /* Bords carrés */
+    border-radius: 3px; /* Bords carrés */
     transition: background-color 0.3s ease, transform 0.2s ease;
     border: none;
 }
@@ -475,6 +475,7 @@ form.rounded {
     background-color: #FF5376; /* Rose intense */
     border: none;
     transition: background-color 0.3s ease, transform 0.2s ease;
+    border-radius: 3px;
 }
 
 .event-card-overlay .btn-cta:hover {
@@ -578,7 +579,6 @@ form.rounded {
 .how-it-works {
     background-color: white;
     padding-top: 70px;
-    padding-BOTTOM: 70px;
 }
 
 .how-it-works h2, .why-zanmi h2 {

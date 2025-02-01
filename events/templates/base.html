@@ -62,8 +62,8 @@
     <!-- Hero Image Section -->
     <div class="hero-image">
         <div class="hero-overlay">
-            <h1 class="fw-bold">Rediscover Toulouse with locals and foreigners <br>who match your vibe</h1>
-            <p>From relaxed evenings to lively nights, explore Toulouse’s iconic spots and hidden gems <br>while making connections with locals, tourists, erasmus students, expats...</p>
+            <h1 class="fw-bold">Join fun and intimate events in Toulouse <br>that make meeting people easy.</h1>
+            <p>Make friends with locals, travelers, and expats while exploring Toulouse through pub crawls, city challenges, and fun group activities</p>
             <a href="#events" class="btn btn-primary btn-lg mt-3">Have a drink with us this week</a>
         </div>
     </div>
@@ -111,12 +111,16 @@
 
         </div>
     </section>
+    <!-- Main Content -->
+    <main class="wide-container mt-4">
+        {% block content %}{% endblock %}
+    </main>
     {% if not request.user.is_authenticated %}
     <section class="cta-section py-5">
         <div class="container text-center">
-            <h2 class="cta-title">Feel like no one’s around? You’re one step away from meeting your crew.</h2>
-            <p class="cta-subtext">No awkwardness, just good vibes. Join us and feel at home anywhere.</p>
-            <a href="{% url 'register' %}" class="btn btn-primary btn-lg mt-3">Sign Up in Seconds (It’s Free!)</a>
+            <h2 class="cta-title">Want to meet new people <br>but don’t see an event that fits?</h2>
+            <p class="cta-subtext">Sign up in seconds to get an invitation to our WhatsApp group. Discuss there with locals, travelers, and expats, and even organize your own outings!</p>
+            <a href="{% url 'register' %}" class="btn btn-primary btn-lg mt-3">Get your WhatsApp invite (it's free!)</a>
         </div>
     </section>
     {% endif %}
@@ -171,9 +175,9 @@
         <div class="story-overlay"></div>
         <div class="container">
             <div class="row align-items-center">
-                <h2 class="story-title text-center">Make Toulouse a village again</h2>
+                <h2 class="story-title">Make Toulouse a village again</h2>
                 <!-- Colonne Gauche : Texte -->
-                <div class="col-md-6">
+                <div class="col-md-12">
 
                     <p class="story-text ">
                         Moving to a new city or country can feel isolating. Even long-time locals know the struggle: friends move away, schedules get busier, and meeting new people becomes harder.
@@ -187,10 +191,7 @@
 
                 </div>
 
-                <!-- Colonne Droite : Image -->
-                <div class="col-md-6">
-                    <img src="{% static 'images/young-smiling.jpg' %}" alt="Smiling young person" >
-                </div>
+
             </div>
             <!-- Bouton d’appel à l’action -->
             <a href="{% url 'register' %}" class="btn btn-primary btn-lg mt-4">Join Us and Start Your Journey Today!</a>
@@ -202,10 +203,7 @@
     {% endif %}
     {% endif %}
 
-    <!-- Main Content -->
-    <main class="wide-container mt-4">
-        {% block content %}{% endblock %}
-    </main>
+
 
     <footer class="footer-simple py-3">
         <div class="container text-center">
