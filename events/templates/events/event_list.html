@@ -19,15 +19,18 @@
     <div class="row g-4">
         {% for event in events %}
         <div class="col-md-4">
-            <a href="{% url 'event_detail' event_id=event.id %}" class="event-card">
-                <div class="event-card-image" style="background-image: url('{{ event.image.url }}');">
-                    <div class="event-card-overlay">
-                        <h3 class="event-card-title">{{ event.title }}</h3>
-                        <p class="event-card-date">{{ event.date|date:"d/m/Y" }}</p>
-                        <a href="{% url 'event_detail' event_id=event.id %}" class="btn-cta">Come With Us</a>
+            <div class="event-card">
+                <a href="{% url 'event_detail' event_id=event.id %}">
+                    <div class="event-card-image" style="background-image: url('{{ event.image.url }}');">
+                        <div class="event-card-overlay">
+                            <h3 class="event-card-title">{{ event.title }}</h3>
+                            <p class="event-card-date">{{ event.date|date:"d/m/Y" }}</p>
+                            <span class="btn-cta">Come with us</span>
+                        </div>
                     </div>
-                </div>
-            </a>
+                </a>
+            </div>
+
         </div>
         {% endfor %}
     </div>
