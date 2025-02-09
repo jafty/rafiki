@@ -14,19 +14,19 @@
     {% block extra_head %}{% endblock %}
 </head>
 <body>
+
+    <!-- 🚀 Navbar -->
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
             <a class="navbar-brand d-flex align-items-center" href="/">
                 <img src="{% static 'images/logo.png' %}" alt="Zanmi Logo" style="height: 40px; margin-right: 10px;">
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/">Home</a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
                     {% if user.is_authenticated %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'notifications_list' %}">
@@ -35,172 +35,125 @@
                                 {% endif %}
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'profile' user.username %}">Profile</a>
-                        </li>
-                        <li class="nav-item nav-btn-li">
-                            <a class="btn btn-primary btn-sm" href="{% url 'event_list' %}">Meet strangers</a>
-                        </li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'profile' user.username %}">Profile</a></li>
+                        <li class="nav-item nav-btn-li"><a class="btn btn-primary btn-sm" href="{% url 'event_list' %}">Meet strangers</a></li>
                     {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'login' %}">Log In</a>
-                        </li>
-                        <li class="nav-item nav-btn-li">
-                            <a class="btn btn-primary btn-sm" href="{% url 'register' %}">Sign Up</a>
-                        </li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Log In</a></li>
+                        <li class="nav-item nav-btn-li"><a class="btn btn-primary btn-sm" href="{% url 'register' %}">Sign Up</a></li>
                     {% endif %}
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    {% if request.resolver_match.url_name == 'event_list' and not request.user.is_authenticated %}
-    <div class="hero-image">
+    <!-- 🎯 HERO SECTION uniquement sur event_detail -->
+    {% if request.resolver_match.url_name == 'event_detail' %}
+    <section class="hero-image">
         <div class="hero-overlay">
-            <h1 class="fw-bold">Join fun and intimate events in Toulouse <br>that make meeting people easy.</h1>
-            <p>Make friends with locals, travelers, and expats while exploring Toulouse through pub crawls, city challenges, and fun group activities.</p>
-            <a href="#events" class="btn btn-primary btn-lg mt-3">Join our next Pub Crawl</a>
+            <h1>{{ event.title }}</h1>
+            <p class="event-subtitle">Discover Toulouse, meet locals & travelers, and enjoy a night out like never before.</p>
+            <a href="#event-details" class="btn btn-primary">Reserve Your Spot</a>
         </div>
-    </div>
+        <div class="hero-background" style="background-image: url('{{ event.image.url }}');"></div>
+    </section>
+    {% endif %}
+
+    <!-- 🔥 HOW IT WORKS - Seulement sur event_detail -->
+    {% if request.resolver_match.url_name == 'event_detail' %}
     <section class="how-it-works">
-        <div class="container">
-            <h2 class="text-center mb-5">How to Meet Your Future Friends</h2>
-            <div class="row text-center">
-                <!-- Étape 1 -->
+        <div class="container text-center">
+            <h2 class="mb-5">How It Works</h2>
+            <div class="row">
                 <div class="col-lg-3 col-md-6 mb-4">
                     <div class="quick-guide-card">
-                        <img src="{% static 'images/event1.jpg' %}" alt="Event 1" class="quick-guide-img">
-                        <h3 class="guide-title">Find Your Event</h3>
+                        <img src="{% static 'images/event1.jpg' %}" alt="Meet People" class="quick-guide-img">
+                        <h3 class="guide-title">Break the Ice</h3>
                         <hr>
-                        <p class="guide-text">Explore a variety of curated events and pick one that matches your vibe.</p>
+                        <p class="guide-text">Start with a small group over a drink—no awkward intros, just good vibes.</p>
                     </div>
                 </div>
-                <!-- Étape 2 -->
                 <div class="col-lg-3 col-md-6 mb-4">
                     <div class="quick-guide-card">
-                        <img src="{% static 'images/event2.jpg' %}" alt="Event 2" class="quick-guide-img">
-                        <h3 class="guide-title">Request to Join</h3>
+                        <img src="{% static 'images/event2.jpg' %}" alt="Explore Toulouse" class="quick-guide-img">
+                        <h3 class="guide-title">Explore Toulouse by Night</h3>
                         <hr>
-                        <p class="guide-text">Complete your profile and let the organizer know you'd like to attend.</p>
+                        <p class="guide-text">Walk through lively streets, discover hidden gems and enjoy unique atmospheres.</p>
                     </div>
                 </div>
-                <!-- Étape 3 -->
                 <div class="col-lg-3 col-md-6 mb-4">
                     <div class="quick-guide-card">
-                        <img src="{% static 'images/event3.jpg' %}" alt="Event 3" class="quick-guide-img">
-                        <h3 class="guide-title">Meet People You Will Love</h3>
+                        <img src="{% static 'images/event3.jpg' %}" alt="Visit Unique Bars" class="quick-guide-img">
+                        <h3 class="guide-title">Visit Local Hotspots</h3>
                         <hr>
-                        <p class="guide-text">Connect with locals and expats who share your interests and energy.</p>
+                        <p class="guide-text">Experience 3 carefully selected bars, each with its own unique vibe.</p>
                     </div>
                 </div>
-                <!-- Étape 4 -->
                 <div class="col-lg-3 col-md-6 mb-4">
                     <div class="quick-guide-card">
-                        <img src="{% static 'images/event4.jpg' %}" alt="Event 4" class="quick-guide-img">
-                        <h3 class="guide-title">Rediscover Toulouse</h3>
+                        <img src="{% static 'images/event4.jpg' %}" alt="Make Friends" class="quick-guide-img">
+                        <h3 class="guide-title">End the Night with New Friends</h3>
                         <hr>
-                        <p class="guide-text">Explore hidden gems, vibrant neighborhoods, and unique spots chosen by thoughtful organizers.</p>
+                        <p class="guide-text">Leave with new friends and future plans—this is just the beginning.</p>
                     </div>
                 </div>
             </div>
-
         </div>
     </section>
     {% endif %}
+
+    
+
+    <!-- ✅ MAIN CONTENT (TOUTES LES PAGES) -->
     <main class="wide-container mt-4">
         {% block content %}{% endblock %}
     </main>
-
-    <!-- WhatsApp CTA Section -->
-    {% if request.resolver_match.url_name == 'event_list' and not request.user.is_authenticated %}
-    <section class="cta-section py-5">
-        <div class="container text-center">
-            <h2 class="cta-title">No events for you this week? <br>Join the WhatsApp group and plan your own!</h2>
-            <p class="cta-subtext">Sign up to get an invitation to our WhatsApp group. Connect with locals, travelers, and expats, and even organize your own outings!</p>
-            <a href="{% url 'register' %}" class="btn btn-primary btn-lg mt-3">Get your WhatsApp invite (it's free!)</a>
-        </div>
-    </section>
+    {% if request.resolver_match.url_name == 'event_detail' %}
     <section class="why-zanmi">
         <div class="container">
-            <h2 class="text-center mb-5">Nervous about joining? <br>We'll make it easy for you. Here's how:</h2>
-
-            <!-- Compatibility and Connection -->
+            <h2 class="text-center mb-5">Why Join a Zanmi Event?</h2>
+    
+            <!-- Meet People Who Match Your Energy -->
             <div class="row align-items-center">
                 <div class="col-md-6 p-0">
-                    <img src="{% static 'images/compatibility.jpg' %}" alt="Compatibility" class="why-image">
+                    <img src="{% static 'images/compatibility.jpg' %}" alt="Meet People" class="why-image">
                 </div>
                 <div class="col-md-6 why-col">
-                    <h3 class="why-title">Compatibility and Connection</h3>
+                    <h3 class="why-title">Meet People Who Match Your Energy</h3>
                     <p class="why-text">
-                        Our organizers carefully design private events and make sure that other participants vibe match with yours, so you can easily make new friends.
+                        No awkward introductions, no pressure—just real conversations. Whether you're new in town or looking to expand your social circle, our events connect you with locals and travelers who are open to meeting new people.
                     </p>
                 </div>
             </div>
-
-            <!-- Discover and Experience -->
+    
+            <!-- Discover Toulouse Like a Local -->
             <div class="row align-items-center flex-md-row-reverse">
                 <div class="col-md-6 p-0">
-                    <img src="{% static 'images/discover.jpg' %}" alt="Discover" class="why-image">
+                    <img src="{% static 'images/discover.jpg' %}" alt="Explore Toulouse" class="why-image">
                 </div>
                 <div class="col-md-6 why-col">
-                    <h3 class="why-title">Discovery and Experience</h3>
+                    <h3 class="why-title">Discover Toulouse Like a Local</h3>
                     <p class="why-text">
-                        Enjoy curated events that take you to new restaurants, lively neighborhoods, and unique cultural spots in Toulouse. Organizers will also animate the events so that each experience is packed with smiles, laughters and core memories.
+                        Skip the tourist traps—our events take you through hidden bars, vibrant neighborhoods, and the best local spots. Hosted by people who know and love the city, every event is a new way to experience Toulouse.
                     </p>
                 </div>
             </div>
-
-            <!-- Safe and Inclusive -->
-            <div class="row align-items-center ">
-                <div class="col-md-6 p-0">
-                    <img src="{% static 'images/safe.jpg' %}" alt="Safety" class="why-image">
-                </div>
-                <div class="col-md-6 why-col">
-                    <h3 class="why-title">Safety and Inclusivity</h3>
-                    <p class="why-text">
-                        All event locations are private and accessible only to approved participants. Organizers will make sure that everyone is safe during their events, ensuring respect for every attendees? For women who prefer, non-mixed events will be available.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-    {% endif %}
-    {% if not request.user.is_authenticated %}
-    <section class="zanmi-story-section position-relative">
-        <!-- Image de fond -->
-        <div class="story-overlay"></div>
-        <div class="container">
+    
+            <!-- A Safe and Friendly Space -->
             <div class="row align-items-center">
-                <h2 class="story-title">Make Toulouse a village again</h2>
-                <!-- Colonne Gauche : Texte -->
-                <div class="col-md-12">
-
-                    <p class="story-text ">
-                        Moving to a new city or country can feel isolating. Even long-time locals know the struggle: friends move away, schedules get busier, and meeting new people becomes harder.
-                    </p>
-                    <p class="story-text ">
-                        Toulouse is home to locals, expats, and students from all over the world — yet too often, they live parallel lives without crossing paths.
-                    </p>
-                    <p class="story-text ">
-                        Zanmi bridges that gap. It’s a platform created by people just like you, to connect locals and internationals for shared stories, cultures, and experiences. Let’s make Toulouse feel like home, together.
-                    </p>
-
+                <div class="col-md-6 p-0">
+                    <img src="{% static 'images/safe.jpg' %}" alt="Safe and Inclusive" class="why-image">
                 </div>
-
-
+                <div class="col-md-6 why-col">
+                    <h3 class="why-title">A Safe and Friendly Space</h3>
+                    <p class="why-text">
+                        Our events are designed to be welcoming and comfortable for everyone. Group sizes are kept small, locations are carefully chosen, and organizers ensure a respectful atmosphere so you can enjoy the experience with peace of mind.
+                    </p>
+                </div>
             </div>
-            <!-- Bouton d’appel à l’action -->
-            <a href="{% url 'register' %}" class="btn btn-primary btn-lg mt-4">Join Us and Start Your Journey Today!</a>
-            <p class="cta-reassurance mt-3">
-                It’s free and takes less than 20 seconds.
-            </p>
         </div>
     </section>
     {% endif %}
-
-
-
+    <!-- ✅ FOOTER -->
     <footer class="footer-simple py-3">
         <div class="container text-center">
             <p class="mb-1">&copy; 2025 Zanmi. All rights reserved.</p>
@@ -212,7 +165,6 @@
             </p>
         </div>
     </footer>
-
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     {% block extra_scripts %}{% endblock %}
