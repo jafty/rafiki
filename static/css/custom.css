@@ -101,7 +101,7 @@ p {
     height: 210px;
 }
 
-.wide-container {
+.offwide-container {
     max-width: 80%;
     margin: 0 auto;
 }
@@ -664,11 +664,11 @@ form.rounded {
 }
 
 .why-zanmi {
-    /* background-color: #ACECF7 ;  */
-    background-color: #fff ;
+    background-color: #F8C0C8; /* Rose clair */
     padding-bottom: 160px;
     padding-top: 90px;
 }
+
 
 .why-col {
     /* background-color: #ACECF7 ;  */

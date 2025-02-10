@@ -1,82 +1,85 @@
 {% extends 'base.html' %}
-
 {% block title %}{{ event.title }}{% endblock %}
 
 {% block content %}
 <div class="block-content mt-4">
+    <!-- Event Details Section -->
+    <section id="event-details" class="container my-5">
+        <div class="row">
+            <!-- Event Description -->
+            <div class="col-md-8">
+                <h2 class="fw-bold">{{ event.title }}</h2>
+                <p class="text-muted"><strong>Hosted by:</strong> <a href="{% url 'profile' event.organizer.username %}" class="fw-bold">{{ event.organizer }}</a></p>
+                <p>{{ event.description|linebreaks }}</p>
+            </div>
 
-    <!-- Event Image -->
-    <div class="mb-4">
-        <img src="{{ event.image.url }}" alt="{{ event.title }}" class="img-fluid w-100 event-image">
-    </div>
+            <!-- Event Details & Registration -->
+            <div class="col-md-4">
+                <div class="p-4 thick-box">
+                    <!-- Event Details -->
+                    <h3 class="text-center mb-3">Event Details</h3>
+                    <p><i class="fas fa-calendar-alt me-2"></i> <strong>Date:</strong> {{ event.date|date:"d/m/Y" }}</p>
+                    <p><i class="fas fa-clock me-2"></i> <strong>Time:</strong> {{ event.time }}</p>
+                    <p><i class="fas fa-map-marker-alt me-2"></i> <strong>Location:</strong> {{ location }}</p>
+                    <p><i class="fas fa-tag me-2"></i> <strong>Activity Type:</strong> {{ event.activity_type }}</p>
+                    <p class="event-price"><strong>Price:</strong> {{ event.price }}€ (includes a free shot at each bar)</p>
+                </div>
 
-    <div class="row">
-        <!-- Column 1: Description, organizer, participants -->
-        <h1 class="mb-4">{{ event.title }}</h1>
-        <div class="col-md-8">
-            <!-- Event Title -->
-
-
-            <!-- Organizer Card -->
-            <div class="organizer-card d-flex align-items-center p-3 mb-4" >
-                <img src="{{ event.organizer.profile.avatar.url }}" alt="Organizer's Avatar" class="avatar-img me-3" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;">
-                <div>
-                    <p class="mb-0">Hosted by:</p>
-                    <p><a href="{% url 'profile' event.organizer.username %}" class="fw-bold">{{ event.organizer }}</a></p>
+                <!-- Registration / Payment Form -->
+                <div class="p-4 thick-box mt-4">
+                    {% if is_accepted %}
+                        <p class="text-success text-center fw-bold">✅ You're in! See you there.</p>
+                    {% elif is_pending %}
+                        <p class="text-warning text-center fw-bold">⏳ Your request is pending.</p>
+                    {% elif is_rejected %}
+                        <p class="text-danger text-center fw-bold">❌ Your request has been rejected.</p>
+                    {% else %}
+                        {% if not user.is_authenticated %}
+                            <h3 class="text-center mb-3">Sign Up to Join</h3>
+                            <form method="post" action="{% url 'register' %}?next={% url 'checkout' event.id %}">
+                                {% csrf_token %}
+                                <div class="mb-3">
+                                    <input type="text" name="username" class="form-control" placeholder="Username" required>
+                                </div>
+                                <div class="mb-3">
+                                    <input type="email" name="email" class="form-control" placeholder="Email" required>
+                                </div>
+                                <div class="mb-3">
+                                    <input type="password" name="password1" class="form-control" placeholder="Password" required>
+                                </div>
+                                <div class="mb-3">
+                                    <input type="password" name="password2" class="form-control" placeholder="Confirm Password" required>
+                                </div>
+                            
+                                <!-- Consentement -->
+                                <div class="mb-3 form-check d-flex align-items-center">
+                                    <input type="checkbox" name="consent" id="id_consent" class="form-check-input me-2" required>
+                                    <label for="id_consent" class="form-check-label mb-0">
+                                        I agree to the <a href="{% url 'cgu' %}" target="_blank">Terms and Conditions</a> and the 
+                                        <a href="{% url 'confidentialite' %}" target="_blank">Privacy Policy</a>.
+                                    </label>
+                                </div>
+                            
+                                <button type="submit" class="btn btn-primary w-100">Create Account & Pay</button>
+                            </form>
+                            
+                            
+                            
+                            <p class="text-center mt-3">Already have an account? <a href="{% url 'login' %}?next={% url 'event_detail' event.id %}">Log in</a></p>
+                        {% else %}
+                            <h3 class="text-center mb-3">Join the Event</h3>
+                            <form method="post">
+                                {% csrf_token %}
+                                <div class="mb-3">
+                                    <textarea name="message" class="form-control" placeholder="Leave a message (optional)"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">Proceed to Payment</button>
+                            </form>
+                        {% endif %}
+                    {% endif %}
                 </div>
             </div>
-
-            <!-- Event Description -->
-            <p>{{ event.description|linebreaks }}</p>
-            <hr class="my-4">
-
-            <!-- Participants -->
-            {% if is_accepted or can_manage %}
-                <h2 class="fw-bold mb-3">Participants</h2>
-                <ul class="list-unstyled">
-                    {% for participant in participations %}
-                        <li class="d-flex align-items-center mb-3">
-                            <img src="{{ participant.user.profile.avatar.url }}" alt="Avatar of {{ participant.user.username }}" class="avatar-img me-2" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
-                            <a href="{% url 'profile' participant.user.username %}" class="text-dark">{{ participant.user.username }}</a>
-                        </li>
-                    {% empty %}
-                        <p>No participants yet.</p>
-                    {% endfor %}
-                </ul>
-            {% endif %}
         </div>
-
-        <!-- Column 2: Details and form -->
-        <div class="col-md-4">
-            <div class="p-4 thick-box">
-                <p><i class="fas fa-calendar-alt  me-2"></i> <strong>Date:</strong> {{ event.date|date:"d/m/Y" }}</p>
-                <p><i class="fas fa-clock  me-2"></i> <strong>Time:</strong> {{ event.time }}</p>
-                <p><i class="fas fa-map-marker-alt  me-2"></i> <strong>Location:</strong> {{ location }}</p>
-                <p><i class="fas fa-tag  me-2"></i> <strong>Activity Type:</strong> {{ event.activity_type }}</p>
-                <p class="event-price">Total: {{ event.price }}€</p>
-
-                <!-- Join Event Button or Management Links -->
-                {% if is_accepted %}
-                    <p class="text-success text-center fw-bold mt-3">You are participating in this event.</p>
-                {% elif is_pending %}
-                    <p class="text-warning text-center fw-bold mt-3">Your request is pending.</p>
-                {% elif is_rejected %}
-                    <p class="text-danger text-center fw-bold mt-3">Your request has been rejected.</p>
-                {% elif not can_manage %}
-                    <form method="post">
-                        {% csrf_token %}
-                        <div class="mb-3">
-                            {{ form.message }}
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100">Join the Event</button>
-                    </form>
-                    <p class="sub-payment text-muted mt-2 text-center" style="font-size: 0.9rem;">No amount will be charged until the organizer accepts your request.</p>
-                {% else %}
-                    <a href="{% url 'manage_participants' event.id %}" class="btn btn-secondary mt-2 w-100">Manage Participants</a>
-                    <a href="{% url 'edit_event' event.id %}" class="btn btn-secondary mt-2 w-100">Edit Event</a>
-                {% endif %}
-            </div>
-        </div>
-    </div>
+    </section>
 </div>
 {% endblock %}

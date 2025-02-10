@@ -124,18 +124,19 @@ def event_detail(request, event_id):
         if not user:
             return redirect('login')  # Redirige les utilisateurs non connectés vers la page de connexion
         form = ParticipationForm(request.POST)
-        if form.is_valid():
-            message = form.cleaned_data.get('message')
+        if user and is_pending:
+            # Si l'utilisateur a une participation en attente, on le renvoie vers Stripe
             session_params = event.get_stripe_session_params()
             session = stripe.checkout.Session.create(
                 **session_params,
                 metadata={
                     'user_id': user.id,
                     'event_id': event.id,
-                    'message': message,  # Ajoute le message ici
+                    'message': "",  
                 }
             )
             return redirect(session.url)
+
     else:
         form = ParticipationForm() if user else None
 
@@ -268,7 +269,6 @@ def edit_event(request, event_id):
             form.initial['date'] = event.date.strftime('%d/%m/%Y')
     return render(request, 'events/edit_event.html', {'form': form, 'event': event})
 
-
 def register(request):
     if request.method == "POST":
         form = CustomUserCreationForm(request.POST)
@@ -276,9 +276,36 @@ def register(request):
             user = form.save()
             user.profile.consent_date = timezone.now()
             login(request, user)
+
+            next_url = request.GET.get('next', None)
+
+            # Si l'inscription est liée à un événement, on redirige immédiatement vers Stripe
+            if next_url and "checkout" in next_url:
+                event_id = next_url.split("/")[-1]  
+                event = get_object_or_404(Event, id=event_id)
+
+                # Création de la participation en statut "pending"
+                participation = Participation.objects.create(
+                    user=user, event=event, status=Participation.PENDING
+                )
+
+                # Création de la session Stripe pour paiement immédiat
+                session_params = event.get_stripe_session_params()
+                session = stripe.checkout.Session.create(
+                    **session_params,
+                    metadata={
+                        'user_id': user.id,
+                        'event_id': event.id,
+                        'message': "",  # Pas de message spécifique
+                    }
+                )
+                return redirect(session.url)  # 🔥 L'utilisateur est immédiatement redirigé vers Stripe
+
             return redirect('edit_profile', username=user.username)
+
     else:
         form = CustomUserCreationForm()
+    
     return render(request, 'accounts/register.html', {'form': form})
 
 
