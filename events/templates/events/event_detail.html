@@ -35,47 +35,12 @@
                         <p class="text-danger text-center fw-bold">❌ Your request has been rejected.</p>
                     {% else %}
                         {% if not user.is_authenticated %}
-                            <h3 class="text-center mb-3">Sign Up to Join</h3>
-                            <form method="post" action="{% url 'register' %}?next={% url 'checkout' event.id %}">
-                                {% csrf_token %}
-                                <div class="mb-3">
-                                    <input type="text" name="username" class="form-control" placeholder="Username" required>
-                                </div>
-                                <div class="mb-3">
-                                    <input type="email" name="email" class="form-control" placeholder="Email" required>
-                                </div>
-                                <div class="mb-3">
-                                    <input type="password" name="password1" class="form-control" placeholder="Password" required>
-                                </div>
-                                <div class="mb-3">
-                                    <input type="password" name="password2" class="form-control" placeholder="Confirm Password" required>
-                                </div>
-                            
-                                <!-- Consentement -->
-                                <div class="mb-3 form-check d-flex align-items-center">
-                                    <input type="checkbox" name="consent" id="id_consent" class="form-check-input me-2" required>
-                                    <label for="id_consent" class="form-check-label mb-0">
-                                        I agree to the <a href="{% url 'cgu' %}" target="_blank">Terms and Conditions</a> and the 
-                                        <a href="{% url 'confidentialite' %}" target="_blank">Privacy Policy</a>.
-                                    </label>
-                                </div>
-                            
-                                <button type="submit" class="btn btn-primary w-100">Create Account & Pay</button>
-                            </form>
-                            
-                            
-                            
-                            <p class="text-center mt-3">Already have an account? <a href="{% url 'login' %}?next={% url 'event_detail' event.id %}">Log in</a></p>
+                        <a href="{% url 'register' %}?next={% url 'event_payment' event.id %}" class="btn btn-primary btn-lg w-100">S'inscrire pour Participer</a>
                         {% else %}
-                            <h3 class="text-center mb-3">Join the Event</h3>
-                            <form method="post">
-                                {% csrf_token %}
-                                <div class="mb-3">
-                                    <textarea name="message" class="form-control" placeholder="Leave a message (optional)"></textarea>
-                                </div>
-                                <button type="submit" class="btn btn-primary w-100">Proceed to Payment</button>
-                            </form>
-                        {% endif %}
+                        <form method="post" action="{% url 'event_payment' event.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary btn-lg w-100">Participer</button>
+                        </form>
                     {% endif %}
                 </div>
             </div>
