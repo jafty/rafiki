@@ -132,7 +132,7 @@ def event_payment(request, event_id):
     else:
         form = ParticipationForm()
 
-    return render(request, 'events/event_payment.html', {'event': event, 'form': form})
+    return redirect('event_detail', event_id=event.id)
 
 
 def event_detail(request, event_id):
