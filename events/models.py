@@ -195,7 +195,7 @@ class Participation(models.Model):
     ]
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="participations")
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="participations")
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=PENDING)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=ACCEPTED)
     message = models.TextField(blank=True, null=True, help_text="Message à l'organisateur")
     stripe_payment_intent = models.CharField(max_length=255, blank=True, null=True, help_text="ID de Stripe PaymentIntent")
 
