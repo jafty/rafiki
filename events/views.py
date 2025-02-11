@@ -99,6 +99,27 @@ def stripe_webhook(request):
     return JsonResponse({"status": "success"}, status=200)
 
 
+def event_payment(request, event_id):
+    """ Vérifie si l'utilisateur est inscrit et le redirige vers Stripe """
+    user = request.user
+    if not user.is_authenticated:
+        return redirect('register', next=f'/event-payment/{event_id}/')
+
+    event = get_object_or_404(Event, id=event_id)
+
+    # Création de la session Stripe
+    session_params = event.get_stripe_session_params()
+    session = stripe.checkout.Session.create(
+        **session_params,
+        metadata={
+            'user_id': user.id,
+            'event_id': event.id,
+        }
+    )
+    
+    return redirect(session.url)
+
+
 def event_detail(request, event_id):
     user = request.user if request.user.is_authenticated else None
     event = get_object_or_404(Event, id=event_id)
@@ -280,27 +301,8 @@ def register(request):
             next_url = request.GET.get('next', None)
 
             # Si l'inscription est liée à un événement, on redirige immédiatement vers Stripe
-            if next_url and "checkout" in next_url:
-                event_id = next_url.split("/")[-1]  
-                event = get_object_or_404(Event, id=event_id)
-
-                # Création de la participation en statut "pending"
-                participation = Participation.objects.create(
-                    user=user, event=event, status=Participation.PENDING
-                )
-
-                # Création de la session Stripe pour paiement immédiat
-                session_params = event.get_stripe_session_params()
-                session = stripe.checkout.Session.create(
-                    **session_params,
-                    metadata={
-                        'user_id': user.id,
-                        'event_id': event.id,
-                        'message': "",  # Pas de message spécifique
-                    }
-                )
-                return redirect(session.url)  # 🔥 L'utilisateur est immédiatement redirigé vers Stripe
-
+            if next_url:
+                return redirect(next_url)  # Redirige vers le paiement Strip
             return redirect('edit_profile', username=user.username)
 
     else:
