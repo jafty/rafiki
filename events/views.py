@@ -15,6 +15,7 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 stripe.api_key = settings.STRIPE_SECRET_KEY
 from django.utils import timezone
+from django.urls import reverse
 
 
 def certification_demand(request):
