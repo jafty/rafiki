@@ -26,11 +26,15 @@ a:hover {
 }
 
 h1 {
-    font-size: 2.4rem; /* Très grand pour le titre principal */
+    font-size: 2.9rem; /* Très grand pour le titre principal */
 }
 
 h2 {
-    font-size: 2rem; /* Titre de section */
+    font-size: 2.4rem; /* Légèrement plus grand pour ressortir */
+    font-weight: 800;
+    color: #120D31;
+    margin-bottom: 15px;
+    line-height: 1.3;
 }
 
 h3 {
@@ -127,7 +131,7 @@ p {
     position: relative;
     width: 100%;
     height: calc(100vh - 60px);
-    background-image: url("/static/images/hero.jpg");
+    background-image: url("/static/images/hero-augustins.jpg");
     background-size: cover; /* L'image couvre tout le container */
     background-position: center;
     background-repeat: no-repeat; /* Évite les répétitions */
@@ -146,7 +150,7 @@ p {
 }
 
 .hero-overlay h1 {
-    font-size: 2.2rem;
+    font-size: 3.4rem;
     margin-bottom: 20px;
 }
 
@@ -200,7 +204,8 @@ form.rounded {
 
 .navbar {
     font-family: 'Poppins', sans-serif;
-    border-bottom: 1px solid #ACECF7;
+    border-bottom: 1px solid #120D31;
+    background-color: white;
 }
 
 .navbar-brand {
@@ -240,13 +245,13 @@ form.rounded {
 }
 
 .footer-links a {
-    color: #F15D58; /* Rose intense pour les liens */
+    color: #F8C0C8; /* Rose intense pour les liens */
     text-decoration: none;
 }
 
 .footer-links a:hover {
     text-decoration: underline;
-    color: #FFE4C4; /* Couleur légèrement différente au hover */
+    color: #D40048; /* Couleur légèrement différente au hover */
 }
 
 
@@ -506,7 +511,7 @@ form.rounded {
 .profile-description-box {
     background-color: #ACECF7; /* Bleu clair */
     padding: 20px;
-    border-radius: 8px;
+    border-radius: 3px;
     border: 2px solid #120D31; /* Optionnel : Bordure sombre */
     color: #120D31; /* Texte bleu foncé */
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Légère ombre pour donner du relief */
@@ -536,10 +541,9 @@ form.rounded {
 
 .profile-card {
     text-align: center;
-    border: 1px solid #ddd;
+    border: 2px solid #120D31 ;
     padding: 20px;
     background-color: #f9f9f9;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     margin-bottom: 35px;
 }
 
@@ -557,7 +561,7 @@ form.rounded {
 
 .profile-card p {
     font-size: 1rem;
-    color: #666;
+    color: #120D31 ;
 }
 
 .avatar-rounded {
@@ -599,7 +603,6 @@ form.rounded {
 
 .how-it-works h2, .why-zanmi h2 {
     font-family: 'Poppins', sans-serif;
-    font-size: 2rem;
     font-weight: 800;
     text-transform: uppercase;
     color: #120D31; /* Texte bleu foncé */
@@ -715,20 +718,11 @@ form.rounded {
     padding-right: 20px; /* Ajoute un léger padding pour l’aérer */
 }
 
-/* Titre de l’événement */
-.event-description h2 {
-    font-size: 2.4rem; /* Légèrement plus grand pour ressortir */
-    font-weight: 800;
-    color: #120D31;
-    margin-bottom: 15px;
-    line-height: 1.3;
-}
-
 /* Texte de description */
 .event-description p {
     font-size: 1.2rem; /* Augmente légèrement la taille */
     line-height: 1.6; /* Aère un peu plus */
-    color: #333; /* Légèrement plus foncé pour améliorer la lecture */
+    color: #120D31 ; /* Légèrement plus foncé pour améliorer la lecture */
     margin-bottom: 15px;
 }
 
@@ -741,6 +735,37 @@ form.rounded {
 .event-description a:hover {
     color: #D40048;
 }
+
+/* Style pour l'encart de l'organisateur */
+.event-host-box {
+    background: #ACECF7; /* Bleu clair pour le mettre en avant */
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Avatar de l'organisateur */
+.organizer-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #120D31;
+}
+
+/* Lien vers le profil de l'organisateur */
+.organizer-link {
+    font-size: 1.2rem;
+    color: #120D31;
+    text-decoration: none;
+    transition: color 0.3s ease-in-out;
+}
+
+.organizer-link:hover {
+    color: #FF5376; /* Rose intense */
+}
+
 
 /* Ajout d'une meilleure responsivité sur petits écrans */
 @media (max-width: 768px) {
@@ -780,9 +805,7 @@ form.rounded {
         font-size: 1.6rem !important; /* Ajuste la taille pour les petits écrans */
     }
 
-    h2 {
-        font-size: 1.4rem !important;
-    }
+
 
     h3 {
         font-size: 1.2rem !important;

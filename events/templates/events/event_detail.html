@@ -9,13 +9,20 @@
             <!-- Event Description -->
             <div class="col-md-8 event-description">
                 <h2 class="fw-bold">{{ event.title }}</h2>
-                <p class="text-muted">
-                    <strong>Hosted by:</strong>
-                    <a href="{% url 'profile' event.organizer.username %}" class="fw-bold">{{ event.organizer }}</a>
-                </p>
+
+                <!-- Host Info Section -->
+                <div class="event-host-box d-flex align-items-center p-3 mb-3">
+                    <img src="{{ event.organizer.profile.avatar.url }}" alt="Organizer Avatar" class="organizer-avatar">
+                    <div class="ms-3">
+                        <p class="text-muted mb-0"><strong>Hosted by:</strong></p>
+                        <a href="{% url 'profile' event.organizer.username %}" target="_blank" class="fw-bold organizer-link">
+                            {{ event.organizer }}
+                        </a>
+                    </div>
+                </div>
+
                 <p>{{ event.description|linebreaks }}</p>
             </div>
-
 
             <!-- Event Details & Registration -->
             <div class="col-md-4">
@@ -26,29 +33,33 @@
                     <p><i class="fas fa-clock me-2"></i> <strong>Time:</strong> {{ event.time }}</p>
                     <p><i class="fas fa-map-marker-alt me-2"></i> <strong>Location:</strong> {{ location }}</p>
                     <p><i class="fas fa-tag me-2"></i> <strong>Activity Type:</strong> {{ event.activity_type }}</p>
-                    <p class="event-price"><strong>Price:</strong> {{ event.price }}€ (includes a free shot at each bar)</p>
+                    <p class="event-price"><strong>Price:</strong> {{ event.price }}€ (includes a few free drinks)</p>
                 </div>
 
                 <!-- Registration / Payment Form -->
-                <div class="p-4 thick-box mt-4">
-                    {% if is_accepted %}
-                    <p class="text-success text-center fw-bold">✅ You're in! See you there.</p>
-                    {% elif is_pending %}
-                    <p class="text-warning text-center fw-bold">⏳ Your request is pending.</p>
-                    {% elif is_rejected %}
-                    <p class="text-danger text-center fw-bold">❌ Your request has been rejected.</p>
+                <div class="p-4 thick-box mt-4 text-center">
+                    <h3 class="mb-3">Don't miss out on this epic night! 🎉</h3>
+                    <p class="cta-subtext">
+                        Secure your spot in just <strong>two quick steps</strong>! Fill out the super short form and complete your <strong>secure payment</strong>.  
+                        Get ready for an unforgettable night of fun, great vibes, and awesome people!
+                    </p>
+                    
+                    {% if not user.is_authenticated %}
+                        <a href="{% url 'register' %}?next={% url 'event_payment' event.id %}" class="btn btn-primary btn-lg w-100">
+                            🎟️ Reserve Your Spot Now
+                        </a>
                     {% else %}
-                        {% if not user.is_authenticated %}
-                            <a href="{% url 'register' %}?next={% url 'event_payment' event.id %}" class="btn btn-primary btn-lg w-100">Join the event</a>
-                        {% else %}
-                            <form method="post" action="{% url 'event_payment' event.id %}">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-primary btn-lg w-100">Join the event</button>
-                            </form>
-                        {% endif %}
-
+                        <form method="post" action="{% url 'event_payment' event.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary btn-lg w-100">
+                                Join Instantly – It's That Easy!
+                            </button>
+                        </form>
                     {% endif %}
+                    
+                    <p class="mt-2">💳 Secure checkout powered by Stripe.</p>
                 </div>
+                
             </div>
         </div>
     </section>
