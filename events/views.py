@@ -266,14 +266,18 @@ def edit_profile(request, username):
     return render(request, 'events/edit_profile.html', {'form': form})
 
 
-
 def event_list(request):
     events = [event for event in Event.objects.all() if event.is_joinable()]
     events = sorted(events, key=lambda event: event.date)
     return render(request, 'events/event_list.html', {'events': events})
 
+
 def featured_event(request):
-    return redirect('event_detail', event_id="1")
+    event = Event.objects.filter(date__gte=timezone.now()).order_by('date').first()
+    if event:
+        return redirect('event_detail', event_id=event.id)
+    return redirect('event_list')  # Si aucun événement valide, rediriger vers la liste (ou autre)
+
 
 def event_list_fr(request):
     events = [event for event in Event.objects.all() if event.is_joinable()]

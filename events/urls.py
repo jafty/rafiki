@@ -6,7 +6,7 @@ from django.conf.urls.static import static
 from django.views.generic import TemplateView
 
 urlpatterns = [
-    path('', event_list, name='event_list'),
+    path('', featured_event, name='home'),
     path('fr/', event_list_fr, name='event_list_fr'),
     path('event/create/', create_event, name='create_event'),
     path('event/<int:event_id>/', event_detail, name='event_detail'),
