@@ -247,16 +247,23 @@ def edit_profile(request, username):
     edited_profile = get_object_or_404(User, username=username).profile
     if not edited_profile.can_edit(request.user):
         return HttpResponseForbidden("Vous ne pouvez pas modifier ce profil.")
+
+    next_url = request.GET.get('next', '')  # 🔄 Récupération du `next` passé dans l'URL
+
     if request.method == "POST":
         form = UserProfileForm(request.POST, request.FILES, instance=edited_profile)
         if form.is_valid():
             form.save()
+            if next_url:  # Si `next` existe, on redirige vers cette URL
+                return redirect(next_url)
             return redirect('profile', username=username)
     else:
         form = UserProfileForm(instance=edited_profile)
         if edited_profile.birth_date:
             form.initial['birth_date'] = edited_profile.birth_date.strftime('%d/%m/%Y')
+
     return render(request, 'events/edit_profile.html', {'form': form})
+
 
 
 def event_list(request):
@@ -303,7 +310,10 @@ def edit_event(request, event_id):
             form.initial['date'] = event.date.strftime('%d/%m/%Y')
     return render(request, 'events/edit_event.html', {'form': form, 'event': event})
 
+
 def register(request):
+    next_url = request.GET.get('next', '')  # On récupère `next` s'il existe
+
     if request.method == "POST":
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
@@ -311,12 +321,8 @@ def register(request):
             user.profile.consent_date = timezone.now()
             login(request, user)
 
-            # Redirige vers la page de paiement après inscription
-            next_url = request.GET.get('next', None)
-            if next_url:
-                return redirect(next_url)
-
-            return redirect('edit_profile', username=user.username)
+            # 🚀 Redirige vers l'édition du profil avec `next`
+            return redirect(f"{reverse('edit_profile', args=[user.username])}?next={next_url}")
     else:
         form = CustomUserCreationForm()
 
