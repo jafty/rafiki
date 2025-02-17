@@ -41,7 +41,7 @@ body {
     font-family: 'Poppins', sans-serif; /* Police par défaut */
     color: #120D31; /* Couleur principale du texte */
     line-height: 1.6; /* Hauteur de ligne agréable */
-    background-color: white; /* Fond beige clair */
+    background-color: #F8F8F8; /* Fond beige clair */
     display: flex;
     flex-direction: column;
 }
@@ -77,7 +77,8 @@ p {
 
 .thick-box {
     background-color: white;
-    border: 2px solid #120D31;
+    border: 2px solid #120D31; /* Bordure fine pour le contraste */
+    padding: 20px;
 }
 
 .thick-box p {
@@ -104,6 +105,11 @@ p {
 .offwide-container {
     max-width: 80%;
     margin: 0 auto;
+}
+
+.wide-container {
+    padding-left: 10%;
+    padding-right: 10%;
 }
 
 
@@ -588,7 +594,6 @@ form.rounded {
 
 /* Section How It Works */
 .how-it-works {
-    background-color: white;
     padding-top: 70px;
 }
 
@@ -702,6 +707,57 @@ form.rounded {
 .organizer-card {
     background-color: #ACECF7;
 }
+
+/* Améliore la lisibilité du bloc de description */
+.event-description {
+    max-width: 750px; /* Évite que le texte soit trop étalé sur grand écran */
+    margin: 0 auto; /* Centre le texte dans la colonne */
+    padding-right: 20px; /* Ajoute un léger padding pour l’aérer */
+}
+
+/* Titre de l’événement */
+.event-description h2 {
+    font-size: 2.4rem; /* Légèrement plus grand pour ressortir */
+    font-weight: 800;
+    color: #120D31;
+    margin-bottom: 15px;
+    line-height: 1.3;
+}
+
+/* Texte de description */
+.event-description p {
+    font-size: 1.2rem; /* Augmente légèrement la taille */
+    line-height: 1.6; /* Aère un peu plus */
+    color: #333; /* Légèrement plus foncé pour améliorer la lecture */
+    margin-bottom: 15px;
+}
+
+/* Lien de l'organisateur */
+.event-description a {
+    font-weight: bold;
+    color: #FF5376;
+}
+
+.event-description a:hover {
+    color: #D40048;
+}
+
+/* Ajout d'une meilleure responsivité sur petits écrans */
+@media (max-width: 768px) {
+    .event-description {
+        max-width: 100%;
+        padding: 0 10px; /* Ajoute de l’espace latéral sur mobile */
+    }
+
+    .event-description h2 {
+        font-size: 2rem; /* Ajustement pour mobile */
+    }
+
+    .event-description p {
+        font-size: 1.1rem;
+    }
+}
+
 @media (max-width: 768px) {
     .profile-card p {
         display: flex;

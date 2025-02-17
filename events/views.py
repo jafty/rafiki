@@ -49,7 +49,7 @@ def create_event(request):
             event = form.save(commit=False)
             event.organizer = request.user
             event.save()
-            
+
             return redirect('event_detail', event_id=event.id)
     else:
         form = EventForm()
@@ -58,11 +58,10 @@ def create_event(request):
 
 @csrf_exempt
 def stripe_webhook(request):
-    # STRIPE HANDLING
     payload = request.body
     sig_header = request.META['HTTP_STRIPE_SIGNATURE']
     endpoint_secret = settings.STRIPE_WEBHOOK_SECRET
-    print("stripe_webhook")
+
     try:
         stripe_event = stripe.Webhook.construct_event(payload, sig_header, endpoint_secret)
     except ValueError:
@@ -70,33 +69,24 @@ def stripe_webhook(request):
     except stripe.error.SignatureVerificationError:
         return JsonResponse({"error": "Invalid signature"}, status=400)
 
-    # COMPLETED CHECKOUT ACTIONS
+    # Paiement complété
     if stripe_event['type'] == "checkout.session.completed":
         session = stripe_event['data']['object']
         user_id = session['metadata']['user_id']
         event_id = session['metadata']['event_id']
-        message = session['metadata']['message']
+
         user = User.objects.get(id=user_id)
         event = Event.objects.get(id=event_id)
-        payment_intent = stripe.PaymentIntent.retrieve(session['payment_intent'])
-        if payment_intent["status"] == "requires_capture":
-            Participation.objects.get_or_create(
-                event=event,
-                user=user,
-                message=message,  # Enregistre le message
-                status=Participation.PENDING,
-                stripe_payment_intent=session['payment_intent'],
-            )
-            notification_exists = Notification.objects.filter(
-                user=event.organizer,
-                event=event,
-                is_read=False
-            ).exists()
-            print("Before not notification_exists")
-            if not notification_exists:
-                print("before notify_organizer")
-                event.notify_organizer()
+
+        # Création de la participation après paiement
+        Participation.objects.get_or_create(
+            event=event,
+            user=user,
+            status=Participation.ACCEPTED  # Accepte directement l'utilisateur
+        )
+
     return JsonResponse({"status": "success"}, status=200)
+
 
 
 @login_required
@@ -105,34 +95,18 @@ def event_payment(request, event_id):
     user = request.user
     event = get_object_or_404(Event, id=event_id)
 
-    if request.method == "POST":
-        form = ParticipationForm(request.POST)
-        if form.is_valid():
-            message = form.cleaned_data.get('message')
+    # Créer la session Stripe pour le paiement
+    session_params = event.get_stripe_session_params()
+    session = stripe.checkout.Session.create(
+        **session_params,
+        metadata={
+            'user_id': user.id,
+            'event_id': event.id,
+        }
+    )
 
-            # Créer la session Stripe pour le paiement
-            session_params = event.get_stripe_session_params()
-            session = stripe.checkout.Session.create(
-                **session_params,
-                metadata={
-                    'user_id': user.id,
-                    'event_id': event.id,
-                    'message': message,  
-                }
-            )
+    return redirect(session.url)  # Redirection vers Stripe Checkout
 
-            # Sauvegarde immédiate de la participation comme "acceptée"
-            Participation.objects.create(
-                event=event,
-                user=user,
-                message=message
-            )
-
-            return redirect(session.url)  # Redirection vers Stripe Checkout
-    else:
-        form = ParticipationForm()
-
-    return redirect('event_detail', event_id=event.id)
 
 
 def event_detail(request, event_id):
@@ -168,7 +142,7 @@ def event_detail(request, event_id):
                 metadata={
                     'user_id': user.id,
                     'event_id': event.id,
-                    'message': "",  
+                    'message': "",
                 }
             )
             return redirect(session.url)
@@ -312,8 +286,8 @@ def register(request):
             user = form.save()
             user.profile.consent_date = timezone.now()
             login(request, user)
-            
-            # Redirection vers l'événement s'il y a un "next"
+
+            # Redirige vers la page de paiement après inscription
             next_url = request.GET.get('next', None)
             if next_url:
                 return redirect(next_url)
@@ -323,7 +297,6 @@ def register(request):
         form = CustomUserCreationForm()
 
     return render(request, 'accounts/register.html', {'form': form})
-
 
 
 @login_required
