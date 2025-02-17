@@ -18,7 +18,7 @@ h1, h2, h3 {
 
 a {
     text-decoration: none;
-    color: #FF5376; /* Couleur rose pour les liens */
+    color: #D81E5B; /* Couleur rose pour les liens */
 }
 
 a:hover {
@@ -26,11 +26,11 @@ a:hover {
 }
 
 h1 {
-    font-size: 2.9rem; /* Très grand pour le titre principal */
+    font-size: 3.1rem; /* Très grand pour le titre principal */
 }
 
 h2 {
-    font-size: 2.4rem; /* Légèrement plus grand pour ressortir */
+    font-size: 2.7rem; /* Légèrement plus grand pour ressortir */
     font-weight: 800;
     color: #120D31;
     margin-bottom: 15px;
@@ -62,7 +62,7 @@ main {
 
 a {
     font-weight: bold;
-    color: #FF5376;
+    color: #D81E5B;
 }
 
 p {
@@ -90,7 +90,7 @@ p {
 }
 
 .thick-box .event-price {
-    font-size: 1.9em;
+    font-size: 1.6em;
 }
 
 .thick-box .sub-payment {
@@ -99,7 +99,7 @@ p {
 }
 
 .thick-box .btn-primary {
-    font-size: 1.1em;
+    font-size: 1.3em;
 }
 
 .thick-box textarea {
@@ -146,7 +146,7 @@ p {
     height: 100%; /* Prend toute la hauteur de .hero-image */
     color: white;
     text-align: center;
-    background: rgba(0, 0, 0, 0.5); /* Ajoute un overlay sombre pour améliorer la lisibilité du texte */
+    background: rgba(0, 0, 0, 0.363); /* Ajoute un overlay sombre pour améliorer la lisibilité du texte */
 }
 
 .hero-overlay h1 {
@@ -160,8 +160,8 @@ p {
 }
 
 .hero-overlay a {
-    font-size: 1.1rem;
-    padding: 10px 20px;
+    font-size: 1.3rem;
+    padding: 15px 25px;
 }
 
 
@@ -186,11 +186,6 @@ form.rounded {
 
 .border h2 {
     font-size: 20px;
-}
-
-.block-content {
-    padding-top: 50px;
-    padding-bottom: 100px;
 }
 
 /* Barre de navigation */
@@ -226,7 +221,7 @@ form.rounded {
 }
 
 .navbar img {
-    height: 30px !important;
+    height: 40px !important;
     margin-right: 10px;
     mix-blend-mode: multiply;
 }
@@ -269,7 +264,7 @@ form.rounded {
     font-family: 'Open Sans', sans-serif;
     font-size: 1.5rem;
     font-weight: 700;
-    color: #FF5376;
+    color: #D81E5B;
 }
 
 /* Boutons */
@@ -283,24 +278,6 @@ form.rounded {
     border-radius: 3px; /* Bords carrés */
     transition: background-color 0.3s ease, transform 0.2s ease;
     border: none;
-}
-
-/* Style du bouton CTA */
-.btn-primary {
-    background-color: #FF5376; /* Rose intense */
-    border: none; /* Pas de bordure */
-    color: #fff; /* Texte blanc */
-    font-family: 'Poppins', sans-serif;
-    font-weight: 700;
-    font-size: 1.2rem; /* Taille légèrement augmentée */
-    text-transform: uppercase; /* Texte en majuscules */
-    padding: 10px 20px;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.btn-primary:hover {
-    background-color: #D60044; /* Couleur légèrement plus sombre au hover */
-    transform: scale(1.05); /* Léger agrandissement */
 }
 
 .cta-section {
@@ -394,11 +371,11 @@ form.rounded {
 
 /* Bouton principal */
 .btn-primary {
-    background-color: #FF5376; /* Rose intense */
+    background-color: #D81E5B; /* Rose intense */
     border: none;
     font-size: 1.3rem;
     font-weight: 700;
-    padding: 12px 24px;
+    padding: 15px 25px;
     text-transform: uppercase;
     transition: background-color 0.3s ease;
 }
@@ -494,7 +471,7 @@ form.rounded {
     font-weight: bold;
     text-transform: uppercase;
     color: #fff;
-    background-color: #FF5376; /* Rose intense */
+    background-color: #D81E5B; /* Rose intense */
     border: none;
     transition: background-color 0.3s ease, transform 0.2s ease;
     border-radius: 3px;
@@ -555,7 +532,7 @@ form.rounded {
 
 .profile-card h2 {
     font-size: 1.5rem;
-    color: #FF5376;
+    color: #D81E5B;
     margin-bottom: 10px;
 }
 
@@ -640,7 +617,7 @@ form.rounded {
 .guide-number {
     font-size: 3rem;
     font-weight: 900;
-    color: #FF5376; /* Rose intense pour les numéros */
+    color: #D81E5B; /* Rose intense pour les numéros */
     margin-bottom: 15px;
 }
 
@@ -664,7 +641,7 @@ form.rounded {
 }
 
 .guide-text {
-    font-size: 1rem;
+    font-size: 1.2rem;
     color: #120D31; /* Texte bleu foncé */
     line-height: 1.5;
     margin-top: 10px;
@@ -702,7 +679,7 @@ form.rounded {
 }
 
 .why-text {
-    font-size: 1rem;
+    font-size: 1.2rem;
     line-height: 1.6;
     color: #120D31; /* Bleu foncé */
 }
@@ -713,9 +690,8 @@ form.rounded {
 
 /* Améliore la lisibilité du bloc de description */
 .event-description {
-    max-width: 750px; /* Évite que le texte soit trop étalé sur grand écran */
     margin: 0 auto; /* Centre le texte dans la colonne */
-    padding-right: 20px; /* Ajoute un léger padding pour l’aérer */
+    padding-right: 50px; /* Ajoute un léger padding pour l’aérer */
 }
 
 /* Texte de description */
@@ -729,7 +705,7 @@ form.rounded {
 /* Lien de l'organisateur */
 .event-description a {
     font-weight: bold;
-    color: #FF5376;
+    color: #D81E5B;
 }
 
 .event-description a:hover {
@@ -763,7 +739,45 @@ form.rounded {
 }
 
 .organizer-link:hover {
-    color: #FF5376; /* Rose intense */
+    color: #D81E5B; /* Rose intense */
+}
+
+/* 🎉 Join Zanmi Section */
+.join-zanmi-section {
+    background: url('/static/images/briques.jpg') center/cover no-repeat;
+    color: #120D31;
+    padding: 80px 20px;
+    position: relative;
+    text-align: center;
+}
+
+.join-zanmi-section .overlay {
+    background: rgba(255, 255, 255, 0.637);
+    padding: 60px 20px;
+    border-radius: 2px;
+    display: inline-block;
+}
+
+.join-zanmi-section h2 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+
+.join-zanmi-section p {
+    font-size: 1.3rem;
+    margin-bottom: 30px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.join-zanmi-section .btn-primary {
+    font-size: 1.4rem;
+    padding: 15px 30px;
+    font-weight: bold;
+    text-transform: uppercase;
 }
 
 

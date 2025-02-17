@@ -69,7 +69,7 @@ def stripe_webhook(request):
     except stripe.error.SignatureVerificationError:
         return JsonResponse({"error": "Invalid signature"}, status=400)
 
-    # Paiement complété
+    # ✅ Paiement complété
     if stripe_event['type'] == "checkout.session.completed":
         session = stripe_event['data']['object']
         user_id = session['metadata']['user_id']
@@ -78,15 +78,39 @@ def stripe_webhook(request):
         user = User.objects.get(id=user_id)
         event = Event.objects.get(id=event_id)
 
-        # Création de la participation après paiement
-        Participation.objects.get_or_create(
-            event=event,
-            user=user,
-            status=Participation.ACCEPTED  # Accepte directement l'utilisateur
+        # ✅ Création de la participation (si pas déjà existante)
+        participation, created = Participation.objects.get_or_create(
+            event=event, 
+            user=user, 
+            defaults={'status': Participation.ACCEPTED}
         )
 
-    return JsonResponse({"status": "success"}, status=200)
+        if created:
+            # ✅ Création d'une notification avec l'adresse complète
+            Notification.objects.create(
+                user=user,
+                event=event,
+                message=f"You are registered for {event.title}! 🎉\n📍 Address: {event.location}"
+            )
 
+            # ✅ Envoi d'un email de confirmation
+            subject = f"Confirmation: You are registered for {event.title} 🎉"
+            html_message = render_to_string("emails/confirmation_event.html", {
+                'user': user,
+                'event': event,
+                'location': event.location,
+                'contact': event.contact
+            })
+            plain_message = strip_tags(html_message)  # Version texte brut
+            send_mail(
+                subject,
+                plain_message,
+                settings.DEFAULT_FROM_EMAIL,
+                [user.email],
+                html_message=html_message
+            )
+
+    return JsonResponse({"status": "success"}, status=200)
 
 
 @login_required
@@ -128,7 +152,7 @@ def event_detail(request, event_id):
 
         # Masquer l'adresse si l'utilisateur n'est pas accepté et n'est pas l'organisateur
         if not is_accepted and not event.can_manage(user) and event.is_location_hidden:
-            location = "Adresse masquée"
+            location = "Join the event to see the "
 
     if request.method == "POST":
         if not user:

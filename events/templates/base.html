@@ -62,38 +62,38 @@
     {% if request.resolver_match.url_name == 'event_detail' %}
     <section class="how-it-works">
         <div class="container text-center">
-            <h2 class="mb-5">How It Works</h2>
+            <h2 class="mb-5">Your evening, step by step</h2>
             <div class="row">
                 <div class="col-lg-3 col-md-6 mb-4">
                     <div class="quick-guide-card">
-                        <img src="{% static 'images/event1.jpg' %}" alt="Meet People" class="quick-guide-img">
-                        <h3 class="guide-title">Break the Ice</h3>
+                        <img src="{% static 'images/break-ice.jpg' %}" alt="Meet People" class="quick-guide-img">
+                        <h3 class="guide-title">Break <br>the Ice</h3>
                         <hr>
-                        <p class="guide-text">Start with a small group over a drink—no awkward intros, just good vibes.</p>
+                        <p class="guide-text">Join a small group of like-minded locals and foreigners over a drink. No awkward intros, just good vibes.</p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 mb-4">
                     <div class="quick-guide-card">
-                        <img src="{% static 'images/event2.jpg' %}" alt="Explore Toulouse" class="quick-guide-img">
-                        <h3 class="guide-title">Explore Toulouse by Night</h3>
+                        <img src="{% static 'images/explore-toulouse.jpg' %}" alt="Explore Toulouse" class="quick-guide-img">
+                        <h3 class="guide-title">Explore <br>Toulouse</h3>
                         <hr>
-                        <p class="guide-text">Walk through lively streets, discover hidden gems and enjoy unique atmospheres.</p>
+                        <p class="guide-text">Walk through lively streets, discover hidden gems and enjoy unique atmospheres with the people you just met</p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 mb-4">
                     <div class="quick-guide-card">
-                        <img src="{% static 'images/event3.jpg' %}" alt="Visit Unique Bars" class="quick-guide-img">
-                        <h3 class="guide-title">Visit Local Hotspots</h3>
+                        <img src="{% static 'images/discover-bars.jpg' %}" alt="Visit Unique Bars" class="quick-guide-img">
+                        <h3 class="guide-title">Discover <br>bars</h3>
                         <hr>
-                        <p class="guide-text">Experience 3 carefully selected bars, each with its own unique vibe.</p>
+                        <p class="guide-text">Experience 3 carefully selected bars and pubs, each with its own unique energy, so you can make yourself a new HQ.</p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 mb-4">
                     <div class="quick-guide-card">
-                        <img src="{% static 'images/event4.jpg' %}" alt="Make Friends" class="quick-guide-img">
+                        <img src="{% static 'images/new-friends.jpg' %}" alt="Make Friends" class="quick-guide-img">
                         <h3 class="guide-title">End the Night with New Friends</h3>
                         <hr>
-                        <p class="guide-text">Leave with new friends and future plans—this is just the beginning.</p>
+                        <p class="guide-text">End the night with new people to hang out with, either from Toulouse or from anywhere in the world.</p>
                     </div>
                 </div>
             </div>
@@ -108,9 +108,18 @@
         {% block content %}{% endblock %}
     </main>
     {% if request.resolver_match.url_name == 'event_detail' %}
+    <!-- 🌟 Not Available? Join Zanmi Section -->
+    <section class="join-zanmi-section text-center">
+        <div class="overlay">
+            <h2>Can't make it to this event?</h2>
+            <p>Don't worry! The Zanmi community hosts plenty of amazing events. Join us and be the first to know about the next ones!</p>
+            <a href="{% url 'register' %}" class="btn btn-primary btn-lg">Join the Zanmi Community</a>
+        </div>
+    </section>
+
     <section class="why-zanmi">
         <div class="container">
-            <h2 class="text-center mb-5">Why Join a Zanmi Event?</h2>
+            <h2 class="text-center mb-5">Here's why you should Join the Zanmi Community</h2>
     
             <!-- Meet People From Around the World -->
             <div class="row align-items-center">
@@ -128,12 +137,12 @@
             <!-- Genuine Connections, No Small Talk -->
             <div class="row align-items-center flex-md-row-reverse">
                 <div class="col-md-6 p-0">
-                    <img src="{% static 'images/discover.jpg' %}" alt="Connections" class="why-image">
+                    <img src="{% static 'images/bar-happy.jpg' %}" alt="Connections" class="why-image">
                 </div>
                 <div class="col-md-6 why-col">
                     <h3 class="why-title">Authentic Moments, Real Conversations</h3>
                     <p class="why-text">
-                        Forget awkward networking events. Zanmi is all about **real** interactions. Small groups, engaging activities, and a laid-back atmosphere make it easy to connect without the pressure of forced conversations.
+                        Forget awkward networking events. Zanmi is all about real interactions. Small groups, engaging activities, and a laid-back atmosphere make it easy to connect without the pressure of forced conversations.
                     </p>
                 </div>
             </div>
@@ -146,7 +155,7 @@
                 <div class="col-md-6 why-col">
                     <h3 class="why-title">A Safe and Inclusive Space</h3>
                     <p class="why-text">
-                        Everyone is welcome at Zanmi events. Our organizers make sure that each event is **respectful, friendly, and inclusive**—so you can feel at ease, whether you’re coming alone or with friends.
+                        Everyone is welcome at Zanmi events. Our organizers make sure that each event is respectful, friendly, and inclusive, so you can feel at ease, whether you’re coming alone or with friends, whether you're introvert or extrovert, whether you're from Toulouse or from Mars.
                     </p>
                 </div>
             </div>
