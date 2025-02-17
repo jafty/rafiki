@@ -36,7 +36,7 @@ def certification_demand(request):
             email.attach(attachment_id.name, attachment_id.read(), attachment_id.content_type)
             email.attach(attachment_pic.name, attachment_pic.read(), attachment_pic.content_type)
             email.send()
-            return redirect('event_list')
+            return redirect('/')
     else:
         form = CertificationForm()
     return render(request, 'emails/certification_demand.html', {'form': form})
