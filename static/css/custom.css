@@ -111,12 +111,6 @@ p {
     margin: 0 auto;
 }
 
-.wide-container {
-    padding-left: 10%;
-    padding-right: 10%;
-}
-
-
 /* Hero */
 .hero-image h1 {
     color: white;
@@ -155,7 +149,7 @@ p {
 }
 
 .hero-overlay p {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     margin-bottom: 30px;
 }
 
@@ -588,7 +582,7 @@ form.rounded {
 
 /* Quick Guide Cards */
 .quick-guide-card {
-    background-color: #ACECF7 ; /* Fond bleu clair */
+    background-color: #F8C0C8 ; /* Fond bleu clair */
     border: 2px solid #120D31; /* Contour bleu foncé */
     border-radius: 0; /* Bords carrés */
     padding: 25px;
@@ -657,7 +651,8 @@ form.rounded {
 
 .why-col {
     /* background-color: #ACECF7 ;  */
-    padding: 80px;
+    padding-left: 50px;
+    padding-right: 50px;
 }
 
 .why-image {

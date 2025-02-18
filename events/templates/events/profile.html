@@ -3,19 +3,19 @@
 {% block title %}Profile of {{ profile.user.username }}{% endblock %}
 {% load custom_filters %}
 {% block content %}
-<div class="mt-4">
+<div class="mt-4 container">
     <div class="row justify-content-center">
         <!-- Left Section: Avatar, Username -->
         <div class="col-md-4">
             <div class="profile-card">
                 <!-- Avatar -->
                 <img src="{{ profile.avatar.url }}" alt="Avatar" class="img-fluid avatar-rounded mb-3" style="object-fit: cover; width: 150px; height: 150px;">
-                
+
                 <h3 class="text-center font-weight-bold">{{ profile.user.username }}</h3>
                 <p class="d-flex align-items-center justify-content-center mb-3">
-                    <i class="fas fa-map-marker-alt me-2" style="color: #FC6C85;"></i> 
-                    {{ profile.city }}, {{ profile.country }} 
-                    <span class="mx-2" style="border-left: 2px solid #ddd; height: 16px;"></span> 
+                    <i class="fas fa-map-marker-alt me-2" style="color: #FC6C85;"></i>
+                    {{ profile.city }}, {{ profile.country }}
+                    <span class="mx-2" style="border-left: 2px solid #ddd; height: 16px;"></span>
                     {% if profile.birth_date %}
                         {{ profile.birth_date|calculate_age }} years old
                     {% else %}
