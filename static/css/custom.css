@@ -140,7 +140,7 @@ p {
     height: 100%; /* Prend toute la hauteur de .hero-image */
     color: white;
     text-align: center;
-    background: rgba(0, 0, 0, 0.363); /* Ajoute un overlay sombre pour améliorer la lisibilité du texte */
+    background: rgba(0, 0, 0, 0.342); /* Ajoute un overlay sombre pour améliorer la lisibilité du texte */
 }
 
 .hero-overlay h1 {
@@ -208,10 +208,6 @@ form.rounded {
     font-size: 1.2rem;
     text-transform: uppercase;
     color: #120D31;
-}
-
-.nav-btn-li {
-    padding-left: 30px;
 }
 
 .navbar img {
@@ -616,7 +612,7 @@ form.rounded {
 }
 
 .guide-title {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: 700;
     color: #120D31; /* Texte bleu foncé */
     text-transform: uppercase;
@@ -651,8 +647,7 @@ form.rounded {
 
 .why-col {
     /* background-color: #ACECF7 ;  */
-    padding-left: 50px;
-    padding-right: 50px;
+    padding: 50px;
 }
 
 .why-image {
@@ -690,7 +685,7 @@ form.rounded {
 }
 
 /* Texte de description */
-.event-description p {
+.event-description p, .event-description li {
     font-size: 1.2rem; /* Augmente légèrement la taille */
     line-height: 1.6; /* Aère un peu plus */
     color: #120D31 ; /* Légèrement plus foncé pour améliorer la lecture */
