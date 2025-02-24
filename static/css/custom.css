@@ -45,7 +45,7 @@ body {
     font-family: 'Poppins', sans-serif; /* Police par défaut */
     color: #120D31; /* Couleur principale du texte */
     line-height: 1.6; /* Hauteur de ligne agréable */
-    background-color: #F8F8F8; /* Fond beige clair */
+    background-color: #ffeff3; /* Fond beige clair */
     display: flex;
     flex-direction: column;
 }
@@ -81,7 +81,7 @@ p {
 
 .thick-box {
     background-color: white;
-    border: 2px solid #120D31; /* Bordure fine pour le contraste */
+    border: 1px solid #120D31; /* Bordure fine pour le contraste */
     padding: 20px;
 }
 
@@ -193,7 +193,7 @@ form.rounded {
 
 .navbar {
     font-family: 'Poppins', sans-serif;
-    border-bottom: 2px solid #120D31;
+    border-bottom: 1px solid #120D31;
     background-color: white;
 }
 
@@ -225,7 +225,7 @@ form.rounded {
     background-color: #120D31; /* Bleu foncé */
     color: #FFFFFF; /* Texte blanc */
     font-size: 0.9rem;
-    border-top: 2px solid #120D31; /* Ligne fine en bleu clair */
+    border-top: 1px solid #120D31; /* Ligne fine en bleu clair */
     margin-top: auto;
 }
 
@@ -304,7 +304,7 @@ form.rounded {
     position: relative;
     text-align: left; /* Texte aligné à gauche */
     padding: 100px 0; /* Marge généreuse pour l'espacement */
-    border-top: 2px solid #b9b2e0;
+    border-top: 1px solid #b9b2e0;
     border-bottom: 4px solid #b9b2e0;
 }
 
@@ -479,7 +479,7 @@ form.rounded {
     background-color: #ACECF7; /* Bleu clair */
     padding: 20px;
     border-radius: 3px;
-    border: 2px solid #120D31; /* Optionnel : Bordure sombre */
+    border: 1px solid #120D31; /* Optionnel : Bordure sombre */
     color: #120D31; /* Texte bleu foncé */
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Légère ombre pour donner du relief */
 }
@@ -508,7 +508,7 @@ form.rounded {
 
 .profile-card {
     text-align: center;
-    border: 2px solid #120D31 ;
+    border: 1px solid #120D31 ;
     padding: 20px;
     background-color: #f9f9f9;
     margin-bottom: 35px;
@@ -548,7 +548,7 @@ form.rounded {
     border-radius: 50%; /* Rend l'image ronde */
     object-fit: cover; /* Ajuste l'image pour remplir le conteneur sans déformation */
     object-position: center; /* Centre l'image */
-    border: 2px solid #120D31; /* Optionnel : Ajoute une bordure pour le style */
+    border: 1px solid #120D31; /* Optionnel : Ajoute une bordure pour le style */
 }
 
 .event-image {
@@ -579,7 +579,7 @@ form.rounded {
 /* Quick Guide Cards */
 .quick-guide-card {
     background-color: #F8C0C8 ; /* Fond bleu clair */
-    border: 2px solid #120D31; /* Contour bleu foncé */
+    border: 1px solid #120D31; /* Contour bleu foncé */
     border-radius: 0; /* Bords carrés */
     padding: 25px;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -623,7 +623,7 @@ form.rounded {
 /* Barre fine entre le titre et le texte */
 .quick-guide-card hr {
     border: 0;
-    border-top: 2px solid #120D31; /* Barre fine bleu foncé */
+    border-top: 1px solid #120D31; /* Barre fine bleu foncé */
     margin: 10px 0;
     width: 50%; /* Barre centrée plus courte */
     margin-left: auto;
@@ -717,7 +717,7 @@ form.rounded {
     height: 60px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid #120D31;
+    border: 1px solid #120D31;
 }
 
 /* Lien vers le profil de l'organisateur */
