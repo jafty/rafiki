@@ -35,7 +35,6 @@
                             </a>
                         </li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'profile' user.username %}">Profile</a></li>
-                        <li class="nav-item nav-btn-li"><a class="btn btn-primary btn-sm" href="">Meet strangers</a></li>
                     {% else %}
                         <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Log In</a></li>
                         <li class="nav-item nav-btn-li"><a class="btn btn-primary btn-sm" href="{% url 'register' %}">Sign Up</a></li>
@@ -110,7 +109,7 @@
     <section class="join-zanmi-section text-center">
         <div class="overlay">
             <h2>Can't make it to this event?</h2>
-            <p>Don't worry! The Zanmi community hosts plenty of amazing events. Join us and be the first to know about the next ones!</p>
+            <p>Be the first to hear about our next events – sign up now!!</p>
             <a href="{% url 'register' %}" class="btn btn-primary btn-lg">Join the Zanmi Community</a>
         </div>
     </section>
