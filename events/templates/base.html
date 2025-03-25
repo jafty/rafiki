@@ -1,179 +1,89 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zanmi - {% block title %}{% endblock %}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="icon" href="{% static 'images/favicon.jpg' %}" type="image/x-icon">
+
+    <!-- Bootstrap CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- TON CSS ORIGINAL COMPLET -->
+    <link rel="stylesheet" href="{% static 'css/main_style.css' %}">
+
+    <!-- Google Fonts (déjà présentes dans ton CSS, mais utile pour la rapidité du rendu initial) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
     {% block extra_head %}{% endblock %}
 </head>
+
 <body>
 
-    <!-- 🚀 Navbar -->
-    <nav class="navbar navbar-expand-lg">
-        <div class="container-fluid">
-            <a class="navbar-brand d-flex align-items-center" href="/">
-                <img src="{% static 'images/logo.png' %}" alt="Zanmi Logo" style="height: 40px; margin-right: 10px;">
+    <!-- NAVIGATION (modifié pour correspondre exactement à ton design original) -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="{% url 'landing' %}">
+                <img src="{% static 'images/logo.png' %}" alt="Zanmi" class="me-2">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav align-items-center">
                     {% if user.is_authenticated %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'notifications_list' %}">
-                                Notifications {% if unread_notifications_count > 0 %}
-                                    <span class="badge bg-danger">{{ unread_notifications_count }}</span>
-                                {% endif %}
-                            </a>
-                        </li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'profile' user.username %}">Profile</a></li>
+                    <!-- Lien vers le profil -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'profile' user.username %}">Profile</a>
+                    </li>
+                    <!-- Formulaire de déconnexion -->
+                    <li class="nav-item">
+                        <form method="POST" action="{% url 'logout' %}" class="m-0">
+                            {% csrf_token %}
+                            <button type="submit" class="nav-link btn btn-link" style="color: inherit; text-decoration: none; padding: 0;">
+                                Log Out
+                            </button>
+                        </form>
+                    </li>
+                    <li class="nav-item me-lg-3">
+                        <a href="{% url 'featured_event' %}" class="nav-link download-btn">✨ Next hangout ✨</a>
+                    </li>
                     {% else %}
-                        <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Log In</a></li>
-                        <li class="nav-item nav-btn-li"><a class="btn btn-primary btn-sm" href="{% url 'register' %}">Sign Up</a></li>
+                    <li class="nav-item ms-lg-3">
+                        <a href="{% url 'register' %}" class="nav-link download-btn">Join us</a>
+                    </li>
                     {% endif %}
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- 🎯 HERO SECTION uniquement sur event_detail -->
-    {% if request.resolver_match.url_name == 'event_detail' %}
-    <section class="hero-image">
-        <div class="hero-overlay">
-            <h1>Explore Toulouse and its bars <br>With Locals & Expats</h1>
-            <a href="#event-details" class="btn btn-primary">Reserve Your Spot</a>
-        </div>
-        <div class="hero-background" style="background-image: url('{{ event.image.url }}');"></div>
-    </section>
-    {% endif %}
-
-    <!-- 🔥 HOW IT WORKS - Seulement sur event_detail -->
-    {% if request.resolver_match.url_name == 'event_detail' %}
-    <section class="how-it-works">
-        <div class="container text-center">
-            <h2 class="mb-5">Your evening, step by step</h2>
-            <div class="row">
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <div class="quick-guide-card">
-                        <img src="{% static 'images/break-ice.jpg' %}" alt="Meet People" class="quick-guide-img">
-                        <h3 class="guide-title">1️⃣<br>Meet the Group</h3>
-                        <hr>
-                        <p class="guide-text">Start with a drink, meet locals and travelers, and get into the vibe.</p>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <div class="quick-guide-card">
-                        <img src="{% static 'images/toulouse_night.jpg' %}" alt="Explore Toulouse" class="quick-guide-img">
-                        <h3 class="guide-title">2️⃣<br>Explore Toulouse</h3>
-                        <hr>
-                        <p class="guide-text">Short strolls between bars, discovering lively streets and cool places.</p>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <div class="quick-guide-card">
-                        <img src="{% static 'images/discover-bars.jpg' %}" alt="Visit Unique Bars" class="quick-guide-img">
-                        <h3 class="guide-title">3️⃣<br>Visit Three Bars</h3>
-                        <hr>
-                        <p class="guide-text">Enjoy a mix of cozy, lively, and hidden gems, with drinks included.</p>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <div class="quick-guide-card">
-                        <img src="{% static 'images/new-friends.jpg' %}" alt="Make Friends" class="quick-guide-img">
-                        <h3 class="guide-title">4️⃣<br>Get new friends</h3>
-                        <hr>
-                        <p class="guide-text">Stay out or plan your next adventure with the people you met.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    {% endif %}
-
-
-
-    <!-- ✅ MAIN CONTENT (TOUTES LES PAGES) -->
-    <main class="wide-container mt-4">
+    <!-- CONTENU PRINCIPAL -->
+    <main>
         {% block content %}{% endblock %}
     </main>
-    {% if request.resolver_match.url_name == 'event_detail' %}
-    <!-- 🌟 Not Available? Join Zanmi Section -->
-    <section class="join-zanmi-section text-center">
-        <div class="overlay">
-            <h2>Can't make it to this event?</h2>
-            <p>Be the first to hear about our next events – sign up now!!</p>
-            <a href="{% url 'register' %}" class="btn btn-primary btn-lg">Join the Zanmi Community</a>
-        </div>
-    </section>
 
-    <section class="why-zanmi">
-        <div class="container">
-            <h2 class="text-center mb-5">Here's why you should Join the Zanmi Community</h2>
-
-            <!-- Meet People From Around the World -->
-            <div class="row align-items-center">
-                <div class="col-md-6 p-0">
-                    <img src="{% static 'images/compatibility.jpg' %}" alt="Meet People" class="why-image">
-                </div>
-                <div class="col-md-6 why-col">
-                    <h3 class="why-title">Make Friends Across Cultures</h3>
-                    <p class="why-text">
-                        Whether you're a traveler, an expat, or a local, Zanmi events bring together people from different backgrounds in a relaxed and welcoming setting. Meet open-minded people who share your curiosity for new cultures and connections.
-                    </p>
-                </div>
-            </div>
-
-            <!-- Genuine Connections, No Small Talk -->
-            <div class="row align-items-center flex-md-row-reverse">
-                <div class="col-md-6 p-0">
-                    <img src="{% static 'images/bar-happy.jpg' %}" alt="Connections" class="why-image">
-                </div>
-                <div class="col-md-6 why-col">
-                    <h3 class="why-title">Authentic Moments, Real Conversations</h3>
-                    <p class="why-text">
-                        Forget awkward networking events. Zanmi is all about real interactions. Small groups, engaging activities, and a laid-back atmosphere make it easy to connect without the pressure of forced conversations.
-                    </p>
-                </div>
-            </div>
-
-            <!-- A Safe and Inclusive Space -->
-            <div class="row align-items-center">
-                <div class="col-md-6 p-0">
-                    <img src="{% static 'images/safe.jpg' %}" alt="Safe and Inclusive" class="why-image">
-                </div>
-                <div class="col-md-6 why-col">
-                    <h3 class="why-title">A Safe and Inclusive Space</h3>
-                    <p class="why-text">
-                        Everyone is welcome at Zanmi events. Our organizers make sure that each event is respectful, friendly, and inclusive, so you can feel at ease, whether you’re coming alone or with friends, whether you're introvert or extrovert, whether you're from Toulouse or from Mars.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    {% endif %}
-    <!-- ✅ FOOTER -->
-    <footer class="footer-simple py-3">
+    <!-- FOOTER (reprenant précisément le design fourni) -->
+    <footer>
         <div class="container text-center">
-            <p class="mb-1">&copy; 2025 Zanmi. All rights reserved.</p>
-            <p class="footer-links">
-                <a href="{% url 'cgv' %}" class="footer-link">Terms of Sale</a> |
-                <a href="{% url 'cgu' %}" class="footer-link">Terms of Use</a> |
-                <a href="{% url 'confidentialite' %}" class="footer-link">Privacy Policy</a> |
-                <a href="{% url 'mentions_legales' %}" class="footer-link">Legal Notice</a>
-            </p>
+            <p>&copy; Zanmi 2025. Tous droits réservés.</p>
+            <div class="footer-links">
+                <a href="{% url 'cgv' %}">Terms of Sale</a> |
+                <a href="{% url 'cgu' %}">Terms of Use</a> |
+                <a href="{% url 'confidentialite' %}">Privacy Policy</a> |
+                <a href="{% url 'mentions_legales' %}">Legal Notice</a>
+            </div>
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- JS Bootstrap Bundle CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Ton fichier JS centralisé -->
+    <script src="{% static 'js/main.js' %}"></script>
+
     {% block extra_scripts %}{% endblock %}
+
 </body>
 </html>

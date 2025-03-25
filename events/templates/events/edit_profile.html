@@ -4,11 +4,11 @@
 {% block title %}Edit Your Profile{% endblock %}
 
 {% block content %}
-<div class="block-content mt-4">
+<div class="container py-5 my-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <h1 class="mb-4 text-center">Edit Your Profile</h1>
-            <form method="post" enctype="multipart/form-data" class="p-4 border rounded shadow-sm">
+            <h1 class="pixel-text mb-4 text-center">Edit Your Profile</h1>
+            <form method="post" enctype="multipart/form-data" class="p-4 border rounded shadow-sm bg-white">
                 {% csrf_token %}
                 <div class="mb-3">
                     <label for="avatar" class="form-label fw-bold">Avatar</label>
@@ -34,7 +34,7 @@
                     <label for="centers_of_interest" class="form-label fw-bold">Interests (in a short paragraph)</label>
                     {{ form.centers_of_interest|add_class:"form-control" }}
                 </div>
-                <button type="submit" class="btn btn-primary w-100">Save</button>
+                <button type="submit" class="primary-btn w-100">Save Changes</button>
             </form>
         </div>
     </div>

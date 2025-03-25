@@ -18,6 +18,10 @@ from django.utils import timezone
 from django.urls import reverse
 
 
+def landing(request):
+    return render(request, 'events/landing.html')
+
+
 def certification_demand(request):
     if request.method == 'POST':
         form = CertificationForm(request.POST, request.FILES)
@@ -81,8 +85,8 @@ def stripe_webhook(request):
 
         # ✅ Création de la participation (si pas déjà existante)
         participation, created = Participation.objects.get_or_create(
-            event=event, 
-            user=user, 
+            event=event,
+            user=user,
             defaults={'status': Participation.ACCEPTED}
         )
 
@@ -225,22 +229,33 @@ def profile(request, username):
     profile_user = get_object_or_404(User, username=username)
     profile = get_object_or_404(UserProfile, user=profile_user)
     user = request.user
-    can_edit = False
+    can_edit = profile_user == user
+
+    # Participations acceptées
     participations = Participation.objects.filter(
-        user=profile.user,
+        user=profile_user,
         status=Participation.ACCEPTED,
-    )
-    if profile.can_edit(user):
-        # Profil public
-        can_edit = True
-        # Profil privé
+    ).select_related('event')
+
+    # Séparer les événements à venir et passés
+    today = timezone.now()
+    upcoming_events = [p for p in participations if p.event.date >= today]
+    past_events = [p for p in participations if p.event.date < today]
+
+
+    # Événements organisés
     organized_events = Event.objects.filter(organizer=profile_user)
-    return render(request, 'events/profile.html', {
+
+    context = {
         'can_edit': can_edit,
         'profile': profile,
-        'participations': participations,
+        'upcoming_events': upcoming_events,
+        'past_events': past_events,
         'organized_events': organized_events,
-    })
+        'events_attended_count': len(past_events),
+        'upcoming_events_count': len(upcoming_events),
+    }
+    return render(request, 'events/profile.html', context)
 
 
 @login_required
@@ -248,20 +263,14 @@ def edit_profile(request, username):
     edited_profile = get_object_or_404(User, username=username).profile
     if not edited_profile.can_edit(request.user):
         return HttpResponseForbidden("Vous ne pouvez pas modifier ce profil.")
-
-    next_url = request.GET.get('next', '')  # 🔄 Récupération du `next` passé dans l'URL
-
-    if request.method == "POST":
+    if request.method == 'POST':
         form = UserProfileForm(request.POST, request.FILES, instance=edited_profile)
         if form.is_valid():
             form.save()
-            if next_url:  # Si `next` existe, on redirige vers cette URL
-                return redirect(next_url)
-            return redirect('profile', username=username)
+            # Redirige vers l'événement avec ID 28 après la mise à jour du profil
+            return redirect('event_detail', event_id=28)  # L'ID de l'événement à mettre en avant
     else:
         form = UserProfileForm(instance=edited_profile)
-        if edited_profile.birth_date:
-            form.initial['birth_date'] = edited_profile.birth_date.strftime('%d/%m/%Y')
 
     return render(request, 'events/edit_profile.html', {'form': form})
 
@@ -317,17 +326,17 @@ def edit_event(request, event_id):
 
 
 def register(request):
-    next_url = request.GET.get('next', '')  # On récupère `next` s'il existe
+    if request.user.is_authenticated:
+        # Si l'utilisateur est déjà connecté, rediriger vers l'événement avec l'ID 28
+        return redirect('event_detail', event_id=28)
 
     if request.method == "POST":
-        form = CustomUserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST)  # Assure-toi que c'est la bonne form
         if form.is_valid():
-            user = form.save()
-            user.profile.consent_date = timezone.now()
-            login(request, user)
-
-            # 🚀 Redirige vers l'édition du profil avec `next`
-            return redirect(f"{reverse('edit_profile', args=[user.username])}?next={next_url}")
+            user = form.save()  # Crée l'utilisateur
+            login(request, user)  # Connecte l'utilisateur immédiatement après l'inscription
+            # Après l'inscription et la connexion, redirige vers l'édition de son profil
+            return redirect('edit_profile', username=user.username)
     else:
         form = CustomUserCreationForm()
 

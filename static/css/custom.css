@@ -1,825 +1,134 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
+/* ===== Styles Zanmi Landing Page ===== */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Poppins:wght@400;500;600&display=swap');
 
-/* Styles isolés */
-html {
-    scroll-behavior: smooth;
-    height: 100%;
-}
-
-h1, h2, h3 {
-    font-family: 'Poppins', sans-serif; /* Police moderne */
-    font-weight: 800; /* Extra bold */
-    text-transform: uppercase; /* Lettres capitales */
-    color: #120D31; /* Couleur principale */
-    letter-spacing: 1px; /* Espacement entre les lettres */
-    line-height: 1.2; /* Hauteur de ligne légèrement resserrée */
-    margin-bottom: 20px; /* Espacement sous les titres */
-}
-
-a {
-    text-decoration: none;
-    color: #D81E5B; /* Couleur rose pour les liens */
-}
-
-a:hover {
-    color: #D40048; /* Couleur rose foncé au survol */
-}
-
-h1 {
-    font-size: 3.1rem; /* Très grand pour le titre principal */
-}
-
-h2 {
-    font-size: 2.7rem; /* Légèrement plus grand pour ressortir */
-    font-weight: 800;
-    color: #120D31;
-    margin-bottom: 15px;
-    line-height: 1.3;
-}
-
-h3 {
-    font-size: 1.8rem; /* Sous-section */
+:root {
+    --primary: #ff1f8e;
+    --secondary: #7d3ac1;
+    --gradient: linear-gradient(135deg, #ff1f8e 0%, #ff69b4 100%);
+    --background: #ffe5f0;
 }
 
 body {
-    font-family: 'Poppins', sans-serif; /* Police par défaut */
-    color: #120D31; /* Couleur principale du texte */
-    line-height: 1.6; /* Hauteur de ligne agréable */
-    background-color: #ffeff3; /* Fond beige clair */
-    display: flex;
-    flex-direction: column;
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--background);
+    color: #333;
 }
 
-main {
-    padding-bottom: 30px;
-    flex: 1;
+.pixel-text {
+    font-family: 'Press Start 2P', cursive;
+    line-height: 1.5;
 }
 
-#logout {
-    color: red !important;
-    font-size: 12px;
+.primary-btn {
+    display: inline-block;
+    background: var(--gradient);
+    color: white !important;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(255, 31, 142, 0.4);
+    text-decoration: none;
+    font-weight: 600;
 }
 
-a {
-    font-weight: bold;
-    color: #D81E5B;
+.primary-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(255, 31, 142, 0.6);
 }
 
-p {
-    font-size: 1.2rem; /* Taille standard */
-    font-weight: 400; /* Poids normal */
-    margin-bottom: 20px; /* Espacement sous le texte */
+.hero, .about, .features, .why-zanmi, .cta {
+    padding: 80px 0;
 }
 
-
-
-/* Supprimer les contours bleus par défaut */
-.btn:focus, .btn:active {
-    outline: none !important;
-    box-shadow: none !important;
-}
-
-.thick-box {
-    background-color: white;
-    border: 1px solid #120D31; /* Bordure fine pour le contraste */
-    padding: 20px;
-}
-
-.thick-box p {
-    font-size: 1.1em;
-}
-
-.thick-box .event-price {
-    font-size: 1.6em;
-}
-
-.thick-box .sub-payment {
-    font-size: 0.9em;
-    margin-top: 15px;
-}
-
-.thick-box .btn-primary {
-    font-size: 1.3em;
-}
-
-.thick-box textarea {
-    height: 210px;
-}
-
-.offwide-container {
-    max-width: 80%;
+.hero-img, .about-img, .reason-img {
+    width: 100%;
+    max-width: 350px;
     margin: 0 auto;
 }
 
-/* Hero */
-.hero-image h1 {
-    color: white;
-    font-size: 2.2rem;
+.feature-card, .reason-card {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
 }
 
-.hero-image p {
-    font-size: 1.1rem;
+.feature-card:hover, .reason-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
 }
 
-.hero-image {
-    position: relative;
-    width: 100%;
-    height: calc(100vh - 60px);
-    background-image: url("/static/images/hero-augustins.jpg");
-    background-size: cover; /* L'image couvre tout le container */
-    background-position: center;
-    background-repeat: no-repeat; /* Évite les répétitions */
+.feature-icon {
+    font-size: 2rem;
+    margin-bottom: 10px;
 }
 
-.hero-overlay {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%; /* Prend toute la hauteur de .hero-image */
+.cta {
+    background: var(--gradient);
     color: white;
     text-align: center;
-    background: rgba(0, 0, 0, 0.342); /* Ajoute un overlay sombre pour améliorer la lisibilité du texte */
 }
 
-.hero-overlay h1 {
-    font-size: 3.4rem;
-    margin-bottom: 20px;
+.floating {
+    animation: float 6s ease-in-out infinite;
 }
 
-.hero-overlay p {
-    font-size: 1.4rem;
-    margin-bottom: 30px;
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
 }
 
-.hero-overlay a {
-    font-size: 1.3rem;
-    padding: 15px 25px;
-}
-
-
-/* Forms */
-form.rounded {
-    background-color: white;
-}
-
-.form-check-input {
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-    margin-right: 10px;
-    margin-left: 30px;
-}
-
-.form-check-label {
-    font-weight: bold;
-    cursor: pointer;
-}
-
-
-.border h2 {
-    font-size: 20px;
-}
-
-/* Barre de navigation */
-/* Récente légèrement le contenu de la navbar sur desktop */
-@media (min-width: 768px) { /* Applique uniquement sur les écrans ≥ 768px */
-    .navbar {
-        padding-left: 10%;
-        padding-right: 10%;
-    }
-}
-
+/* Navbar simplifiée pour Zanmi landing page */
 .navbar {
-    font-family: 'Poppins', sans-serif;
-    border-bottom: 1px solid #120D31;
-    background-color: white;
+    background: white;
+    box-shadow: 0 2px 10px rgba(255, 31, 142, 0.1);
 }
 
-.navbar-brand {
-    font-size: 1.5rem; /* Taille visible */
-    font-weight: 800; /* Extra bold */
-    text-transform: uppercase;
-    color: #120D31; /* Couleur principale */
+.navbar-brand img {
+    height: 40px;
+    width: auto;
 }
 
-.navbar-nav .nav-link {
-    font-size: 1.2rem;
-    text-transform: uppercase;
-    color: #120D31;
+.navbar .nav-link {
+    color: #120D31 !important;
+    font-weight: 600;
 }
 
-.navbar img {
-    height: 40px !important;
-    margin-right: 10px;
-    mix-blend-mode: multiply;
+.navbar .nav-link:hover {
+    color: var(--primary) !important;
 }
 
-.navbar a.btn {
-    font-size: 1.1rem;
-    padding: 10px 20px;
-}
-
-.footer-simple {
-    background-color: #120D31; /* Bleu foncé */
-    color: #FFFFFF; /* Texte blanc */
+.navbar .primary-btn {
+    padding: 8px 16px;
     font-size: 0.9rem;
-    border-top: 1px solid #120D31; /* Ligne fine en bleu clair */
-    margin-top: auto;
+    margin-left: 10px;
 }
 
-.footer-links a {
-    color: #F8C0C8; /* Rose intense pour les liens */
-    text-decoration: none;
-}
-
-.footer-links a:hover {
-    text-decoration: underline;
-    color: #D40048; /* Couleur légèrement différente au hover */
-}
-
-
-/* Cartes */
-.card {
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.card img {
-    max-height: 150px;
-    object-fit: cover;
-}
-
-.card-title {
-    font-family: 'Open Sans', sans-serif;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #D81E5B;
-}
-
-/* Boutons */
-/* Boutons génériques */
-.btn {
-    font-family: 'Poppins', sans-serif; /* Cohérence avec le reste du site */
-    font-weight: 800; /* Extra bold pour impact visuel */
-    text-transform: uppercase; /* Texte en capital */
-    font-size: 1rem; /* Taille standard */
-    padding: 12px 20px; /* Espacement interne */
-    border-radius: 3px; /* Bords carrés */
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    border: none;
-}
-
-.cta-section {
-    background-color: #F8C0C8; /* Jaune moutarde */
-    color: #120D31; /* Bleu foncé */
-    padding: 60px 0;
-}
-
-.cta-title {
-    font-family: 'Poppins', sans-serif;
-    font-size: 2.5rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    line-height: 1.3;
-    margin-bottom: 20px;
-}
-
-.cta-subtext {
-    font-family: 'Poppins', sans-serif;
-    font-size: 1.2rem;
-    font-weight: 400;
-    line-height: 1.6;
-    margin-bottom: 30px;
-    color: #120D31; /* Gris légèrement plus doux pour contraster */
-}
-
-/* Section Zanmi Story */
-.zanmi-story-section {
-    background-image: url('/static/images/image.jpg');
-    background-size: cover; /* L'image couvre tout le container */
-    background-position: center; /* Centre l'image */
-    background-repeat: no-repeat; /* Évite les répétitions */
-    color: white; /* Texte blanc */
-    position: relative;
-    text-align: left; /* Texte aligné à gauche */
-    padding: 100px 0; /* Marge généreuse pour l'espacement */
-    border-top: 1px solid #b9b2e0;
-    border-bottom: 4px solid #b9b2e0;
-}
-
-.zanmi-story-section img {
-    width: 100%;
-    object-fit: cover;
-}
-
-
-/* Image de fond */
-.story-bg-image {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: center;
-    z-index: 1;
-}
-
-/* Overlay bleu clair */
-.story-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 2;
-}
-
-/* Contenu de la section */
-.container {
-    position: relative;
-    z-index: 3; /* Contenu par-dessus l'overlay */
-}
-
-/* Titre */
-.story-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    margin-bottom: 20px;
+.cta h2, .cta p {
     color: white;
 }
 
-/* Texte */
-.story-text {
-    font-size: 1.2rem;
-    line-height: 1.8;
-    margin-bottom: 15px;
+.cta .primary-btn {
+    background: white;
+    color: var(--primary) !important;
 }
 
-/* Bouton principal */
-.btn-primary {
-    background-color: #D81E5B; /* Rose intense */
-    border: none;
-    font-size: 1.3rem;
-    font-weight: 700;
-    padding: 15px 25px;
-    text-transform: uppercase;
-    transition: background-color 0.3s ease;
+.cta .primary-btn:hover {
+    background: var(--background);
 }
 
-/* Bouton hover */
-.btn-primary:hover {
-    background-color: #BB0044; /* Rose foncé */
-    color: white;
-}
-
-/* Message rassurant sous le bouton */
-.cta-reassurance {
-    font-size: 1rem;
-    font-style: italic;
-    color: white;
-    opacity: 0.9;
-    margin-top: 10px;
-}
-
-
-
-.btn-secondary {
-    background-color: #ACECF7; /* Bleu pastel */
-    color: #120D31; /* Texte gris foncé */
-}
-
-.btn-secondary:hover {
-    background-color: #99D2DF; /* Bleu pastel plus foncé */
-}
-
-
-/* Style de base pour les cartes d'événements */
-.event-card {
-    display: block;
-    text-decoration: none;
-    color: inherit;
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-}
-
-.event-card:hover {
-    transform: translateY(-5px); /* Légère élévation */
-    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2); /* Ombre plus marquée */
-}
-
-.event-card-image {
-    position: relative;
-    width: 100%;
-    height: 285px;
-    background-size: cover;
-    background-position: center;
-    overflow: hidden;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-}
-
-.event-card-overlay {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    padding: 10px;
-    background: rgba(0, 0, 0, 0.6);
-    color: #fff;
-    text-align: center;
-}
-
-/* Rendre toute la carte cliquable */
-.event-card a {
-    display: block;
-    width: 100%;
-    height: 100%;
-}
-
-
-.event-card-title {
-    font-size: 1.25rem;
-    font-weight: bold;
-    color: white;
-    margin-bottom: 5px;
-}
-
-.event-card-date {
-    font-size: 0.9rem;
-    font-style: italic;
-    margin-bottom: 10px;
-}
-
-/* Bouton sur l'image */
-.event-card-overlay .btn-cta {
-    display: inline-block;
-    padding: 8px 15px;
-    font-size: 0.85rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    color: #fff;
-    background-color: #D81E5B; /* Rose intense */
-    border: none;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    border-radius: 3px;
-}
-
-.event-card-overlay .btn-cta:hover {
-    background-color: #120D31; /* Bleu foncé au survol */
-    transform: scale(1.05); /* Léger agrandissement */
-    color: #fff;
-}
-
-
-/* Profils */
-.profile-description-box {
-    background-color: #ACECF7; /* Bleu clair */
-    padding: 20px;
-    border-radius: 3px;
-    border: 1px solid #120D31; /* Optionnel : Bordure sombre */
-    color: #120D31; /* Texte bleu foncé */
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Légère ombre pour donner du relief */
-}
-
-.profile-description-box h3 {
-    font-family: 'Poppins', sans-serif;
-    font-size: 1.5rem;
-    margin-bottom: 15px;
-    color: #120D31;
-    font-weight: bold;
-}
-
-.profile-card .fa-map-marker-alt {
-    font-size: 1.5rem; /* Augmente la taille */
-    color: #ACECF7; /* Bleu clair */
-}
-
-.profile-card .d-flex {
-    font-size: 1.1rem;
-    color: #120D31;
-}
-
-.profile-card .btn {
-    width: 100%;
-}
-
-.profile-card {
-    text-align: center;
-    border: 1px solid #120D31 ;
-    padding: 20px;
-    background-color: #f9f9f9;
-    margin-bottom: 35px;
-}
-
-.profile-card img {
-    max-width: 100%;
-    border-radius: 50%;
-    margin-bottom: 15px;
-}
-
-.profile-card h2 {
-    font-size: 1.5rem;
-    color: #D81E5B;
-    margin-bottom: 10px;
-}
-
-.profile-card p {
-    font-size: 1rem;
-    color: #120D31 ;
-}
-
-.avatar-rounded {
-    width: 150px; /* Taille fixe pour le cercle */
-    height: 150px; /* Hauteur égale pour former un cercle */
-    border-radius: 50%; /* Rond */
-    object-fit: cover; /* Conserve les proportions de l'image */
-    object-position: center; /* Centre l'image */
-    border: 1px solid #120D31; /* Ajout d'une bordure pour le style */
-    margin: 0 auto; /* Centrer l'avatar */
-    display: block; /* S'assurer que c'est un bloc pour le centrage */
-}
-
-.avatar-img {
-    width: 40px; /* Taille fixe */
-    height: 40px; /* Taille fixe égale pour un carré parfait */
-    border-radius: 50%; /* Rend l'image ronde */
-    object-fit: cover; /* Ajuste l'image pour remplir le conteneur sans déformation */
-    object-position: center; /* Centre l'image */
-    border: 1px solid #120D31; /* Optionnel : Ajoute une bordure pour le style */
-}
-
-.event-image {
-    max-height: 400px; /* Limite la hauteur à 400px */
-    width: 100%; /* L'image occupe toute la largeur disponible */
-    object-fit: cover; /* Recadre l'image pour qu'elle remplisse le conteneur sans déformation */
-    object-position: center; /* Centre l'image si elle est recadrée */
-}
-
-.accordion-button:not(.collapsed) .faq-plus-icon {
-    content: "-";
-    transform: rotate(45deg);
-}
-
-/* Section How It Works */
-.how-it-works {
-    padding-top: 70px;
-}
-
-.how-it-works h2, .why-zanmi h2 {
-    font-family: 'Poppins', sans-serif;
-    font-weight: 800;
-    text-transform: uppercase;
-    color: #120D31; /* Texte bleu foncé */
-    margin-bottom: 40px;
-}
-
-/* Quick Guide Cards */
-.quick-guide-card {
-    background-color: #F8C0C8 ; /* Fond bleu clair */
-    border: 1px solid #120D31; /* Contour bleu foncé */
-    border-radius: 0; /* Bords carrés */
-    padding: 25px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    height: 100%; /* Uniformise la hauteur */
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.quick-guide-card:hover {
-    transform: translateY(-5px); /* Légère élévation au survol */
-    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.1); /* Ombre subtile */
-}
-
-/* Images des encarts */
-.quick-guide-img {
-    width: 100%; /* Prend toute la largeur disponible */
-    height: 200px; /* Hauteur fixe */
-    object-fit: cover; /* Ajuste l'image pour remplir sans déformation */
-    margin-bottom: 15px; /* Espace sous l'image */
-}
-
-/* Contenu des cartes */
-.guide-number {
-    font-size: 3rem;
-    font-weight: 900;
-    color: #D81E5B; /* Rose intense pour les numéros */
-    margin-bottom: 15px;
-}
-
-.guide-title {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: #120D31; /* Texte bleu foncé */
-    text-transform: uppercase;
-    margin-bottom: 10px;
-
-}
-
-/* Barre fine entre le titre et le texte */
-.quick-guide-card hr {
-    border: 0;
-    border-top: 1px solid #120D31; /* Barre fine bleu foncé */
-    margin: 10px 0;
-    width: 50%; /* Barre centrée plus courte */
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.guide-text {
-    font-size: 1.2rem;
-    color: #120D31; /* Texte bleu foncé */
-    line-height: 1.5;
-    margin-top: 10px;
-    min-height: 100px;
-}
-
-.why-zanmi {
-    background-color: #F8C0C8; /* Rose clair */
-    padding-bottom: 160px;
-    padding-top: 90px;
-}
-
-
-.why-col {
-    /* background-color: #ACECF7 ;  */
-    padding: 50px;
-}
-
-.why-image {
-    width: 100%;
-    height: 400px;
-    object-fit: cover;
-    display: block;
-}
-
-.row > .col-md-6.p-0 {
-    padding: 0; /* Supprime tout espace entre les images */
-}
-
-.why-title {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #120D31; /* Bleu foncé */
-    margin-bottom: 10px;
-}
-
-.why-text {
-    font-size: 1.2rem;
-    line-height: 1.6;
-    color: #120D31; /* Bleu foncé */
-}
-
-.organizer-card {
-    background-color: #ACECF7;
-}
-
-/* Améliore la lisibilité du bloc de description */
-.event-description {
-    margin: 0 auto; /* Centre le texte dans la colonne */
-    padding-right: 50px; /* Ajoute un léger padding pour l’aérer */
-}
-
-/* Texte de description */
-.event-description p, .event-description li {
-    font-size: 1.2rem; /* Augmente légèrement la taille */
-    line-height: 1.6; /* Aère un peu plus */
-    color: #120D31 ; /* Légèrement plus foncé pour améliorer la lecture */
-    margin-bottom: 15px;
-}
-
-/* Lien de l'organisateur */
-.event-description a {
-    font-weight: bold;
-    color: #D81E5B;
-}
-
-.event-description a:hover {
-    color: #D40048;
-}
-
-/* Style pour l'encart de l'organisateur */
-.event-host-box {
-    background: #ACECF7; /* Bleu clair pour le mettre en avant */
-    border-radius: 3px;
-    display: flex;
-    align-items: center;
-    transition: all 0.3s ease-in-out;
-}
-
-/* Avatar de l'organisateur */
-.organizer-avatar {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 1px solid #120D31;
-}
-
-/* Lien vers le profil de l'organisateur */
-.organizer-link {
-    font-size: 1.2rem;
-    color: #120D31;
-    text-decoration: none;
-    transition: color 0.3s ease-in-out;
-}
-
-.organizer-link:hover {
-    color: #D81E5B; /* Rose intense */
-}
-
-/* 🎉 Join Zanmi Section */
-.join-zanmi-section {
-    background: url('/static/images/briques.jpg') center/cover no-repeat;
-    color: #120D31;
-    padding: 80px 20px;
-    position: relative;
-    text-align: center;
-}
-
-.join-zanmi-section .overlay {
-    background: rgba(255, 255, 255, 0.637);
-    padding: 60px 20px;
-    border-radius: 2px;
-    display: inline-block;
-}
-
-.join-zanmi-section h2 {
-    font-size: 2.5rem;
-    font-weight: 800;
-    margin-bottom: 20px;
-    text-transform: uppercase;
-}
-
-.join-zanmi-section p {
-    font-size: 1.3rem;
-    margin-bottom: 30px;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.join-zanmi-section .btn-primary {
-    font-size: 1.4rem;
-    padding: 15px 30px;
-    font-weight: bold;
-    text-transform: uppercase;
-}
-
-
-/* Ajout d'une meilleure responsivité sur petits écrans */
+/* Responsive adjustments */
 @media (max-width: 768px) {
-    .event-description {
-        max-width: 100%;
-        padding: 0 10px; /* Ajoute de l’espace latéral sur mobile */
+    .hero, .about, .features, .why-zanmi, .cta {
+        padding: 50px 15px;
     }
-
-    .event-description h2 {
-        font-size: 2rem; /* Ajustement pour mobile */
+    .hero-img, .about-img {
+        margin-top: 30px;
     }
-
-    .event-description p {
-        font-size: 1.1rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .profile-card p {
-        display: flex;
-        flex-direction: column; /* Empile les éléments */
-        align-items: center; /* Centre les éléments */
-        text-align: center; /* Centre le texte */
-    }
-
-    .why-title {
-        text-align: center; /* Centrer le titre sur mobile */
-    }
-    .why-text {
-        text-align: center; /* Centrer le texte sur mobile */
-    }
-    .row {
-        margin-bottom: 30px; /* Réduit l’espacement sur mobile */
-    }
-
-    h1 {
-        font-size: 1.6rem !important; /* Ajuste la taille pour les petits écrans */
-    }
-
-
-
-    h3 {
+    .pixel-text {
         font-size: 1.2rem !important;
-    }
-
-    .btn-primary {
-        font-size: 1.1em;
-    }
-
-    .hero-overlay p {
-        font-size: 1.1em !important;
     }
 }
