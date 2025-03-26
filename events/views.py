@@ -138,56 +138,51 @@ def event_payment(request, event_id):
 
 
 
+@login_required(login_url='login')
 def event_detail(request, event_id):
-    user = request.user if request.user.is_authenticated else None
+    # TODO: refacto
+    user = request.user
     event = get_object_or_404(Event, id=event_id)
     participations = Participation.objects.filter(event=event, status=Participation.ACCEPTED)
 
-    participation = None
-    is_accepted = False
-    is_pending = False
-    is_rejected = False
+    participation = Participation.objects.filter(user=user, event=event).first()
+    is_accepted = participation.is_accepted() if participation else False
+    is_pending = participation.is_pending() if participation else False
+    is_rejected = participation.is_rejected() if participation else False
+
+    # Masquer l’adresse si l'utilisateur n'est pas accepté et ce n’est pas l’organisateur
     location = event.location
-
-    if user:
-        participation = Participation.objects.filter(user=user, event=event).first()
-        is_accepted = participation.is_accepted() if participation else False
-        is_pending = participation.is_pending() if participation else False
-        is_rejected = participation.is_rejected() if participation else False
-
-        # Masquer l'adresse si l'utilisateur n'est pas accepté et n'est pas l'organisateur
-        if not is_accepted and not event.can_manage(user) and event.is_location_hidden:
-            location = "Join the event to see the "
+    if not is_accepted and not event.can_manage(user) and event.is_location_hidden:
+        location = "Join the event to see the location"
 
     if request.method == "POST":
-        if not user:
-            return redirect('login')  # Redirige les utilisateurs non connectés vers la page de connexion
         form = ParticipationForm(request.POST)
-        if user and is_pending:
-            # Si l'utilisateur a une participation en attente, on le renvoie vers Stripe
-            session_params = event.get_stripe_session_params()
-            session = stripe.checkout.Session.create(
-                **session_params,
-                metadata={
-                    'user_id': user.id,
-                    'event_id': event.id,
-                    'message': "",
-                }
-            )
-            return redirect(session.url)
 
+        # Si l'utilisateur a déjà une participation, on ne crée pas de doublon
+        if Participation.objects.filter(user=user, event=event).exists():
+            return redirect('event_detail', event_id=event.id)
+
+        if form.is_valid():
+            participation = form.save(commit=False)
+            participation.user = user
+            participation.event = event
+            participation.status = Participation.PENDING
+            participation.save()
+
+            event.notify_organizer()
+
+            return redirect('event_detail', event_id=event.id)
     else:
-        form = ParticipationForm() if user else None
-
+        form = ParticipationForm() if not is_accepted and not is_pending and not is_rejected else None
     return render(request, 'events/event_detail.html', {
         'event': event,
         'participations': participations,
-        'can_manage': event.can_manage(user) if user else False,
+        'can_manage': event.can_manage(user),
         'is_accepted': is_accepted,
-        'location': location,
         'is_pending': is_pending,
         'is_rejected': is_rejected,
         'form': form,
+        'location': location,
     })
 
 

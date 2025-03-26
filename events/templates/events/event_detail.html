@@ -57,23 +57,6 @@
                     <h2 class="pixel-text">About This Event</h2>
                     <p>{{ event.description|safe }}</p>
 
-                    <h3>What's Included:</h3>
-                    <ul>
-                        <li>Guided tour of secret locations</li>
-                        <li>Interactive social games</li>
-                        <li>Local snacks and one drink</li>
-                        <li>Professional local guide</li>
-                        <li>Group photos</li>
-                    </ul>
-
-                    {% if spots_left %}
-                    <div class="spots-left">
-                        <div class="progress">
-                            <div class="progress-bar" role="progressbar" style="width: {{ spots_left_percentage }}%;" aria-valuenow="{{ spots_left_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                        <p>Only {{ spots_left }} spots left!</p>
-                    </div>
-                    {% endif %}
                 </div>
             </div>
 
@@ -90,12 +73,26 @@
                                 Sign Up & Join
                             </a>
                         {% else %}
-                            <form method="post" action="{% url 'event_payment' event.id %}">
-                                {% csrf_token %}
-                                <button type="submit" class="primary-btn w-100">Reserve My Spot</button>
-                            </form>
+                        <form method="post" action="{% url 'event_detail' event.id %}">
+                            {% csrf_token %}
+                            {{ form.non_field_errors }}
+                            <div class="mb-3">
+                                {{ form.message.label_tag }}
+                                {{ form.message }}
+                                {% if form.message.errors %}
+                                    <div class="text-danger small">{{ form.message.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <button type="submit" class="primary-btn w-100">Request to Join</button>
+                        </form>
+                        <p class="mt-2 text-muted small text-center">📩 Your request will be reviewed by the host.</p>
+                        
                         {% endif %}
-                        <p class="mt-2 text-muted small text-center">💳 Secure checkout powered by Stripe.</p>
+                        <p class="mt-2 text-muted small text-center">
+                            <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/stripe.svg" alt="Stripe" width="18" style="vertical-align: middle; margin-right: 4px;">
+                            Secure checkout powered by Stripe.<br>
+                            You will be <strong>fully refunded</strong> if your request is not accepted.
+                        </p>
                     {% endif %}
                 </div>
             </div>
