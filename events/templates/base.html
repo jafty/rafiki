@@ -39,7 +39,7 @@
                         <a class="nav-link" href="{% url 'profile' user.username %}">Profile</a>
                     </li>
                     <!-- Formulaire de déconnexion -->
-                    <li class="nav-item">
+                    <li class="nav-item me-lg-3">
                         <form method="POST" action="{% url 'logout' %}" class="m-0">
                             {% csrf_token %}
                             <button type="submit" class="nav-link btn btn-link" style="color: inherit; text-decoration: none; padding: 0;">
@@ -47,7 +47,7 @@
                             </button>
                         </form>
                     </li>
-                    <li class="nav-item me-lg-3">
+                    <li class="nav-item">
                         <a href="{% url 'featured_event' %}" class="nav-link download-btn">✨ Next hangout ✨</a>
                     </li>
                     {% else %}
