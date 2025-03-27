@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load widget_tweaks %}
 {% block title %}Log in to Zanmi{% endblock %}
+{% load socialaccount %}
 
 {% block content %}
 <div class="container py-5 my-5">
@@ -28,6 +29,11 @@
                 </div>
                 <button type="submit" class="primary-btn w-100 mt-3">Log In</button>
             </form>
+            <a href="{% provider_login_url 'google' %}" class="btn btn-outline-dark w-100 mt-3">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_2013_Google.png" style="height: 20px; margin-right: 8px;">
+                Continue with Google
+            </a>
+            
 
             <div class="text-center mt-3">
                 <a href="{% url 'password_reset' %}" class="text-decoration-none small">Forgot password?</a>

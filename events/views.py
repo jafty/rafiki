@@ -4,6 +4,8 @@ from django.views.decorators.csrf import csrf_exempt  # Pour désactiver la vér
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
+from allauth.account.utils import complete_signup
+from allauth.account import app_settings as allauth_settings
 from .models import Event, Participation, EventForm, UserProfile, UserProfileForm, ParticipationForm, CustomUserCreationForm, Notification
 from .forms import CertificationForm
 from django.core.mail import EmailMessage
@@ -353,3 +355,4 @@ def stripe_success(request):
 
 def stripe_cancel(request):
     return render(request, 'events/stripe_cancel.html')
+
