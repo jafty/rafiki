@@ -33,8 +33,16 @@
             </button>
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav align-items-center">
-                    {% if user.is_authenticated and user.username  %}
-                    <!-- Lien vers le profil -->
+                    {% if user.is_authenticated and user.username %}
+                    <li class="nav-item position-relative me-3">
+                        <a class="nav-link" href="{% url 'notifications_list' %}">
+                            Notifications
+                            {% if unread_count > 0 %}
+                                <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"></span>
+                            {% endif %}
+                        </a>
+                    </li>
+                                    <!-- Lien vers le profil -->
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'profile' user.username %}">Profile</a>
                     </li>
