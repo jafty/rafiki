@@ -3,10 +3,20 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from .forms import UsernameForm
 
+
+@login_required
+def post_login_redirect(request):
+    user = request.user
+    if user.username.startswith("temp_"):
+        return redirect('complete_social_signup')
+    return redirect('featured_event')
+
+
 @login_required
 def complete_social_signup(request):
     user = request.user
-    if user.username:
+
+    if not user.username.startswith("temp_"):
         return redirect('edit_profile', username=user.username)
 
     if request.method == 'POST':

@@ -4,8 +4,6 @@ from django.views.decorators.csrf import csrf_exempt  # Pour désactiver la vér
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
-from allauth.account.utils import complete_signup
-from allauth.account import app_settings as allauth_settings
 from .models import Event, Participation, EventForm, UserProfile, UserProfileForm, ParticipationForm, CustomUserCreationForm, Notification
 from .forms import CertificationForm
 from django.core.mail import EmailMessage
@@ -17,8 +15,7 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 stripe.api_key = settings.STRIPE_SECRET_KEY
 from django.utils import timezone
-from django.urls import reverse
-
+from datetime import date
 
 def landing(request):
     return render(request, 'events/landing.html')
@@ -227,22 +224,15 @@ def profile(request, username):
     profile = get_object_or_404(UserProfile, user=profile_user)
     user = request.user
     can_edit = profile_user == user
-
-    # Participations acceptées
+    age = profile.get_age(date.today())
     participations = Participation.objects.filter(
         user=profile_user,
         status=Participation.ACCEPTED,
     ).select_related('event')
-
-    # Séparer les événements à venir et passés
     today = timezone.now()
     upcoming_events = [p for p in participations if p.event.date >= today]
     past_events = [p for p in participations if p.event.date < today]
-
-
-    # Événements organisés
     organized_events = Event.objects.filter(organizer=profile_user)
-
     context = {
         'can_edit': can_edit,
         'profile': profile,
@@ -251,6 +241,7 @@ def profile(request, username):
         'organized_events': organized_events,
         'events_attended_count': len(past_events),
         'upcoming_events_count': len(upcoming_events),
+        'age': age,
     }
     return render(request, 'events/profile.html', context)
 
@@ -279,7 +270,7 @@ def event_list(request):
 
 
 def featured_event(request):
-    event = Event.objects.filter(date__gte=timezone.now()).order_by('date').first()
+    event = get_object_or_404(Event, id=28)
     if event:
         return redirect('event_detail', event_id=event.id)
     return redirect('event_list')  # Si aucun événement valide, rediriger vers la liste (ou autre)
@@ -294,7 +285,6 @@ def event_list_fr(request):
 @login_required
 def edit_event(request, event_id):
     event = get_object_or_404(Event, id=event_id)
-    # Vérifie si l'utilisateur est l'organisateur de l'événement
     if not event.can_manage(request.user):
         return HttpResponseForbidden("Vous n'avez pas la permission de modifier cet événement.")
     if request.method == "POST":
@@ -309,7 +299,7 @@ def edit_event(request, event_id):
             'title': event.title,
             'description': event.description,
             'location': event.location,
-            'date': event.date,  # Pré-remplit le champ date
+            'date': event.date,
             'price': event.price,
             'is_location_hidden': event.is_location_hidden,
             'time': event.time,
@@ -324,15 +314,13 @@ def edit_event(request, event_id):
 
 def register(request):
     if request.user.is_authenticated:
-        # Si l'utilisateur est déjà connecté, rediriger vers l'événement avec l'ID 28
         return redirect('event_detail', event_id=28)
 
     if request.method == "POST":
-        form = CustomUserCreationForm(request.POST)  # Assure-toi que c'est la bonne form
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            user = form.save()  # Crée l'utilisateur
-            login(request, user)  # Connecte l'utilisateur immédiatement après l'inscription
-            # Après l'inscription et la connexion, redirige vers l'édition de son profil
+            user = form.save()
+            login(request, user)
             return redirect('edit_profile', username=user.username)
     else:
         form = CustomUserCreationForm()
@@ -342,9 +330,7 @@ def register(request):
 
 @login_required
 def notifications(request):
-    # Récupère les notifications de l'utilisateur
     notifications = request.user.notifications.all().order_by('-created_at')
-    # Marque toutes les notifications comme lues
     notifications.filter(is_read=False).update(is_read=True)
     return render(request, 'events/notifications.html', {'notifications': notifications})
 

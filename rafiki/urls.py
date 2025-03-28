@@ -18,12 +18,14 @@ from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
+from accounts.views import post_login_redirect
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('events.urls')),
     path('accounts/', include('accounts.urls')),
     path('accounts/', include('allauth.urls')),
+    path('post-login-redirect/', post_login_redirect, name='post_login_redirect'),
 
 ]
 

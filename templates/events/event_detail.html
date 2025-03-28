@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ event.title }}{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="event-hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <div class="event-image">
+                    <img src="{{ event.image.url }}" alt="{{ event.title }}">
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="event-details">
+                    <span class="event-type">{{ event.activity_type }}</span>
+                    <h1 class="pixel-text">{{ event.title }}</h1>
+                    <div class="event-meta">
+                        <div class="meta-item">
+                            <img src="https://api.iconify.design/mdi:calendar.svg" alt="Date">
+                            <span>{{ event.date|date:"F j, Y" }}</span>
+                        </div>
+                        <div class="meta-item">
+                            <img src="https://api.iconify.design/mdi:clock.svg" alt="Time">
+                            <span>{{ event.time }}</span>
+                        </div>
+                        <div class="meta-item">
+                            <img src="https://api.iconify.design/mdi:map-marker.svg" alt="Location">
+                            <span>
+                                {% if is_accepted %}
+                                    {{ event.location }}
+                                {% else %}
+                                    Hidden until booking
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div class="meta-item">
+                            <img src="https://api.iconify.design/mdi:ticket.svg" alt="Price">
+                            <span>{{ event.price }}€ per person</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Description + Join Section -->
+<section class="event-description">
+    <div class="container">
+        <div class="row">
+            <!-- Left Column: Description -->
+            <div class="col-lg-8">
+                <div class="description-card">
+                    <h2 class="pixel-text">About This Event</h2>
+                    <p>{{ event.description|safe }}</p>
+
+                </div>
+            </div>
+
+            <!-- Right Column: Join Form -->
+            <div class="col-lg-4">
+                <div class="join-form-card">
+                    {% if is_accepted %}
+                        <h2 class="pixel-text text-success">✅ You're In!</h2>
+                        <p>Check the details and get ready for an epic night.</p>
+                    {% else %}
+                        <h2 class="pixel-text">Join Event</h2>
+                        {% if not user.is_authenticated %}
+                            <a href="{% url 'register' %}?next={% url 'event_detail' event.id %}" class="primary-btn w-100 mb-2">
+                                Sign Up & Join
+                            </a>
+                        {% else %}
+                        <form method="post" action="{% url 'event_detail' event.id %}">
+                            {% csrf_token %}
+                            {{ form.non_field_errors }}
+                            <div class="mb-3">
+                                {{ form.message.label_tag }}
+                                {{ form.message }}
+                                {% if form.message.errors %}
+                                    <div class="text-danger small">{{ form.message.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <button type="submit" class="primary-btn w-100">Request to Join</button>
+                        </form>
+                        <p class="mt-2 text-muted small text-center">📩 Your request will be reviewed by the host.</p>
+                        
+                        {% endif %}
+                        <p class="mt-2 text-muted small text-center">
+                            <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/stripe.svg" alt="Stripe" width="18" style="vertical-align: middle; margin-right: 4px;">
+                            Secure checkout powered by Stripe.<br>
+                            You will be <strong>fully refunded</strong> if your request is not accepted.
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block title %}Log in to Zanmi{% endblock %}
+{% load socialaccount %}
+
+{% block content %}
+<div class="container py-5 my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5 col-lg-4">
+            <h1 class="pixel-text text-center mb-4">Welcome Back!</h1>
+
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <form method="post" class="p-4 border rounded shadow-sm bg-white">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Username</label>
+                    {{ form.username|add_class:"form-control" }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Password</label>
+                    {{ form.password|add_class:"form-control" }}
+                </div>
+                <button type="submit" class="primary-btn w-100 mt-3">Log In</button>
+            </form>
+            <form action="{% provider_login_url 'google' %}" method="post" class="mt-4">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-danger google-btn w-100">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_2013_Google.png" alt="Google" style="height: 20px; margin-right: 10px;">
+                    Sign-in with Google
+                </button>
+            </form>
+
+
+            <div class="text-center mt-3">
+                <a href="{% url 'password_reset' %}" class="text-decoration-none small">Forgot password?</a>
+            </div>
+            <div class="text-center mt-2">
+                Don't have an account? <a href="{% url 'register' %}" class="text-decoration-none">Sign up</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -52,13 +52,17 @@
             <div class="text-center mt-3">
                 Already have an account? <a href="{% url 'login' %}" class="text-decoration-none">Log in</a>
             </div>
+
             <div class="text-center mt-4">
-                <a href="{% provider_login_url 'google' %}" class="btn btn-outline-danger w-100">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_2013_Google.png" alt="Google" style="height: 20px; margin-right: 10px;">
-                    Sign up with Google
-                </a>
+                <form action="{% provider_login_url 'google' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-danger w-100">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_2013_Google.png" alt="Google" style="height: 20px; margin-right: 10px;">
+                        Sign up with Google
+                    </button>
+                </form>
             </div>
-            
+
         </div>
     </div>
 </div>

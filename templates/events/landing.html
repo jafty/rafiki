@@ -1,0 +1,148 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Zanmi - Private Events with <br>Locals & Expats{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/zanmi.css' %}">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="pixel-text">Private Events<br>with <br>Locals & Expats</h1>
+                <p>Join small, hosted events designed for locals and travelers to easily connect, play games, and share memorable moments together.</p>
+                <p class="mt-3"><strong>Our events are intentionally cozy, spots go fast!</strong></p>
+
+                <a href="{% url 'register' %}" class="primary-btn  mt-4">Save your spot</a>
+            </div>
+            <div class="col-lg-6 text-center">
+                <div class="hero-image ">
+                    <div class="hero-circle floating">
+                        <img src="{% static 'images/hero-augustins.jpg' %}" alt="Event illustration" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- About Section -->
+<section class="about">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 text-center">
+                <img src="{% static 'images/new-friends.jpg' %}" class="about-img floating" alt="About Zanmi">
+            </div>
+            <div class="col-lg-6">
+                <h2 class="pixel-text">Meet people from everywhere, without the awkwardness</h2>
+                <p>Zanmi is all about making real connections without the stress of big crowds or forced conversations. Each event is designed for friendly locals, travelers, and expats — all in a chill, small group setting. Forget awkward intros; our hosts keep things fun and easy.
+                <strong>No fake urgency, just genuinely limited availability.</strong></p>
+                <a href="{% url 'register' %}" class="primary-btn  mt-4">Save your spot</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features">
+    <div class="container">
+        <h2 class="pixel-text">Joining Zanmi is simple</h2>
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6">
+                <div class="feature-card">
+                    <div class="feature-icon">📝</div>
+                    <h3>Sign up in seconds</h3>
+                    <p>Quick & easy — just basic info.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="feature-card">
+                    <div class="feature-icon">👤</div>
+                    <h3>Complete your profile</h3>
+                    <p>Let people know you better.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="feature-card">
+                    <div class="feature-icon">🎟️</div>
+                    <h3>Reserve your spot</h3>
+                    <p>Secure a place for events.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="feature-card">
+                    <div class="feature-icon">🎉</div>
+                    <h3>Meet cool people</h3>
+                    <p>Connect and enjoy your night.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Why Join Zanmi Section -->
+<section class="why-zanmi">
+    <div class="container">
+        <h2 class="pixel-text text-center">3 Good Reasons to Join</h2>
+        <p class="text-center mb-5"><strong>We keep our events small and friendly. Each spot counts!</strong></p>
+
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="reason-card">
+                    <img src="{% static 'images/friends_cultures.jpg' %}" alt="Global Community" class="reason-img">
+                    <h3>Make Friends Across Cultures</h3>
+                    <p>Meet amazing people from all around the globe in a comfortable and welcoming environment. Expand your horizons with genuine friendships.</p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="reason-card">
+                    <img src="{% static 'images/real_discussion.jpg' %}" alt="Real Conversations" class="reason-img">
+                    <h3>Real Conversations</h3>
+                    <p>Skip superficial small-talk and dive straight into genuine connections through our carefully crafted social activities.</p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="reason-card">
+                    <img src="{% static 'images/safety.jpeg' %}" alt="Safe Space" class="reason-img">
+                    <h3>Safe & Inclusive</h3>
+                    <p>Everyone is welcome at Zanmi—our hosts ensure every guest feels respected and at ease from the moment you arrive.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta">
+    <div class="container text-center">
+        <h2 class="pixel-text">Next Event:<br>Toulouse Secret Night Tour</h2>
+        <p class="mt-3">
+            A unique night out hosted by locals, games, surprises, and awesome vibes.
+            <strong>Spots are limited because intimacy and genuine interactions matter to us.</strong>
+        </p>
+        <a href="{% url 'register' %}" class="primary-btn mt-4">Save your spot</a>
+        <p class="mt-2 small-group-note">Small groups only, spots fill quickly!</p>
+
+
+        <!-- Ajoute ceci -->
+        <div class="party-container">
+            <div class="party-icon pink">
+                <img src="https://api.iconify.design/noto:cocktail-glass.svg" alt="Cocktail" class="floating" />
+            </div>
+            <div class="party-icon blue">
+                <img src="https://api.iconify.design/noto:party-popper.svg" alt="Party" class="floating" />
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{% endblock %}

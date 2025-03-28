@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Participants{% endblock %}
+
+{% block content %}
+<div class="mt-4">
+    <h1>Manage Participants for {{ event.title }}</h1>
+    <p><strong>Date:</strong> {{ event.date|date:"d/m/Y" }}</p>
+
+    <div class="mt-4">
+        <h2>Pending Requests</h2>
+        <ul class="list-group">
+            {% for participant in pending_participants %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <img src="{{ participant.user.profile.avatar.url }}" alt="Avatar" class="rounded-circle me-2" style="width: 40px; height: 40px;">
+                    <div>
+                        <a href="{% url 'profile' participant.user.username %}" class="fw-bold text-decoration-none">{{ participant.user.username }}</a><br>
+                        <b>Message:</b> {{ participant.message|default:"No message." }}
+                    </div>
+                </div>
+                <div>
+                    <form method="post" action="{% url 'manage_participants' event.id %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="user_id" value="{{ participant.user.id }}">
+                        <button type="submit" name="action" value="accept" class="btn btn-success btn-sm">Accept</button>
+                        <button type="submit" name="action" value="reject" class="btn btn-danger btn-sm">Reject</button>
+                    </form>
+                </div>
+            </li>
+            
+            {% empty %}
+                <p>No pending requests.</p>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}

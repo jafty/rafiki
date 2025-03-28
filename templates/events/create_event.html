@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}Create an Event{% endblock %}
+
+{% block content %}
+<section class="contact-section pt-115 pb-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-title section-title-left mb-50">
+                    <h2>Create an Event</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="contact-wrapper-one mb-30 wow fadeInRight">
+                    <div class="contact-form">
+                        <form id="contactForm" enctype="multipart/form-data" name="contactForm" method="post">
+                            {% csrf_token %}
+                            {% if form.non_field_errors %}
+                                <div class="alert alert-danger">
+                                    {% for error in form.non_field_errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="mb-3">
+                                <label for="name" class="form-label fw-bold">Event Name</label>
+                                {{ form.title|add_class:"form-control" }}
+                            </div>
+                            <div class="mb-3">
+                                <label for="date" class="form-label fw-bold">Date</label>
+                                {{ form.date|add_class:"form-control" }}
+                            </div>
+                            <div class="mb-3">
+                                <label for="time" class="form-label fw-bold">Time</label>
+                                {{ form.time|add_class:"form-control" }}
+                            </div>
+                            <div class="mb-3">
+                                <label for="price" class="form-label fw-bold">Price in Euros</label>
+                                {{ form.price|add_class:"form-control" }}
+                            </div>
+                            <div class="mb-3">
+                                <label for="location" class="form-label fw-bold">Location</label>
+                                {{ form.location|add_class:"form-control" }}
+                            </div>
+                            <div class="mb-3">
+                                <label for="activity_type" class="form-label fw-bold">Activity Type</label>
+                                {{ form.activity_type|add_class:"form-control" }}
+                            </div>
+                            <div class="mb-3">
+                                <label for="description" class="form-label fw-bold">Description</label>
+                                {{ form.description|add_class:"form-control" }}
+                            </div>
+                            <div class="mb-3">
+                                <label for="contact" class="form-label fw-bold">How to Contact You</label>
+                                {{ form.contact|add_class:"form-control" }}
+                            </div>
+                            <div class="mb-3">
+                                <label for="image" class="form-label fw-bold">Image</label>
+                                {{ form.image|add_class:"form-control" }}
+                            </div>
+                            <div class="mb-3">
+                                <label for="is_location_hidden" class="form-check-label fw-bold">Hide Address?</label>
+                                {{ form.is_location_hidden|add_class:"form-check-input" }}
+                            </div>
+                            <button type="submit" class="btn btn-primary">Create</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

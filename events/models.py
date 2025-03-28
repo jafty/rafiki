@@ -9,7 +9,7 @@ from django.core.exceptions import ValidationError
 from rafiki import settings
 from django.core.mail import send_mail
 from django.core.validators import RegexValidator
-from datetime import time
+
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
@@ -23,6 +23,10 @@ class UserProfile(models.Model):
     city = models.CharField(max_length=100)
     country = models.CharField(max_length=100)
     centers_of_interest = models.TextField(blank=True, null=True, help_text="Qu'appréciez-vous ?")
+
+    def get_age(self, today_date):
+        return today_date.year - self.birth_date.year - ((today_date.month, today_date.day) < (self.birth_date.month, self.birth_date.day))
+        return 29
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -182,7 +186,7 @@ class EventForm(forms.ModelForm):
     def clean_time(self):
         time = self.cleaned_data.get('time', '').strip()
         return time
-    
+
 
 class Participation(models.Model):
     ACCEPTED = "accepted"

@@ -26,6 +26,10 @@ html {
     scroll-behavior: smooth;
 }
 
+a {
+    color: var(--primary);
+    text-decoration: none;
+}
 
 body {
     font-family: 'Poppins', sans-serif;
@@ -76,6 +80,11 @@ h3 {
     box-shadow: 0 5px 20px rgba(255, 31, 142, 0.4);
     display: inline-block;
     margin-top: 2rem;
+}
+
+.google-btn {
+    background-color: white;
+    color: black !important;
 }
 
 .primary-btn:hover {
@@ -152,7 +161,7 @@ li.nav-item {
     color: white !important;
     border: none;
     padding: 0.5rem 1.5rem;
-    border-radius: 25px;
+    border-radius: 5px;
     transition: transform 0.3s;
 }
 
@@ -507,7 +516,7 @@ footer {
     color: white;
     border: none;
     padding: 0.75rem 2rem;
-    border-radius: 25px;
+    border-radius: 5px;
     font-weight: 500;
     transition: all 0.3s;
 }
@@ -941,5 +950,104 @@ footer {
     .join-form-card {
         margin-top: 2rem;
         position: static;
+    }
+}
+
+/* Edit Profile Page Styles */
+.edit-profile-container {
+    padding: 120px 0 60px;
+    background: var(--pink-light);
+    min-height: 100vh;
+}
+
+.edit-profile-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(255, 31, 142, 0.15);
+    padding: 2.5rem;
+}
+
+.avatar-upload {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.current-avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: var(--pink-light);
+    box-shadow: 0 5px 15px rgba(255, 31, 142, 0.2);
+}
+
+.avatar-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.avatar-controls {
+    width: 100%;
+    max-width: 300px;
+    text-align: center;
+}
+
+.form-hint {
+    color: #666;
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+}
+
+.section-title {
+    font-size: 1.2rem;
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--pink-light);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-control {
+    background: var(--pink-light);
+    border: 2px solid transparent;
+    padding: 0.75rem;
+    border-radius: 10px;
+    transition: all 0.3s;
+}
+
+.form-control:focus {
+    background: white;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.25rem rgba(255, 31, 142, 0.1);
+}
+
+textarea.form-control {
+    min-height: 120px;
+}
+
+.form-label {
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+}
+
+.save-button {
+    margin-top: 2rem;
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.1rem;
+    border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+    .edit-profile-card {
+        padding: 1.5rem;
     }
 }

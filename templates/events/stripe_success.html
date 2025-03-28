@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Payment Successful{% endblock %}
+
+{% block content %}
+<div class="text-center mt-5">
+    <h1 class="text-success">🎉 Payment Successful!</h1>
+    <p>Your payment was completed successfully.</p>
+    <p>You will be redirected to the event list in 3 seconds.</p>
+</div>
+
+<script>
+    setTimeout(function() {
+        window.location.href = "/";
+    }, 3000);
+</script>
+{% endblock %}

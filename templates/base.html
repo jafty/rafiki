@@ -1,0 +1,89 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zanmi - {% block title %}{% endblock %}</title>
+
+    <!-- Bootstrap CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- TON CSS ORIGINAL COMPLET -->
+    <link rel="stylesheet" href="{% static 'css/main_style.css' %}">
+
+    <!-- Google Fonts (déjà présentes dans ton CSS, mais utile pour la rapidité du rendu initial) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body>
+
+    <!-- NAVIGATION (modifié pour correspondre exactement à ton design original) -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="{% url 'landing' %}">
+                <img src="{% static 'images/logo.png' %}" alt="Zanmi" class="me-2">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav align-items-center">
+                    {% if user.is_authenticated and user.username  %}
+                    <!-- Lien vers le profil -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'profile' user.username %}">Profile</a>
+                    </li>
+                    <!-- Formulaire de déconnexion -->
+                    <li class="nav-item me-lg-3">
+                        <form method="POST" action="{% url 'logout' %}" class="m-0">
+                            {% csrf_token %}
+                            <button type="submit" class="nav-link btn btn-link" style="color: inherit; text-decoration: none; padding: 0;">
+                                Log Out
+                            </button>
+                        </form>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'featured_event' %}" class="nav-link download-btn">✨ Next hangout ✨</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item ms-lg-3">
+                        <a href="{% url 'register' %}" class="nav-link download-btn">Join us</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CONTENU PRINCIPAL -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- FOOTER (reprenant précisément le design fourni) -->
+    <footer>
+        <div class="container text-center">
+            <p>&copy; Zanmi 2025. Tous droits réservés.</p>
+            <div class="footer-links">
+                <a href="{% url 'cgv' %}">Terms of Sale</a> |
+                <a href="{% url 'cgu' %}">Terms of Use</a> |
+                <a href="{% url 'confidentialite' %}">Privacy Policy</a> |
+                <a href="{% url 'mentions_legales' %}">Legal Notice</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JS Bootstrap Bundle CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Ton fichier JS centralisé -->
+    <script src="{% static 'js/main.js' %}"></script>
+
+    {% block extra_scripts %}{% endblock %}
+
+</body>
+</html>

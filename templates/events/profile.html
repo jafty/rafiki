@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Profile - {{ profile.user.username }}{% endblock %}
+
+{% block content %}
+<section class="profile-hero">
+    <div class="container">
+        <div class="profile-header">
+            <div class="profile-avatar">
+                {% if profile.avatar %}
+                    <img src="{{ profile.avatar.url }}" alt="Profile Picture" />
+                {% else %}
+                    <img src="{% static 'default_avatar.png' %}" alt="Profile Picture" />
+                {% endif %}
+            </div>
+            <div class="profile-info">
+                <h1 class="pixel-text">{{ profile.user.username }}</h1>
+                <div class="profile-meta">
+                    <span><img src="https://api.iconify.design/mdi:map-marker.svg" /> {{ profile.city }}, {{ profile.country }}</span>
+                    {% if profile.birth_date %}
+                        <span><img src="https://api.iconify.design/mdi:cake.svg" /> {{ age }} years old</span>
+                    {% endif %}
+                    <span><img src="https://api.iconify.design/mdi:translate.svg" /> {{ profile.languages|default:"Not specified" }}</span>
+                </div>
+                {% if can_edit %}
+                    <a href="{% url 'edit_profile' profile.user.username %}" class="edit-profile-btn">Edit Profile</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="profile-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="profile-section">
+                    <h2 class="pixel-text">About Me</h2>
+                    <p>{{ profile.description|default:"No description available."|linebreaks }}</p>
+                </div>
+
+                <div class="profile-section">
+                    <h2 class="pixel-text">Upcoming Events</h2>
+                    {% if upcoming_events %}
+                        <div class="event-cards">
+                            {% for participation in upcoming_events %}
+                                <div class="event-card">
+                                    <div class="event-card-image">
+                                        <img src="{{ participation.event.image.url }}" alt="Event" />
+                                    </div>
+                                    <div class="event-card-content">
+                                        <h3>{{ participation.event.title }}</h3>
+                                        <p class="event-date">{{ participation.event.date|date:"F j, Y" }}</p>
+                                        <span class="event-status">Confirmed</span>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p>No upcoming events yet...</p>
+                    {% endif %}
+                </div>
+
+                <div class="profile-section">
+                    <h2 class="pixel-text">Past Events</h2>
+                    {% if past_events %}
+                        <div class="event-cards">
+                            {% for participation in past_events %}
+                                <div class="event-card">
+                                    <div class="event-card-image">
+                                        <img src="{{ participation.event.image.url }}" alt="Event" />
+                                    </div>
+                                    <div class="event-card-content">
+                                        <h3>{{ participation.event.title }}</h3>
+                                        <p class="event-date">{{ participation.event.date|date:"F j, Y" }}</p>
+                                        <span class="event-status past">Attended</span>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p>No past events yet!</p>
+                    {% endif %}
+                </div>
+
+
+
+                <div class="profile-section">
+                    <h2 class="pixel-text">Events Organized</h2>
+                    {% if organized_events %}
+                        <div class="event-cards">
+                            {% for event in organized_events %}
+                                <div class="event-card">
+                                    <div class="event-card-image">
+                                        <img src="{{ event.image.url }}" alt="Event" />
+                                    </div>
+                                    <div class="event-card-content">
+                                        <h3>{{ event.title }}</h3>
+                                        <p class="event-date">{{ event.date|date:"F j, Y" }}</p>
+                                        <span class="event-status">Organizer</span>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p>No events organized yet.</p>
+                    {% endif %}
+                </div>
+
+            </div>
+
+            <div class="col-lg-4">
+                <div class="profile-sidebar">
+                    <div class="stats-card">
+                        <h3>Profile Stats</h3>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <span class="stat-number">{{ events_attended_count }}</span>
+                                <span class="stat-label">Events Attended</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">{{ upcoming_events_count }}</span>
+                                <span class="stat-label">Upcoming Events</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="verification-card">
+                        <h3>Verifications</h3>
+                        <ul class="verification-list">
+                            <li><img src="https://api.iconify.design/mdi:check-circle.svg" /> Email Verified</li>
+                            <li><img src="https://api.iconify.design/mdi:check-circle.svg" /> Phone Verified</li>
+                            <li><img src="https://api.iconify.design/mdi:check-circle.svg" /> ID Verified</li>
+                        </ul>
+                    </div>
+
+                    {% if can_edit %}
+                        <form action="{% url 'logout' %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-link w-100 text-decoration-underline mt-3" style="color: var(--primary);">Log Out</button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
