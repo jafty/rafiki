@@ -166,11 +166,10 @@ def event_detail(request, event_id):
             participation.user = user
             participation.event = event
             participation.status = Participation.PENDING
+            participation.message = form.cleaned_data.get('message', '')
             participation.save()
-
             event.notify_organizer()
-
-            return redirect('event_detail', event_id=event.id)
+            return redirect('event_payment', event_id=event.id)
     else:
         form = ParticipationForm() if not is_accepted and not is_pending and not is_rejected else None
     return render(request, 'events/event_detail.html', {
