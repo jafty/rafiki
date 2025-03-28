@@ -25,8 +25,9 @@ class UserProfile(models.Model):
     centers_of_interest = models.TextField(blank=True, null=True, help_text="Qu'appréciez-vous ?")
 
     def get_age(self, today_date):
+        if not self.birth_date:
+            return None
         return today_date.year - self.birth_date.year - ((today_date.month, today_date.day) < (self.birth_date.month, self.birth_date.day))
-        return 29
 
     def save(self, *args, **kwargs):
         if not self.slug:

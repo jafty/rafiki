@@ -19,15 +19,7 @@ class UserProfileUnitTests(TestCase):
         self.profile_user = User.objects.create(username="participant")
         self.profile = UserProfile.objects.get(user=self.profile_user)
         self.today_date = datetime(2025, 3, 28)
-        self.user_29 = User.objects.create(username="user_29")
-        self.profile_29 = UserProfile.objects.get(user=self.user_29)
-        self.profile_29.birth_date=date(1995, 9, 19)
-        self.user_39 = User.objects.create(username="user_39")
-        self.profile_39 = UserProfile.objects.get(user=self.user_39)
-        self.profile_39.birth_date=date(1985, 9, 19)
-        self.user_0 = User.objects.create(username="user_0")
-        self.profile_0 = UserProfile.objects.get(user=self.user_0)
-        self.profile_0.birth_date=date(2025, 3, 28)
+
 
     def test_user_can_edit_his_own_profile(self):
         """
@@ -44,6 +36,9 @@ class UserProfileUnitTests(TestCase):
         When the profile is born in 19/09/1995 and the date is 28/03/2025
         Then 29 is calculated
         """
+        self.user_29 = User.objects.create(username="user_29")
+        self.profile_29 = UserProfile.objects.get(user=self.user_29)
+        self.profile_29.birth_date=date(1995, 9, 19)
         self.assertEqual(self.profile_29.get_age(self.today_date), 29)
 
     def test_user_is_39(self):
@@ -52,6 +47,9 @@ class UserProfileUnitTests(TestCase):
         When the profile is born in 19/09/1985 and the date is 28/03/2025
         Then 39 is calculated
         """
+        self.user_39 = User.objects.create(username="user_39")
+        self.profile_39 = UserProfile.objects.get(user=self.user_39)
+        self.profile_39.birth_date=date(1985, 9, 19)
         self.assertEqual(self.profile_39.get_age(self.today_date), 39)
 
     def test_user_is_0(self):
@@ -60,7 +58,18 @@ class UserProfileUnitTests(TestCase):
         When the profile is born in 19/09/1985 and the date is 28/03/2025
         Then 0 is calculated
         """
+        self.user_0 = User.objects.create(username="user_0")
+        self.profile_0 = UserProfile.objects.get(user=self.user_0)
+        self.profile_0.birth_date=date(2025, 3, 28)
         self.assertEqual(self.profile_0.get_age(self.today_date), 0)
+
+    def test_user_has_no_age(self):
+        """
+        Given a profile
+        When the profile is born in 19/09/1985 and the date is 28/03/2025
+        Then 0 is calculated
+        """
+        self.assertEqual(self.profile.get_age(self.today_date), None)
 
 
 class EventUnitTests(TestCase):
