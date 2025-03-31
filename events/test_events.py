@@ -183,7 +183,7 @@ class ParticipationUnitTests(TestCase):
             user=self.participant
         )
 
-    def test_accept_participant(self):
+    def test_accept_participant_sets_status(self):
         """
         Given a user and a participation
         When the participation is accepted
@@ -194,7 +194,7 @@ class ParticipationUnitTests(TestCase):
         self.assertFalse(self.participation.is_pending())
         self.assertFalse(self.participation.is_rejected())
 
-    def test_reject_participant(self):
+    def test_reject_participant_sets_status(self):
         """
         Given a user and a participation
         When the participation is rejected
@@ -204,6 +204,19 @@ class ParticipationUnitTests(TestCase):
         self.assertTrue(self.participation.is_rejected())
         self.assertFalse(self.participation.is_accepted())
         self.assertFalse(self.participation.is_pending())
+
+    @patch('stripe.PaymentIntent.capture')
+    def test_accept_participant_captures_payment(self, mock_capture):
+        """
+        Given a participation
+        When the participation is accepted
+        Then stripe payment capture is called
+        """
+        self.participation.accept_participant()
+        mock_capture.assert_called_once_with(
+        self.assertTrue(self.participation.is_accepted())
+        self.assertFalse(self.participation.is_pending())
+        self.assertFalse(self.participation.is_rejected())
 
     def test_new_participant(self):
         """
