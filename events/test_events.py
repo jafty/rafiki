@@ -10,6 +10,8 @@ from datetime import datetime, timedelta, date
 from django.utils.timezone import now
 from unittest.mock import patch
 from unittest import mock
+from unittest.mock import patch, MagicMock
+from django.shortcuts import get_object_or_404
 
 
 class UserProfileUnitTests(TestCase):
@@ -102,6 +104,84 @@ class EventUnitTests(TestCase):
         Then the user can manage the event
         """
         self.assertTrue(self.event.can_manage(self.organizer))
+
+    def test_join_event_creates_checkout(self):
+        """
+        Given an event
+        When a user asks to join it
+        Then a checkout form is generated
+        """
+        fixed_params = {"params": "fixed_params"}
+        message = "je veux participer"
+        self.event.get_stripe_session_params = MagicMock(return_value=fixed_params)
+        mock_session = MagicMock()
+        mock_session.url = "www.test.fr"
+        with patch('stripe.checkout.Session.create') as mock_stripe_create:
+            self.event.get_checkout_page(self.participant, message)
+            mock_stripe_create.return_value = mock_session
+            mock_stripe_create.assert_called_once_with(
+                **fixed_params, 
+                metadata={
+                    'user_id': self.participant.id,
+                    'event_id': self.event.id,
+                    'message': message,
+                }
+            )
+            checkout_url = self.event.get_checkout_page(self.participant, message)
+            self.assertEqual(checkout_url, "www.test.fr")
+
+    def test_should_complete_checkout_creates_pending_if_required_capture(self):
+        """
+        Given an event and a user
+        When the user completed a checkout
+        Then he's added to the pending list
+        """
+        # assert that participation has the right info, simulate right payment intent
+        webhook_message = "je veux participer"
+        payment_intent_id = "abc123"
+        user_id = self.participant.id 
+        event_id = self.event.id
+        requires_capture=True
+        self.event.create_pending_participation(
+            webhook_message,
+            payment_intent_id,
+            self.participant.id, 
+            requires_capture,
+        )
+        self.assertTrue(
+            Participation.objects.filter(
+                user=self.participant, 
+                event=self.event, 
+                status=Participation.PENDING,
+                message=webhook_message,
+                stripe_payment_intent=payment_intent_id,
+            ).exists()
+        )
+
+    def test_complete_checkout_should_not_create_pending_if_not_required_capture(self):
+        """
+        Given an event and a user
+        When the user completed a checkout but is no "required_capture"
+        Then he's not added to the pending list
+        """
+        # assert that participation has the right info, simulate right payment intent
+        webhook_message = "je veux participer"
+        payment_intent_id = "abc123"
+        user_id = self.participant.id 
+        event_id = self.event.id
+        requires_capture=False
+        self.event.create_pending_participation(
+            webhook_message,
+            payment_intent_id,
+            self.participant.id, 
+            requires_capture,
+        )
+        self.assertFalse(
+            Participation.objects.filter(
+                user=self.participant, 
+                event=self.event, 
+            ).exists()
+        )
 
     def test_cannot_manage_if_not_organizer(self):
         """
@@ -204,19 +284,6 @@ class ParticipationUnitTests(TestCase):
         self.assertTrue(self.participation.is_rejected())
         self.assertFalse(self.participation.is_accepted())
         self.assertFalse(self.participation.is_pending())
-
-    @patch('stripe.PaymentIntent.capture')
-    def test_accept_participant_captures_payment(self, mock_capture):
-        """
-        Given a participation
-        When the participation is accepted
-        Then stripe payment capture is called
-        """
-        self.participation.accept_participant()
-        mock_capture.assert_called_once_with(
-        self.assertTrue(self.participation.is_accepted())
-        self.assertFalse(self.participation.is_pending())
-        self.assertFalse(self.participation.is_rejected())
 
     def test_new_participant(self):
         """

@@ -63,83 +63,34 @@ def create_event(request):
 @csrf_exempt
 def stripe_webhook(request):
     payload = request.body
-    sig_header = request.META['HTTP_STRIPE_SIGNATURE']
+    sig_header = request.META.get('HTTP_STRIPE_SIGNATURE')
     endpoint_secret = settings.STRIPE_WEBHOOK_SECRET
 
     try:
         stripe_event = stripe.Webhook.construct_event(payload, sig_header, endpoint_secret)
-    except ValueError:
-        return JsonResponse({"error": "Invalid payload"}, status=400)
-    except stripe.error.SignatureVerificationError:
-        return JsonResponse({"error": "Invalid signature"}, status=400)
+    except (ValueError, stripe.error.SignatureVerificationError):
+        return JsonResponse({"error": "Invalid webhook"}, status=400)
 
-    # ✅ Paiement complété
     if stripe_event['type'] == "checkout.session.completed":
         session = stripe_event['data']['object']
-        user_id = session['metadata']['user_id']
-        event_id = session['metadata']['event_id']
+        user = User.objects.get(id=session['metadata']['user_id'])
+        event = Event.objects.get(id=session['metadata']['event_id'])
+        message = session['metadata'].get('message', '')
+        payment_intent_id = session['payment_intent']
+        requires_capture = stripe.PaymentIntent.retrieve(payment_intent_id)["status"] == "requires_capture"
 
-        user = User.objects.get(id=user_id)
-        event = Event.objects.get(id=event_id)
-
-        # ✅ Création de la participation (si pas déjà existante)
-        participation, created = Participation.objects.get_or_create(
-            event=event,
-            user=user,
-            defaults={'status': Participation.ACCEPTED}
+        event.create_pending_participation(
+            message=message,
+            payment_intent=payment_intent_id,
+            user_id=user.id,
+            requires_capture=requires_capture,
         )
 
-        if created:
-            # ✅ Création d'une notification avec l'adresse complète
-            Notification.objects.create(
-                user=user,
-                event=event,
-                message=f"You are registered for {event.title}! 🎉\n📍 Address: {event.location}"
-            )
-
-            # ✅ Envoi d'un email de confirmation
-            subject = f"Confirmation: You are registered for {event.title} 🎉"
-            html_message = render_to_string("emails/confirmation_event.html", {
-                'user': user,
-                'event': event,
-                'location': event.location,
-                'contact': event.contact
-            })
-            plain_message = strip_tags(html_message)  # Version texte brut
-            send_mail(
-                subject,
-                plain_message,
-                settings.DEFAULT_FROM_EMAIL,
-                [user.email],
-                html_message=html_message
-            )
-
-    return JsonResponse({"status": "success"}, status=200)
-
-
-@login_required
-def event_payment(request, event_id):
-    """ Gère l'inscription et le paiement pour un événement """
-    user = request.user
-    event = get_object_or_404(Event, id=event_id)
-
-    # Créer la session Stripe pour le paiement
-    session_params = event.get_stripe_session_params()
-    session = stripe.checkout.Session.create(
-        **session_params,
-        metadata={
-            'user_id': user.id,
-            'event_id': event.id,
-        }
-    )
-
-    return redirect(session.url)  # Redirection vers Stripe Checkout
-
+    return JsonResponse({"status": "success"})
 
 
 @login_required(login_url='login')
 def event_detail(request, event_id):
-    # TODO: refacto
     user = request.user
     event = get_object_or_404(Event, id=event_id)
     participations = Participation.objects.filter(event=event, status=Participation.ACCEPTED)
@@ -149,27 +100,17 @@ def event_detail(request, event_id):
     is_pending = participation.is_pending() if participation else False
     is_rejected = participation.is_rejected() if participation else False
 
-    # Masquer l’adresse si l'utilisateur n'est pas accepté et ce n’est pas l’organisateur
     location = event.location
     if not is_accepted and not event.can_manage(user) and event.is_location_hidden:
         location = "Join the event to see the location"
 
     if request.method == "POST":
-        form = ParticipationForm(request.POST)
-
-        # Si l'utilisateur a déjà une participation, on ne crée pas de doublon
-        if Participation.objects.filter(user=user, event=event).exists():
+        if participation:
             return redirect('event_detail', event_id=event.id)
-
+        form = ParticipationForm(request.POST)
         if form.is_valid():
-            participation = form.save(commit=False)
-            participation.user = user
-            participation.event = event
-            participation.status = Participation.PENDING
-            participation.message = form.cleaned_data.get('message', '')
-            participation.save()
-            event.notify_organizer()
-            return redirect('event_payment', event_id=event.id)
+            message = form.cleaned_data.get('message', '')
+            return redirect(event.get_checkout_page(user, message))
     else:
         form = ParticipationForm() if not is_accepted and not is_pending and not is_rejected else None
     return render(request, 'events/event_detail.html', {
@@ -269,7 +210,7 @@ def event_list(request):
 
 
 def featured_event(request):
-    event = get_object_or_404(Event, id=28)
+    event = get_object_or_404(Event, id=7)
     if event:
         return redirect('event_detail', event_id=event.id)
     return redirect('event_list')  # Si aucun événement valide, rediriger vers la liste (ou autre)

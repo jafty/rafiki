@@ -15,7 +15,6 @@ urlpatterns = [
     path('accounts/login/', auth_views.LoginView.as_view(template_name='events/login.html'), name='login'),
     path('accounts/logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('register/', register, name='register'),
-    path('event-payment/<int:event_id>/', event_payment, name='event_payment'),
     path('profile/<str:username>/', profile, name='profile'),
     path('profile/<str:username>/edit/', edit_profile, name='edit_profile'),
     path('event/<int:event_id>/edit/', edit_event, name='edit_event'),

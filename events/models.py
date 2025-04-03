@@ -9,6 +9,8 @@ from django.core.exceptions import ValidationError
 from rafiki import settings
 from django.core.mail import send_mail
 from django.core.validators import RegexValidator
+import stripe
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 class UserProfile(models.Model):
@@ -125,6 +127,29 @@ class Event(models.Model):
             event=self,
             message=f"You have new demands for {self.title}"
         )
+    
+    def get_checkout_page(self, user, message):
+        """
+        Handles generation of checkout when a user wants to join an event
+        """
+        session_params = self.get_stripe_session_params()
+        session = stripe.checkout.Session.create(
+            **session_params,
+            metadata={
+                'user_id': user.id,
+                'event_id': self.id,
+                'message': message,
+            }
+        )
+        return session.url
+    
+    def create_pending_participation(self, message, payment_intent, user_id, requires_capture):
+        """
+        Creates a pending participation from user and stripe data
+        """
+        user = User.objects.get(id=user_id)
+        if requires_capture:
+            Participation.objects.create(event=self, user=user, message=message, stripe_payment_intent=payment_intent)
 
     def get_stripe_session_params(self):
         """
@@ -200,7 +225,7 @@ class Participation(models.Model):
     ]
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="participations")
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="participations")
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=ACCEPTED)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=PENDING)
     message = models.TextField(blank=True, null=True, help_text="Message à l'organisateur")
     stripe_payment_intent = models.CharField(max_length=255, blank=True, null=True, help_text="ID de Stripe PaymentIntent")
 
