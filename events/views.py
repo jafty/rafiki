@@ -62,6 +62,9 @@ def create_event(request):
 
 @csrf_exempt
 def stripe_webhook(request):
+    """
+    Called when a user has completed a checkout after asking to join an event
+    """
     payload = request.body
     sig_header = request.META.get('HTTP_STRIPE_SIGNATURE')
     endpoint_secret = settings.STRIPE_WEBHOOK_SECRET
@@ -85,6 +88,7 @@ def stripe_webhook(request):
             user_id=user.id,
             requires_capture=requires_capture,
         )
+        
 
     return JsonResponse({"status": "success"})
 

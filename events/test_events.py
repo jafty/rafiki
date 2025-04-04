@@ -130,33 +130,26 @@ class EventUnitTests(TestCase):
             checkout_url = self.event.get_checkout_page(self.participant, message)
             self.assertEqual(checkout_url, "www.test.fr")
 
-    def test_should_complete_checkout_creates_pending_if_required_capture(self):
-        """
-        Given an event and a user
-        When the user completed a checkout
-        Then he's added to the pending list
-        """
-        # assert that participation has the right info, simulate right payment intent
-        webhook_message = "je veux participer"
-        payment_intent_id = "abc123"
-        user_id = self.participant.id 
-        event_id = self.event.id
-        requires_capture=True
-        self.event.create_pending_participation(
-            webhook_message,
-            payment_intent_id,
-            self.participant.id, 
-            requires_capture,
-        )
-        self.assertTrue(
-            Participation.objects.filter(
-                user=self.participant, 
-                event=self.event, 
-                status=Participation.PENDING,
-                message=webhook_message,
-                stripe_payment_intent=payment_intent_id,
-            ).exists()
-        )
+    @patch('events.models.Participation.notify_user')
+    def test_should_complete_checkout_creates_pending_if_required_capture(self, mock_notify_user):
+        with patch.object(self.event, 'notify_organizer') as mock_notify_organizer:
+            webhook_message = "je veux participer"
+            payment_intent_id = "abc123"
+            user_id = self.participant.id
+            requires_capture = True
+            self.event.create_pending_participation(
+                webhook_message,
+                payment_intent_id,
+                user_id,
+                requires_capture,
+            )
+            participation = Participation.objects.get(user=self.participant, event=self.event)
+            mock_notify_user.assert_called_once_with(action="pending")
+            mock_notify_organizer.assert_called_once()
+            self.assertEqual(participation.message, webhook_message)
+            self.assertEqual(participation.stripe_payment_intent, payment_intent_id)
+            self.assertEqual(participation.status, Participation.PENDING)
+
 
     def test_complete_checkout_should_not_create_pending_if_not_required_capture(self):
         """
@@ -274,6 +267,18 @@ class ParticipationUnitTests(TestCase):
         self.assertFalse(self.participation.is_pending())
         self.assertFalse(self.participation.is_rejected())
 
+    @patch('stripe.PaymentIntent.capture')
+    @patch.object(Participation, 'notify_user')
+    def test_accept_participant_should_capture_payment_and_notify(self, mock_notify, mock_capture):
+        """
+        Given a pending participation with a stripe payment intent
+        When accept_participant is called
+        Then it should capture the payment, change the status, and notify the user
+        """
+        self.participation.accept_participant()
+        mock_capture.assert_called_once_with
+        # TODO: setup + appel méthode + assertions
+
     def test_reject_participant_sets_status(self):
         """
         Given a user and a participation
@@ -323,6 +328,21 @@ class ParticipationUnitTests(TestCase):
         self.assertIsNotNone(notification)
         self.assertIn("rejected", notification.message)
 
+    @patch('events.models.send_mail')
+    def test_notify_new_participant(self, mock_send_mail):
+        """
+        Given a user and an event
+        When a new participation is created
+        Then the user is notified of his pending status
+        """
+        self.participation.notify_user(action='pending')
+        args, kwargs = mock_send_mail.call_args
+        self.assertIn("You will receive all the needed info", args[0])  # message
+        self.assertEqual(args[1], settings.DEFAULT_FROM_EMAIL) # source
+        self.assertEqual(args[2], [self.participant.email]) # recipient
+        notification = Notification.objects.filter(user=self.participant, event=self.event, is_read=False).first()
+        self.assertIsNotNone(notification)
+        self.assertIn("reviewed", notification.message)
 
     @patch('events.models.send_mail')
     def test_notify_accepted_user(self, mock_send_mail):

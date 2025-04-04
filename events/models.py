@@ -112,8 +112,6 @@ class Event(models.Model):
         return self.date >= now()
 
     def notify_organizer(self):
-        print("in notify_organizer")
-        print(self.organizer.email)
         send_mail(
             f"You have new demands for {self.title}",
             f"You have new demands for {self.title}, please visit your event to\
@@ -149,7 +147,9 @@ class Event(models.Model):
         """
         user = User.objects.get(id=user_id)
         if requires_capture:
-            Participation.objects.create(event=self, user=user, message=message, stripe_payment_intent=payment_intent)
+            new_participation = Participation.objects.create(event=self, user=user, message=message, stripe_payment_intent=payment_intent)
+            new_participation.notify_user(action="pending")
+            self.notify_organizer()
 
     def get_stripe_session_params(self):
         """
@@ -263,6 +263,19 @@ class Participation(models.Model):
                 event=self.event,
                 message=f"Your demand for {self.event.title} has been rejected"
             )
+        elif action == "pending":
+            send_mail(
+                f"Your demand for {self.event.title} will be reviewed by the organizer. \
+                    You will receive all the needed info as soon as he accepts your request. \
+                        We do this so we can keep events small and cosy, while making sur everyone will get along!",
+                settings.DEFAULT_FROM_EMAIL,
+                [self.user.email]
+            )
+            Notification.objects.create(
+                user=self.user,
+                event=self.event,
+                message=f"Your demand for {self.event.title} will be reviewed by the organizer."
+            )            
         else:
             send_mail(
                 f"Your demand for {self.event.title} has been accepted",
