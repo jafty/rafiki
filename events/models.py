@@ -253,10 +253,12 @@ class Participation(models.Model):
                 stripe.PaymentIntent.cancel(self.stripe_payment_intent)
                 self.notify_user(action="reject")
                 self.status=Participation.REJECTED
+                self.save()
                 return None
             stripe.PaymentIntent.capture(self.stripe_payment_intent)
             self.notify_user(action="accept")
             self.status=Participation.ACCEPTED
+            self.save()
             return None
         except stripe.error.StripeError as e:
             raise RuntimeError(f"Stripe error while processing {action} : {str(e)}")

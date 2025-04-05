@@ -268,6 +268,7 @@ class ParticipationUnitTests(TestCase):
         self.participation.handle_request(action='accept', current_user=self.organizer)
         mock_capture.assert_called_once_with("pi_test_123")
         mock_notify_user.assert_called_once_with(action='accept')
+        self.participation.refresh_from_db()
         self.assertEqual(self.participation.status, Participation.ACCEPTED)
 
     @patch.object(Participation, 'notify_user')
@@ -282,6 +283,7 @@ class ParticipationUnitTests(TestCase):
             self.participation.handle_request(action='accept', current_user=self.organizer)
         self.assertIn("Stripe error while processing accept", str(context.exception))
         mock_notify_user.assert_not_called()
+        self.participation.refresh_from_db()
         self.assertEqual(self.participation.status, Participation.PENDING)
 
     def test_should_not_handle_request_with_permission_denied(self):
@@ -309,6 +311,7 @@ class ParticipationUnitTests(TestCase):
         self.participation.handle_request(action='reject', current_user=self.organizer)
         mock_cancel.assert_called_once_with("pi_test_123")
         mock_notify_user.assert_called_once_with(action='reject')
+        self.participation.refresh_from_db()
         self.assertEqual(self.participation.status, Participation.REJECTED)
 
     @patch.object(Participation, 'notify_user')
@@ -321,13 +324,8 @@ class ParticipationUnitTests(TestCase):
         """
         with self.assertRaises(RuntimeError) as context:
             self.participation.handle_request(action='reject', current_user=self.organizer)
-
         self.assertIn("stripe error while processing reject", str(context.exception).lower())
-
-        # Notification ne doit pas être appelée
         mock_notify_user.assert_not_called()
-
-        # Statut doit rester PENDING
         self.participation.refresh_from_db()
         self.assertEqual(self.participation.status, Participation.PENDING)
 
