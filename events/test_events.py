@@ -129,6 +129,7 @@ class EventUnitTests(TestCase):
             )
             checkout_url = self.event.get_checkout_page(self.participant, message)
             self.assertEqual(checkout_url, "www.test.fr")
+    
 
     @patch('events.models.Participation.notify_user')
     def test_should_complete_checkout_creates_pending_if_required_capture(self, mock_notify_user):
@@ -190,8 +191,8 @@ class EventUnitTests(TestCase):
         When the event date is anterior to the date of the day
         Then nobody can join the event
         """
-        self.assertFalse(self.past_event.is_joinable())
-        self.assertTrue(self.event.is_joinable())
+        self.assertTrue(self.past_event.is_not_joinable())
+        self.assertFalse(self.event.is_not_joinable())
 
     def test_euros_to_cents_conversion(self):
         """

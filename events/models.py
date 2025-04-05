@@ -109,8 +109,8 @@ class Event(models.Model):
     def get_price_in_cents(self):
         return int(self.price * 100)
 
-    def is_joinable(self):
-        return self.date >= now()
+    def is_not_joinable(self):
+        return self.date < now()
 
     def notify_organizer(self):
         send_mail(
@@ -312,7 +312,8 @@ class Participation(models.Model):
             Notification.objects.create(
                 user=self.user,
                 event=self.event,
-                message=f"Your demand for {self.event.title} has been accepted"
+                message=f"Your demand for {self.event.title} has been accepted! Here's the location: {self.event.location}.\
+                    Here's how you can contact the organizer: {self.event.contact}"
             )
 
     class Meta:

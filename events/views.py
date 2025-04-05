@@ -94,13 +94,11 @@ def stripe_webhook(request):
 
 
 @login_required(login_url='login')
-@login_required(login_url='login')
 def event_detail(request, event_id):
     user = request.user
     event = get_object_or_404(Event, id=event_id)
     participation = Participation.objects.filter(user=user, event=event).first()
     
-    # Déterminer les statuts
     is_accepted = participation.is_accepted() if participation else False
     is_pending = participation.is_pending() if participation else False
     is_rejected = participation.is_rejected() if participation else False
@@ -109,23 +107,19 @@ def event_detail(request, event_id):
     if not is_accepted and not event.can_manage(user) and event.is_location_hidden:
         location = "Join the event to see the location"
 
-    # Gérer l'accept/reject
     if request.method == "POST":
         action = request.POST.get("action")
         target_user_id = request.POST.get("user_id")
         message = request.POST.get("message", "")
 
-        # Si l'organisateur clique sur accepter/rejeter quelqu'un
         if action in ["accept", "reject"] and event.can_manage(user):
             participation_to_update = get_object_or_404(Participation, user_id=target_user_id, event=event)
             try:
                 participation_to_update.handle_request(action=action, current_user=user)
             except Exception as e:
                 print("Error while handling request:", e)
-                # Optionnel : ajouter un message d'erreur
             return redirect("event_detail", event_id=event.id)
 
-        # Si l'utilisateur fait une demande pour rejoindre
         if not participation:
             form = ParticipationForm(request.POST)
             if form.is_valid():
@@ -134,7 +128,6 @@ def event_detail(request, event_id):
     else:
         form = ParticipationForm() if not is_accepted and not is_pending and not is_rejected else None
 
-    # Participants pour affichage
     pending_participants = event.get_pending_participants().select_related("user", "user__profile")
     accepted_participants = event.get_accepted_participants().select_related("user", "user__profile")
 
@@ -148,39 +141,8 @@ def event_detail(request, event_id):
         'is_rejected': is_rejected,
         'form': form,
         'location': location,
-    })
-
-
-@login_required
-def manage_participants(request, event_id):
-    event = get_object_or_404(Event, id=event_id)
-    if request.method == "POST":
-        action = request.POST.get('action')
-        user_id = request.POST.get('user_id')
-        participation = get_object_or_404(Participation, event=event, user_id=user_id)
-        if action == "accept":
-            try:
-                stripe.PaymentIntent.capture(participation.stripe_payment_intent)
-                participation.accept_participant()
-                participation.notify_user(action="accept")
-            except stripe.error.StripeError as e:
-                # Gérer les erreurs de capture Stripe
-                print(f"Erreur lors de la capture du paiement : {e}")
-                return JsonResponse({'error': 'Erreur lors de la capture du paiement.'}, status=400)
-        elif action == "reject":
-            try:
-                stripe.PaymentIntent.cancel(participation.stripe_payment_intent)
-                participation.reject_participant()
-                participation.notify_user(action="reject")
-            except stripe.error.StripeError as e:
-                # Gérer les erreurs d'annulation Stripe
-                print(f"Erreur lors de l'annulation du paiement : {e}")
-                return JsonResponse({'error': 'Erreur lors de l\'annulation du paiement.'}, status=400)
-        return redirect('manage_participants', event_id=event.id)
-    pending_participants = event.participations.filter(status=Participation.PENDING)
-    return render(request, 'events/manage_participants.html', {
-        'event': event,
-        'pending_participants': pending_participants
+        'is_not_joinable': event.is_not_joinable(),
+        'today': date.today()
     })
 
 

@@ -68,10 +68,15 @@
                             <div class="participant-info">
                                 <img src="{{ p.user.profile.avatar.url }}" alt="Avatar" class="participant-avatar" />
                                 <div class="participant-details">
-                                    <h4>{{ p.user.username }}</h4>
+                                    <h4>
+                                        <a href="{% url 'profile' p.user.username %}">
+                                          {{ p.user.username }}
+                                        </a>
+                                      </h4>
+                                      
                                     <p>From {{ p.user.profile.city }} •
                                     {% if p.user.profile.birth_date %}
-                                        {{ p.user.profile.get_age|default:"?" }} years old
+                                        {{ p.user.profile.get_age(today)|default:"?" }} years old
                                     {% endif %}
                                     </p>
                                     <p class="participant-message">{{ p.message|default:"No message." }}</p>
@@ -114,7 +119,9 @@
                         <h2 class="pixel-text text-danger">❌ Request Rejected</h2>
                         <p>Sorry, your request wasn’t accepted. But don’t worry — your payment has been <strong>fully refunded</strong>.</p>
                         <p>Feel free to explore other events happening soon 🌍</p>
-
+                    {% elif is_not_joinable %}
+                        <h2 class="pixel-text text-danger">❌ You can not join anymore</h2>
+                        <p>This event is either past due, either canceled.</p>
                     {% else %}
                         <h2 class="pixel-text">Join Event</h2>
                         {% if not user.is_authenticated %}
