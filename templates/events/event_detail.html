@@ -73,10 +73,10 @@
                                           {{ p.user.username }}
                                         </a>
                                       </h4>
-                                      
+
                                     <p>From {{ p.user.profile.city }} •
                                     {% if p.user.profile.birth_date %}
-                                        {{ p.user.profile.get_age(today)|default:"?" }} years old
+                                        {{ p.user.profile.age|default:"?" }} years old
                                     {% endif %}
                                     </p>
                                     <p class="participant-message">{{ p.message|default:"No message." }}</p>

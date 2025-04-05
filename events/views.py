@@ -88,7 +88,7 @@ def stripe_webhook(request):
             user_id=user.id,
             requires_capture=requires_capture,
         )
-        
+
 
     return JsonResponse({"status": "success"})
 
@@ -98,7 +98,7 @@ def event_detail(request, event_id):
     user = request.user
     event = get_object_or_404(Event, id=event_id)
     participation = Participation.objects.filter(user=user, event=event).first()
-    
+
     is_accepted = participation.is_accepted() if participation else False
     is_pending = participation.is_pending() if participation else False
     is_rejected = participation.is_rejected() if participation else False
@@ -130,7 +130,11 @@ def event_detail(request, event_id):
 
     pending_participants = event.get_pending_participants().select_related("user", "user__profile")
     accepted_participants = event.get_accepted_participants().select_related("user", "user__profile")
-
+    today = date.today()
+    for p in accepted_participants:
+        p.user.profile.age = p.user.profile.get_age(today)
+    for p in pending_participants:
+        p.user.profile.age = p.user.profile.get_age(today)
     return render(request, 'events/event_detail.html', {
         'event': event,
         'participations': accepted_participants,
