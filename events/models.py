@@ -286,9 +286,9 @@ class Participation(models.Model):
             )
         elif action == "pending":
             send_mail(
-                f"Your demand for {self.event.title} will be reviewed by the organizer. \
-                    You will receive all the needed info as soon as he accepts your request. \
-                        We do this so we can keep events small and cosy, while making sur everyone will get along!",
+                f"Your demand for {self.event.title} will be reviewed by the organizer.", \
+                    "Hello! You will receive all the needed info if and when the organizer accepts your request.<br> \
+                        We do not grant automatic access so we can keep events small and cosy, while making sure everyone will get along!<br>See you soon",
                 settings.DEFAULT_FROM_EMAIL,
                 [self.user.email]
             )
