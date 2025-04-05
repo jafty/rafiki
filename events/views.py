@@ -188,7 +188,7 @@ def edit_profile(request, username):
         if form.is_valid():
             form.save()
             # Redirige vers l'événement avec ID 28 après la mise à jour du profil
-            return redirect('event_detail', event_id=28)  # L'ID de l'événement à mettre en avant
+            return redirect('featured_event')  # L'ID de l'événement à mettre en avant
     else:
         form = UserProfileForm(instance=edited_profile)
 
@@ -246,7 +246,7 @@ def edit_event(request, event_id):
 
 def register(request):
     if request.user.is_authenticated:
-        return redirect('event_detail', event_id=28)
+        return redirect('featured_event')
 
     if request.method == "POST":
         form = CustomUserCreationForm(request.POST)

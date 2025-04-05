@@ -5,13 +5,12 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'rafiki.settings')
 django.setup()
 from django.test import TestCase
 from django.contrib.auth.models import User
-from events.models import Event, Participation, UserProfile, Notification
+from events.models import Event, Participation, UserProfile, Notification, UserProfileForm
 from datetime import datetime, timedelta, date
 from django.utils.timezone import now
 from unittest.mock import patch
 from unittest import mock
 from unittest.mock import patch, MagicMock
-from django.shortcuts import get_object_or_404
 import stripe
 
 class UserProfileUnitTests(TestCase):
@@ -22,6 +21,12 @@ class UserProfileUnitTests(TestCase):
         self.profile = UserProfile.objects.get(user=self.profile_user)
         self.today_date = datetime(2025, 3, 28)
 
+    def test_birth_date_cannot_be_in_future(self):
+        form = UserProfileForm(data={
+            'birth_date': (date.today() + timedelta(days=1)).strftime('%d/%m/%Y'),
+        })
+        self.assertFalse(form.is_valid())
+        self.assertIn('birth_date', form.errors)
 
     def test_user_can_edit_his_own_profile(self):
         """

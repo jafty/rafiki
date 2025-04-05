@@ -12,7 +12,7 @@ from django.core.mail import send_mail
 from django.core.validators import RegexValidator
 import stripe
 stripe.api_key = settings.STRIPE_SECRET_KEY
-
+from datetime import date
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
@@ -26,6 +26,10 @@ class UserProfile(models.Model):
     city = models.CharField(max_length=100)
     country = models.CharField(max_length=100)
     centers_of_interest = models.TextField(blank=True, null=True, help_text="Qu'appréciez-vous ?")
+
+    def clean(self):
+        if self.birth_date and self.birth_date > date.today():
+            raise ValidationError({'birth_date': "You can't be born in the future."})
 
     def get_age(self, today_date):
         if not self.birth_date:
