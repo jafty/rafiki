@@ -69,7 +69,7 @@
                                 <img src="{{ p.user.profile.avatar.url }}" alt="Avatar" class="participant-avatar" />
                                 <div class="participant-details">
                                     <h4>{{ p.user.username }}</h4>
-                                    <p>From {{ p.user.profile.city }} • 
+                                    <p>From {{ p.user.profile.city }} •
                                     {% if p.user.profile.birth_date %}
                                         {{ p.user.profile.get_age|default:"?" }} years old
                                     {% endif %}
@@ -98,9 +98,23 @@
             <!-- Right Column: Join Form -->
             <div class="col-lg-4">
                 <div class="join-form-card">
-                    {% if is_accepted %}
+                    {% if can_manage %}
+                        <h2 class="pixel-text">🎤 You're the Host!</h2>
+                        <p>Welcome back, chief. You can manage requests just below 👇</p>
+
+                    {% elif is_accepted %}
                         <h2 class="pixel-text text-success">✅ You're In!</h2>
-                        <p>Check the details and get ready for an epic night.</p>
+                        <p>See you there! All the details are now visible. Don’t forget to bring your good vibes 😎</p>
+
+                    {% elif is_pending %}
+                        <h2 class="pixel-text text-warning">⏳ Request Pending</h2>
+                        <p>Your request has been sent and is awaiting approval from the host. You’ll be notified by email soon!</p>
+
+                    {% elif is_rejected %}
+                        <h2 class="pixel-text text-danger">❌ Request Rejected</h2>
+                        <p>Sorry, your request wasn’t accepted. But don’t worry — your payment has been <strong>fully refunded</strong>.</p>
+                        <p>Feel free to explore other events happening soon 🌍</p>
+
                     {% else %}
                         <h2 class="pixel-text">Join Event</h2>
                         {% if not user.is_authenticated %}
@@ -108,21 +122,21 @@
                                 Sign Up & Join
                             </a>
                         {% else %}
-                        <form method="post" action="{% url 'event_detail' event.id %}">
-                            {% csrf_token %}
-                            {{ form.non_field_errors }}
-                            <div class="mb-3">
-                                {{ form.message.label_tag }}
-                                {{ form.message }}
-                                {% if form.message.errors %}
-                                    <div class="text-danger small">{{ form.message.errors }}</div>
-                                {% endif %}
-                            </div>
-                            <button type="submit" class="primary-btn w-100">Request to Join</button>
-                        </form>
-                        <p class="mt-2 text-muted small text-center">📩 Your request will be reviewed by the host.</p>
-                        
+                            <form method="post" action="{% url 'event_detail' event.id %}">
+                                {% csrf_token %}
+                                {{ form.non_field_errors }}
+                                <div class="mb-3">
+                                    {{ form.message.label_tag }}
+                                    {{ form.message }}
+                                    {% if form.message.errors %}
+                                        <div class="text-danger small">{{ form.message.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                <button type="submit" class="primary-btn w-100">Request to Join</button>
+                            </form>
+                            <p class="mt-2 text-muted small text-center">📩 Your request will be reviewed by the host.</p>
                         {% endif %}
+
                         <p class="mt-2 text-muted small text-center">
                             <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/stripe.svg" alt="Stripe" width="18" style="vertical-align: middle; margin-right: 4px;">
                             Secure checkout powered by Stripe.<br>
@@ -130,6 +144,7 @@
                         </p>
                     {% endif %}
                 </div>
+
             </div>
         </div>
     </div>

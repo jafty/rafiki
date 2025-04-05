@@ -126,7 +126,7 @@ class Event(models.Model):
             event=self,
             message=f"You have new demands for {self.title}"
         )
-    
+
     def get_checkout_page(self, user, message):
         """
         Handles generation of checkout when a user wants to join an event
@@ -141,15 +141,27 @@ class Event(models.Model):
             }
         )
         return session.url
-    
+
     def create_pending_participation(self, message, payment_intent, user_id, requires_capture):
         """
         Creates a pending participation from user and stripe data
+        - Prevents duplicates
+        - Sends notification to user and organizer
         """
+        from .models import Participation, User
         user = User.objects.get(id=user_id)
-        if requires_capture:
-            new_participation = Participation.objects.create(event=self, user=user, message=message, stripe_payment_intent=payment_intent)
-            new_participation.notify_user(action="pending")
+        participation, created = Participation.objects.get_or_create(
+            event=self,
+            user=user,
+            defaults={
+                'message': message,
+                'stripe_payment_intent': payment_intent,
+                'status': Participation.PENDING,
+                'requires_capture': requires_capture,
+            }
+        )
+        if created:
+            participation.notify_user(action="pending")
             self.notify_organizer()
 
     def get_stripe_session_params(self):
@@ -284,7 +296,7 @@ class Participation(models.Model):
                 user=self.user,
                 event=self.event,
                 message=f"Your demand for {self.event.title} will be reviewed by the organizer."
-            )            
+            )
         else:
             send_mail(
                 f"Your demand for {self.event.title} has been accepted",
