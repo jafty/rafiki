@@ -49,7 +49,7 @@
                                         <img src="{{ participation.event.image.url }}" alt="Event" />
                                     </div>
                                     <div class="event-card-content">
-                                        <h3>{{ participation.event.title }}</h3>
+                                        <h3><a href="{% url 'event_detail' participation.event.id %}">{{ participation.event.title }}</a></h3>
                                         <p class="event-date">{{ participation.event.date|date:"F j, Y" }}</p>
                                         <span class="event-status">Confirmed</span>
                                     </div>
@@ -71,7 +71,7 @@
                                         <img src="{{ participation.event.image.url }}" alt="Event" />
                                     </div>
                                     <div class="event-card-content">
-                                        <h3>{{ participation.event.title }}</h3>
+                                        <h3><a href="{% url 'event_detail' participation.event.id %}">{{ participation.event.title }}</a></h3>
                                         <p class="event-date">{{ participation.event.date|date:"F j, Y" }}</p>
                                         <span class="event-status past">Attended</span>
                                     </div>
@@ -95,7 +95,7 @@
                                         <img src="{{ event.image.url }}" alt="Event" />
                                     </div>
                                     <div class="event-card-content">
-                                        <h3>{{ event.title }}</h3>
+                                        <h3><a href="{% url 'event_detail' event.id %}">{{ event.title }}</a></h3>
                                         <p class="event-date">{{ event.date|date:"F j, Y" }}</p>
                                         <span class="event-status">Organizer</span>
                                     </div>

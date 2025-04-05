@@ -58,6 +58,41 @@
                     <p>{{ event.description|safe }}</p>
 
                 </div>
+                {% if can_manage %}
+                <!-- SECTION : Demandes en attente -->
+                <div class="description-card">
+                    <h2 class="pixel-text">Pending Requests</h2>
+                    <div class="participant-list">
+                        {% for p in pending_participants %}
+                        <div class="participant-item">
+                            <div class="participant-info">
+                                <img src="{{ p.user.profile.avatar.url }}" alt="Avatar" class="participant-avatar" />
+                                <div class="participant-details">
+                                    <h4>{{ p.user.username }}</h4>
+                                    <p>From {{ p.user.profile.city }} • 
+                                    {% if p.user.profile.birth_date %}
+                                        {{ p.user.profile.get_age|default:"?" }} years old
+                                    {% endif %}
+                                    </p>
+                                    <p class="participant-message">{{ p.message|default:"No message." }}</p>
+                                </div>
+                            </div>
+                            <div class="participant-actions">
+                                <form method="post" action="">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="user_id" value="{{ p.user.id }}">
+                                    <button type="submit" name="action" value="accept" class="accept-btn">Accept</button>
+                                    <button type="submit" name="action" value="reject" class="reject-btn">Reject</button>
+                                </form>
+                            </div>
+                        </div>
+                        {% empty %}
+                            <p>No pending requests.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
             </div>
 
             <!-- Right Column: Join Form -->

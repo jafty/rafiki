@@ -94,12 +94,13 @@ def stripe_webhook(request):
 
 
 @login_required(login_url='login')
+@login_required(login_url='login')
 def event_detail(request, event_id):
     user = request.user
     event = get_object_or_404(Event, id=event_id)
-    participations = Participation.objects.filter(event=event, status=Participation.ACCEPTED)
-
     participation = Participation.objects.filter(user=user, event=event).first()
+    
+    # Déterminer les statuts
     is_accepted = participation.is_accepted() if participation else False
     is_pending = participation.is_pending() if participation else False
     is_rejected = participation.is_rejected() if participation else False
@@ -108,18 +109,39 @@ def event_detail(request, event_id):
     if not is_accepted and not event.can_manage(user) and event.is_location_hidden:
         location = "Join the event to see the location"
 
+    # Gérer l'accept/reject
     if request.method == "POST":
-        if participation:
-            return redirect('event_detail', event_id=event.id)
-        form = ParticipationForm(request.POST)
-        if form.is_valid():
-            message = form.cleaned_data.get('message', '')
-            return redirect(event.get_checkout_page(user, message))
+        action = request.POST.get("action")
+        target_user_id = request.POST.get("user_id")
+        message = request.POST.get("message", "")
+
+        # Si l'organisateur clique sur accepter/rejeter quelqu'un
+        if action in ["accept", "reject"] and event.can_manage(user):
+            participation_to_update = get_object_or_404(Participation, user_id=target_user_id, event=event)
+            try:
+                participation_to_update.handle_request(action=action, current_user=user)
+            except Exception as e:
+                print("Error while handling request:", e)
+                # Optionnel : ajouter un message d'erreur
+            return redirect("event_detail", event_id=event.id)
+
+        # Si l'utilisateur fait une demande pour rejoindre
+        if not participation:
+            form = ParticipationForm(request.POST)
+            if form.is_valid():
+                message = form.cleaned_data.get("message", "")
+                return redirect(event.get_checkout_page(user, message))
     else:
         form = ParticipationForm() if not is_accepted and not is_pending and not is_rejected else None
+
+    # Participants pour affichage
+    pending_participants = event.get_pending_participants().select_related("user", "user__profile")
+    accepted_participants = event.get_accepted_participants().select_related("user", "user__profile")
+
     return render(request, 'events/event_detail.html', {
         'event': event,
-        'participations': participations,
+        'participations': accepted_participants,
+        'pending_participants': pending_participants,
         'can_manage': event.can_manage(user),
         'is_accepted': is_accepted,
         'is_pending': is_pending,
