@@ -37,7 +37,7 @@
                     <li class="nav-item position-relative">
                         <a class="nav-link" href="{% url 'notifications_list' %}">
                             Notifications
-                            {% if unread_count > 0 %}
+                            {% if unread_notifications_count > 0 %}
                                 <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"></span>
                             {% endif %}
                         </a>
