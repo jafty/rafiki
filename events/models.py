@@ -150,19 +150,19 @@ class Event(models.Model):
         """
         from .models import Participation, User
         user = User.objects.get(id=user_id)
-        participation, created = Participation.objects.get_or_create(
-            event=self,
-            user=user,
-            defaults={
-                'message': message,
-                'stripe_payment_intent': payment_intent,
-                'status': Participation.PENDING,
-                'requires_capture': requires_capture,
-            }
-        )
-        if created:
-            participation.notify_user(action="pending")
-            self.notify_organizer()
+        if requires_capture:
+            participation, created = Participation.objects.get_or_create(
+                event=self,
+                user=user,
+                defaults={
+                    'message': message,
+                    'stripe_payment_intent': payment_intent,
+                    'status': Participation.PENDING,
+                }
+            )
+            if created:
+                participation.notify_user(action="pending")
+                self.notify_organizer()
 
     def get_stripe_session_params(self):
         """
