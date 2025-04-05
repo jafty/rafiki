@@ -6,6 +6,7 @@ from django.utils.text import slugify
 from django.utils.timezone import now
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
+import stripe.error
 from rafiki import settings
 from django.core.mail import send_mail
 from django.core.validators import RegexValidator
@@ -232,13 +233,21 @@ class Participation(models.Model):
     def __str__(self):
         return f"{self.user.username} <-> {self.event.title}"
 
-    def accept_participant(self):
-        self.status = self.ACCEPTED
-        self.save()
-
-    def reject_participant(self):
-        self.status = self.REJECTED
-        self.save()
+    def handle_request(self, action, current_user):
+        if not self.event.can_manage(current_user):
+            raise PermissionError("You can't manage this event.")
+        try:
+            if action == "reject":
+                stripe.PaymentIntent.cancel(self.stripe_payment_intent)
+                self.notify_user(action="reject")
+                self.status=Participation.REJECTED
+                return None
+            stripe.PaymentIntent.capture(self.stripe_payment_intent)
+            self.notify_user(action="accept")
+            self.status=Participation.ACCEPTED
+            return None
+        except stripe.error.StripeError as e:
+            raise RuntimeError(f"Stripe error while processing {action} : {str(e)}")
 
     def is_accepted(self):
         return self.status == self.ACCEPTED

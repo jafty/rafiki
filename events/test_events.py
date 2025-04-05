@@ -12,7 +12,7 @@ from unittest.mock import patch
 from unittest import mock
 from unittest.mock import patch, MagicMock
 from django.shortcuts import get_object_or_404
-
+import stripe
 
 class UserProfileUnitTests(TestCase):
     def setUp(self):
@@ -253,42 +253,83 @@ class ParticipationUnitTests(TestCase):
         )
         self.participation = Participation.objects.create(
             event=self.event,
-            user=self.participant
+            user=self.participant,
+            stripe_payment_intent="pi_test_123"
         )
-
-    def test_accept_participant_sets_status(self):
-        """
-        Given a user and a participation
-        When the participation is accepted
-        Then participation can only be accepted
-        """
-        self.participation.accept_participant()
-        self.assertTrue(self.participation.is_accepted())
-        self.assertFalse(self.participation.is_pending())
-        self.assertFalse(self.participation.is_rejected())
 
     @patch('stripe.PaymentIntent.capture')
     @patch.object(Participation, 'notify_user')
-    def test_accept_participant_should_capture_payment_and_notify(self, mock_notify, mock_capture):
+    def test_should_handle_successful_accept(self, mock_notify_user, mock_capture):
         """
-        Given a pending participation with a stripe payment intent
-        When accept_participant is called
-        Then it should capture the payment, change the status, and notify the user
+        Given a participation with a valid stripe payment intent,
+        When the organizer handles the request with action 'accept',
+        Then the payment is captured, user is notified, and status becomes 'accepted'.
         """
-        self.participation.accept_participant()
-        mock_capture.assert_called_once_with
-        # TODO: setup + appel méthode + assertions
+        self.participation.handle_request(action='accept', current_user=self.organizer)
+        mock_capture.assert_called_once_with("pi_test_123")
+        mock_notify_user.assert_called_once_with(action='accept')
+        self.assertEqual(self.participation.status, Participation.ACCEPTED)
 
-    def test_reject_participant_sets_status(self):
+    @patch.object(Participation, 'notify_user')
+    @patch('stripe.PaymentIntent.capture', side_effect=stripe.error.StripeError("Capture failed"))
+    def test_should_not_accept_when_stripe_capture_fails(self, mock_capture, mock_notify_user):
         """
-        Given a user and a participation
-        When the participation is rejected
-        Then participation status is rejected
+        Given a participation with a Stripe intent,
+        When Stripe.capture fails,
+        Then the status remains unchanged and no notification is sent.
         """
-        self.participation.reject_participant()
-        self.assertTrue(self.participation.is_rejected())
-        self.assertFalse(self.participation.is_accepted())
-        self.assertFalse(self.participation.is_pending())
+        with self.assertRaises(RuntimeError) as context:
+            self.participation.handle_request(action='accept', current_user=self.organizer)
+        self.assertIn("Stripe error while processing accept", str(context.exception))
+        mock_notify_user.assert_not_called()
+        self.assertEqual(self.participation.status, Participation.PENDING)
+
+    def test_should_not_handle_request_with_permission_denied(self):
+        """
+        Given a user who is not the event organizer,
+        When they try to accept a participant,
+        Then a PermissionError is raised and nothing happens.
+        """
+        self.participation.event.can_manage = MagicMock(return_value=False)
+        for action in ["accept", "reject"]:
+            with self.subTest(action=action):
+                with self.assertRaises(PermissionError) as context:
+                    self.participation.handle_request(action=action, current_user=self.organizer)
+                self.assertIn("can't manage", str(context.exception).lower())
+        self.assertEqual(self.participation.status, Participation.PENDING)
+
+    @patch('stripe.PaymentIntent.cancel')
+    @patch.object(Participation, 'notify_user')
+    def test_should_handle_reject_success(self, mock_notify_user, mock_cancel):
+        """
+        Given a valid participation with payment intent,
+        When the organizer rejects it,
+        Then the payment is cancelled, user is notified, and status is 'rejected'.
+        """
+        self.participation.handle_request(action='reject', current_user=self.organizer)
+        mock_cancel.assert_called_once_with("pi_test_123")
+        mock_notify_user.assert_called_once_with(action='reject')
+        self.assertEqual(self.participation.status, Participation.REJECTED)
+
+    @patch.object(Participation, 'notify_user')
+    @patch('stripe.PaymentIntent.cancel', side_effect=stripe.error.StripeError("Cancel failed"))
+    def test_handle_reject_stripe_cancel_fails(self, mock_cancel, mock_notify_user):
+        """
+        Given a participation with a payment intent,
+        When Stripe cancel fails during rejection,
+        Then a RuntimeError is raised, and status is unchanged.
+        """
+        with self.assertRaises(RuntimeError) as context:
+            self.participation.handle_request(action='reject', current_user=self.organizer)
+
+        self.assertIn("stripe error while processing reject", str(context.exception).lower())
+
+        # Notification ne doit pas être appelée
+        mock_notify_user.assert_not_called()
+
+        # Statut doit rester PENDING
+        self.participation.refresh_from_db()
+        self.assertEqual(self.participation.status, Participation.PENDING)
 
     def test_new_participant(self):
         """
@@ -308,7 +349,6 @@ class ParticipationUnitTests(TestCase):
         """
         with self.assertRaises(ValueError):
             Participation.objects.create(event=self.event, user=self.organizer)
-
 
     @patch('events.models.send_mail')
     def test_notify_rejected_user(self, mock_send_mail):
