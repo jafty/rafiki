@@ -17,15 +17,21 @@ from datetime import date
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     avatar = models.ImageField(upload_to='avatars/', blank=True, null=True, default='avatars/default.jpg')
-    description = models.TextField(blank=True, null=True, help_text="Parlez un peu de vous.")
+    description = models.TextField(blank=True, null=True, help_text="Short personal introduction.")
     birth_date = models.DateField(blank=True, null=True)
+    city = models.CharField(max_length=100, help_text="Current city where you live.")
+    country = models.CharField(max_length=100, help_text="Country you come from.")
+    languages_spoken = models.TextField(blank=True, null=True, help_text="Languages you speak.")
+    centers_of_interest = models.TextField(blank=True, null=True, help_text="Things you're passionate about.")
+    event_expectations = models.TextField(blank=True, null=True, help_text="What do you hope to get from Zanmi events?")
+    activity_preferences = models.TextField(blank=True, null=True, help_text="Games, sports, food tours, chill drinks?")
+    group_size_preference = models.CharField(max_length=100, blank=True, null=True, help_text="Small, medium, doesn’t matter?")
+    dietary_restrictions = models.TextField(blank=True, null=True, help_text="Anything we should know if food is involved?")
+    
+    is_certified = models.BooleanField(default=False)
+    consent_date = models.DateTimeField(null=True, blank=True, default=None)
     created_at = models.DateTimeField(default=now)
     slug = models.SlugField(unique=True, blank=True)
-    consent_date = models.DateTimeField(null=True, blank=True, default=None)
-    is_certified = models.BooleanField(default=False)
-    city = models.CharField(max_length=100)
-    country = models.CharField(max_length=100)
-    centers_of_interest = models.TextField(blank=True, null=True, help_text="Qu'appréciez-vous ?")
 
     def clean(self):
         if self.birth_date and self.birth_date > date.today():
@@ -34,7 +40,9 @@ class UserProfile(models.Model):
     def get_age(self, today_date):
         if not self.birth_date:
             return None
-        return today_date.year - self.birth_date.year - ((today_date.month, today_date.day) < (self.birth_date.month, self.birth_date.day))
+        return today_date.year - self.birth_date.year - (
+            (today_date.month, today_date.day) < (self.birth_date.month, self.birth_date.day)
+        )
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -42,7 +50,7 @@ class UserProfile(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"Profil de {self.user.username}"
+        return f"{self.user.username}'s profile"
 
     def can_edit(self, user):
         return user == self.user
@@ -51,14 +59,32 @@ class UserProfileForm(forms.ModelForm):
     birth_date = forms.DateField(
         required=False,
         input_formats=['%d/%m/%Y'],
-        widget=forms.TextInput(attrs={
-            'placeholder': 'JJ/MM/AAAA',
-        }),
-        label="Date de naissance"
+        widget=forms.TextInput(attrs={'placeholder': 'DD/MM/YYYY'}),
+        label="Date of birth"
     )
+
     class Meta:
         model = UserProfile
-        fields = ['avatar', 'description', 'birth_date', 'city', 'country', 'centers_of_interest']
+        fields = [
+            'avatar', 'description', 'birth_date', 'city', 'country',
+            'centers_of_interest', 'languages_spoken', 'event_expectations',
+            'activity_preferences', 'group_size_preference', 'dietary_restrictions'
+        ]
+        labels = {
+            'avatar': "Profile picture",
+            'description': "Short introduction",
+            'birth_date': "Date of birth",
+            'city': "Current city",
+            'country': "Country of origin",
+            'centers_of_interest': "Interests",
+            'languages_spoken': "Languages spoken",
+            'event_expectations': "What do you hope to get from Zanmi events?",
+            'activity_preferences': "Preferred activities (games, sports, etc.)",
+            'group_size_preference': "Preferred group size",
+            'dietary_restrictions': "Dietary restrictions (if any)",
+        }
+
+
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True, widget=forms.EmailInput(attrs={'class': 'form-control'}))

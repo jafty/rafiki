@@ -1,26 +1,23 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Profile - {{ profile.user.username }}{% endblock %}
+
+{% block title %}{{ profile.user.username }}'s Profile{% endblock %}
 
 {% block content %}
 <section class="profile-hero">
     <div class="container">
         <div class="profile-header">
             <div class="profile-avatar">
-                {% if profile.avatar %}
-                    <img src="{{ profile.avatar.url }}" alt="Profile Picture" />
-                {% else %}
-                    <img src="{% static 'default_avatar.png' %}" alt="Profile Picture" />
-                {% endif %}
+                <img src="{{ profile.avatar.url }}" alt="Avatar">
             </div>
             <div class="profile-info">
                 <h1 class="pixel-text">{{ profile.user.username }}</h1>
                 <div class="profile-meta">
-                    <span><img src="https://api.iconify.design/mdi:map-marker.svg" /> {{ profile.city }}, {{ profile.country }}</span>
-                    {% if profile.birth_date %}
-                        <span><img src="https://api.iconify.design/mdi:cake.svg" /> {{ age }} years old</span>
+                    {% if age %}<span>🎂 {{ age }} years old</span>{% endif %}
+                    <span>📍 {{ profile.city }}, {{ profile.country }}</span>
+                    {% if profile.languages_spoken %}
+                    <span>🗣️ {{ profile.languages_spoken }}</span>
                     {% endif %}
-                    <span><img src="https://api.iconify.design/mdi:translate.svg" /> {{ profile.languages|default:"Not specified" }}</span>
                 </div>
                 {% if can_edit %}
                     <a href="{% url 'edit_profile' profile.user.username %}" class="edit-profile-btn">Edit Profile</a>
@@ -33,86 +30,90 @@
 <section class="profile-content">
     <div class="container">
         <div class="row">
+            <!-- Left Column -->
             <div class="col-lg-8">
+                {% if profile.description %}
                 <div class="profile-section">
                     <h2 class="pixel-text">About Me</h2>
-                    <p>{{ profile.description|default:"No description available."|linebreaks }}</p>
+                    <p>{{ profile.description }}</p>
                 </div>
+                {% endif %}
 
+                {% if profile.centers_of_interest %}
+                <div class="profile-section">
+                    <h2 class="pixel-text"2>Things I Enjoy</h2>
+                    <div class="interests">
+                        {% for interest in interest_list %}
+                        <span class="interest-tag">{{ interest }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if profile.event_expectations or profile.activity_preferences or profile.group_size_preference %}
+                <div class="profile-section">
+                    <h2 class="pixel-text">What I'm Looking For</h2>
+                    {% if profile.event_expectations %}
+                        <p><strong>Why I'm here:</strong> {{ profile.event_expectations }}</p>
+                    {% endif %}
+                    {% if profile.activity_preferences %}
+                        <p><strong>Preferred activities:</strong> {{ profile.activity_preferences }}</p>
+                    {% endif %}
+                    {% if profile.group_size_preference %}
+                        <p><strong>Group size preference:</strong> {{ profile.group_size_preference }}</p>
+                    {% endif %}
+                    {% if profile.dietary_restrictions %}
+                        <p><strong>Dietary restrictions:</strong> {{ profile.dietary_restrictions }}</p>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                {% if upcoming_events %}
                 <div class="profile-section">
                     <h2 class="pixel-text">Upcoming Events</h2>
-                    {% if upcoming_events %}
-                        <div class="event-cards">
-                            {% for participation in upcoming_events %}
-                                <div class="event-card">
-                                    <div class="event-card-image">
-                                        <img src="{{ participation.event.image.url }}" alt="Event" />
-                                    </div>
-                                    <div class="event-card-content">
-                                        <h3><a href="{% url 'event_detail' participation.event.id %}">{{ participation.event.title }}</a></h3>
-                                        <p class="event-date">{{ participation.event.date|date:"F j, Y" }}</p>
-                                        <span class="event-status">Confirmed</span>
-                                    </div>
+                    <div class="event-cards">
+                        {% for p in upcoming_events %}
+                            <div class="event-card">
+                                <div class="event-card-image">
+                                    <img src="{{ p.event.image.url }}">
                                 </div>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        <p>No upcoming events yet...</p>
-                    {% endif %}
+                                <div class="event-card-content">
+                                    <h3>{{ p.event.title }}</h3>
+                                    <p class="event-date">{{ p.event.date|date:"F j, Y, g:i a" }}</p>
+                                    <span class="event-status">Upcoming</span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
+                {% endif %}
 
+                {% if past_events %}
                 <div class="profile-section">
                     <h2 class="pixel-text">Past Events</h2>
-                    {% if past_events %}
-                        <div class="event-cards">
-                            {% for participation in past_events %}
-                                <div class="event-card">
-                                    <div class="event-card-image">
-                                        <img src="{{ participation.event.image.url }}" alt="Event" />
-                                    </div>
-                                    <div class="event-card-content">
-                                        <h3><a href="{% url 'event_detail' participation.event.id %}">{{ participation.event.title }}</a></h3>
-                                        <p class="event-date">{{ participation.event.date|date:"F j, Y" }}</p>
-                                        <span class="event-status past">Attended</span>
-                                    </div>
+                    <div class="event-cards">
+                        {% for p in past_events %}
+                            <div class="event-card">
+                                <div class="event-card-image">
+                                    <img src="{{ p.event.image.url }}">
                                 </div>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        <p>No past events yet!</p>
-                    {% endif %}
-                </div>
-
-
-
-                <div class="profile-section">
-                    <h2 class="pixel-text">Events Organized</h2>
-                    {% if organized_events %}
-                        <div class="event-cards">
-                            {% for event in organized_events %}
-                                <div class="event-card">
-                                    <div class="event-card-image">
-                                        <img src="{{ event.image.url }}" alt="Event" />
-                                    </div>
-                                    <div class="event-card-content">
-                                        <h3><a href="{% url 'event_detail' event.id %}">{{ event.title }}</a></h3>
-                                        <p class="event-date">{{ event.date|date:"F j, Y" }}</p>
-                                        <span class="event-status">Organizer</span>
-                                    </div>
+                                <div class="event-card-content">
+                                    <h3>{{ p.event.title }}</h3>
+                                    <p class="event-date">{{ p.event.date|date:"F j, Y, g:i a" }}</p>
+                                    <span class="event-status past">Past</span>
                                 </div>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        <p>No events organized yet.</p>
-                    {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
-
+                {% endif %}
             </div>
 
+            <!-- Right Column -->
             <div class="col-lg-4">
                 <div class="profile-sidebar">
                     <div class="stats-card">
-                        <h3>Profile Stats</h3>
+                        <h3>Stats</h3>
                         <div class="stats-grid">
                             <div class="stat-item">
                                 <span class="stat-number">{{ events_attended_count }}</span>
@@ -120,18 +121,22 @@
                             </div>
                             <div class="stat-item">
                                 <span class="stat-number">{{ upcoming_events_count }}</span>
-                                <span class="stat-label">Upcoming Events</span>
+                                <span class="stat-label">Upcoming</span>
                             </div>
                         </div>
                     </div>
-
-
-                    {% if can_edit %}
-                        <form action="{% url 'logout' %}" method="post">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-link w-100 text-decoration-underline mt-3" style="color: var(--primary);">Log Out</button>
-                        </form>
-                    {% endif %}
+                    <div class="verification-card">
+                        <h3>Trust & Safety</h3>
+                        <ul class="verification-list">
+                            <li>✅ Profile completed</li>
+                            {% if profile.is_certified %}
+                            <li>✅ ID Verified</li>
+                            {% else %}
+                            <li>❌ Not ID Verified</li>
+                            {% endif %}
+                            <li>🎂 Age visible</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>

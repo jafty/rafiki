@@ -6,35 +6,68 @@
 {% block content %}
 <div class="container py-5 my-5">
     <div class="row justify-content-center">
-        <div class="col-md-6">
+        <div class="col-md-8">
             <h1 class="pixel-text mb-4 text-center">Edit Your Profile</h1>
             <form method="post" enctype="multipart/form-data" class="p-4 border rounded shadow-sm bg-white">
                 {% csrf_token %}
+
+                <!-- Section 1: Personal Info -->
+                <h3 class="section-title">1. Personal Info</h3>
                 <div class="mb-3">
-                    <label for="avatar" class="form-label fw-bold">Avatar</label>
+                    <label for="avatar" class="form-label">Profile picture</label>
                     {{ form.avatar|add_class:"form-control" }}
                 </div>
                 <div class="mb-3">
-                    <label for="description" class="form-label fw-bold">Description</label>
-                    {{ form.description|add_class:"form-control" }}
-                </div>
-                <div class="mb-3">
-                    <label for="birth_date" class="form-label fw-bold">Date of Birth</label>
+                    <label for="birth_date" class="form-label">Date of birth</label>
                     {{ form.birth_date|add_class:"form-control" }}
                 </div>
                 <div class="mb-3">
-                    <label for="city" class="form-label fw-bold">Hometown</label>
+                    <label for="city" class="form-label">Current city</label>
                     {{ form.city|add_class:"form-control" }}
                 </div>
                 <div class="mb-3">
-                    <label for="country" class="form-label fw-bold">Country of Origin</label>
+                    <label for="country" class="form-label">Country of origin</label>
                     {{ form.country|add_class:"form-control" }}
                 </div>
                 <div class="mb-3">
-                    <label for="centers_of_interest" class="form-label fw-bold">Interests (in a short paragraph)</label>
+                    <label for="languages_spoken" class="form-label">Languages spoken</label>
+                    {{ form.languages_spoken|add_class:"form-control" }}
+                </div>
+
+                <!-- Section 2: About You -->
+                <h3 class="section-title">2. About You</h3>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Short introduction</label>
+                    {{ form.description|add_class:"form-control" }}
+                </div>
+                <div class="mb-3">
+                    <label for="centers_of_interest" class="form-label">What are you interested in?</label>
                     {{ form.centers_of_interest|add_class:"form-control" }}
                 </div>
-                <button type="submit" class="primary-btn w-100">Save Changes</button>
+
+                <!-- Section 3: What You’re Looking For -->
+                <h3 class="section-title">3. What You’re Looking For</h3>
+                <div class="mb-3">
+                    <label for="event_expectations" class="form-label">What do you hope to get from these events?</label>
+                    {{ form.event_expectations|add_class:"form-control" }}
+                </div>
+                <div class="mb-3">
+                    <label for="activity_preferences" class="form-label">Preferred activities</label>
+                    {{ form.activity_preferences|add_class:"form-control" }}
+                </div>
+                <div class="mb-3">
+                    <label for="group_size_preference" class="form-label">Preferred group size</label>
+                    {{ form.group_size_preference|add_class:"form-control" }}
+                </div>
+
+                <!-- Section 4: Trust & Accessibility -->
+                <h3 class="section-title">4. Trust & Accessibility</h3>
+                <div class="mb-3">
+                    <label for="dietary_restrictions" class="form-label">Dietary restrictions (if any)</label>
+                    {{ form.dietary_restrictions|add_class:"form-control" }}
+                </div>
+
+                <button type="submit" class="primary-btn w-100 mt-4">Save Changes</button>
             </form>
         </div>
     </div>

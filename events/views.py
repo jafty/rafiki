@@ -174,6 +174,7 @@ def profile(request, username):
         'events_attended_count': len(past_events),
         'upcoming_events_count': len(upcoming_events),
         'age': age,
+        'interest_list': [i.strip() for i in profile.centers_of_interest.split(',')] if profile.centers_of_interest else [],
     }
     return render(request, 'events/profile.html', context)
 
